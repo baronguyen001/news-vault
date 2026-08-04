@@ -14,16 +14,17 @@ import requests
 from PIL import Image, ImageOps
 
 from newsvault.model import Article
+from newsvault.prompts import category_prompt, cover_prompt
 from newsvault.text import slugify
 
 PROVIDER_AIHUB: str = "aihub"
 PROVIDER_GEMINI: str = "gemini"
-# Measured, not assumed: the AI Hub `orchestration` model rewrites the prompt before
-# drawing, so the same locked house-style brief produced a clean editorial vector on one
-# run and a lotus-and-pagoda tourism poster with rendered text on the next. Gemini honours
-# the prompt, which is what an archive of hundreds of coherent images needs.
-# Set NEWSVAULT_IMAGE_PROVIDER=aihub to prefer the hub anyway.
-DEFAULT_PROVIDER: str = PROVIDER_GEMINI
+# AI Hub draws by default; Gemini is the fallback.
+# Known trade-off: `orchestration` is a routing model that rewrites the prompt before
+# drawing, so house-style adherence varies run to run - one build gave a clean editorial
+# vector, another a tourism poster carrying rendered text. Its ceiling is higher than
+# Gemini's, its floor is lower. Set NEWSVAULT_IMAGE_PROVIDER=gemini for the consistent one.
+DEFAULT_PROVIDER: str = PROVIDER_AIHUB
 
 AIHUB_DEFAULT_MODEL: str = "orchestration"
 AIHUB_DEFAULT_BASE_URL: str = "https://ai-hub.mk1technology.net/v1"
@@ -113,7 +114,17 @@ def plan_images(
     mode: str = "all",
     max_categories: int = 4,
 ) -> list[ImageRequest]:
-    """Plan cover and topic illustrations for one archive day."""
+    """Plan the cover and per-topic illustrations for one archive day.
+
+    Prompts come from :mod:`newsvault.prompts` and nowhere else. That module maps topics
+    to English scene wording and never lets article text reach the image API - two
+    properties this project depends on:
+
+    * the model treats any supplied string as a caption to draw, and renders Vietnamese
+      as misspelled nonsense across the picture;
+    * this is a private archive, so its headlines must not be shipped to a third-party
+      image endpoint just to decorate a page.
+    """
     if not articles:
         return []
 
@@ -121,26 +132,29 @@ def plan_images(
     topics: Counter[str] = Counter(article.topic or "Khác" for article in articles)
 
     if mode in {"all", "cover"}:
-        top_titles = [article.title_vi or article.title for article in articles[:6]]
-        top_topics = [topic for topic, _count in topics.most_common(3)]
-        prompt = (
-            f"Create a Vietnamese editorial news illustration for {day}. "
-            f"Landscape composition, sophisticated newspaper art direction, subtle paper grain, "
-            f"clean shapes, restrained palette, no text, no logos, no watermark. "
-            f"Reflect these themes: {', '.join(top_topics)}. "
-            f"Story cues: {'; '.join(top_titles)}."
+        headlines = [article.title_vi or article.title for article in articles[:5]]
+        top_topics = [topic for topic, _count in topics.most_common(5)]
+        requests_.append(
+            ImageRequest(
+                key="cover",
+                label="Trang bìa",
+                prompt=cover_prompt(day, headlines, top_topics=top_topics),
+                size=COVER_SIZE,
+            )
         )
-        requests_.append(ImageRequest(key="cover", label="Cover", prompt=prompt, size=COVER_SIZE))
 
     if mode in {"all", "categories"} and max_categories > 0:
         for topic, _count in topics.most_common(max_categories):
-            key = slugify(topic)
-            prompt = (
-                f"Create a Vietnamese editorial category illustration about {topic}. "
-                f"Landscape composition, modern magazine style, tactile paper texture, "
-                f"bold but disciplined color palette, no text, no logos, no watermark."
+            topic_articles = [a for a in articles if (a.topic or "Khác") == topic]
+            headlines = [a.title_vi or a.title for a in topic_articles[:5]]
+            requests_.append(
+                ImageRequest(
+                    key=slugify(topic),
+                    label=topic,
+                    prompt=category_prompt(topic, headlines),
+                    size=CATEGORY_SIZE,
+                )
             )
-            requests_.append(ImageRequest(key=key, label=topic, prompt=prompt, size=CATEGORY_SIZE))
 
     return requests_
 

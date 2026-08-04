@@ -63,6 +63,8 @@
     loadAllMonths: "Tìm toàn bộ các tháng",
     archiveSearchHint: "Kết quả toàn kho",
     calendarTitle: "Lịch tin",
+    calNoNews: "Không có tin",
+    calDayCount: (d, n) => `Ngày ${d}: ${n} tin`,
     monthNames: ["T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11", "T12"],
     weekdays: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
     latestTitle: "Ngày mới nhất",
@@ -1104,14 +1106,31 @@
         const th = make("div", "cal__weekday", grid);
         text(th, wd);
       }
-      const firstDate = new Date(mDays[0].d + "T00:00:00");
-      const pad = (firstDate.getDay() + 6) % 7;
+      // T.weekdays starts on Sunday, so the leading pad must be the Sunday-based day
+      // index. Using a Monday-based one put every date one column off.
+      const year = parseInt(y, 10);
+      const month = parseInt(mo, 10);
+      const pad = new Date(year, month - 1, 1).getDay();
       for (let i = 0; i < pad; i++) make("div", "cal__cell cal__cell--pad", grid);
-      for (const d of mDays) {
+
+      // Walk every date of the month, not just the ones that have articles: skipping a
+      // quiet day used to shift every following date into the wrong weekday column.
+      const counted = new Map(mDays.map((d) => [d.d, d.n || 0]));
+      const lastDay = new Date(year, month, 0).getDate();
+      for (let dayNum = 1; dayNum <= lastDay; dayNum++) {
+        const key = `${m}-${String(dayNum).padStart(2, "0")}`;
+        const n = counted.get(key);
+        if (n === undefined) {
+          const blank = make("div", "cal__cell cal__cell--empty", grid);
+          text(blank, dayNum);
+          blank.title = T.calNoNews;
+          continue;
+        }
         const cell = make("a", "cal__cell", grid);
-        cell.href = `${config.base}d/${d.d}/`;
-        text(cell, parseInt(d.d.slice(8, 10), 10));
-        const bucket = Math.min(4, Math.ceil((d.n / max) * 4)) || 1;
+        cell.href = `${config.base}d/${key}/`;
+        text(cell, dayNum);
+        cell.title = T.calDayCount(dayNum, n);
+        const bucket = Math.min(4, Math.ceil((n / max) * 4)) || 1;
         cell.classList.add(`cal__cell--l${bucket}`);
       }
     }
@@ -1172,10 +1191,37 @@
   }
 
   /* ---------- Entity page ---------- */
+  /** Minimal topbar for the entity and week pages: without it those pages are a dead end. */
+  function renderSimpleTopbar(parent) {
+    // No title here: the page already carries its own <h1> immediately below, and
+    // repeating it in the bar just wastes a line of a phone screen.
+    const bar = make("header", "topbar", parent);
+    const site = make("a", "topbar__site", bar);
+    site.href = config.base || "./";
+    text(site, config.site || T.site);
+    const nav = make("nav", "topbar__nav", bar);
+    const home = make("a", "topbar__link topbar__link--home", nav);
+    home.href = config.base || "./";
+    text(home, T.home);
+    if (config.latest || (manifest && manifest.days && manifest.days.length)) {
+      const latest = config.latest ||
+        manifest.days[manifest.days.length - 1].d;
+      const day = make("a", "topbar__link", nav);
+      day.href = `${config.base || ""}d/${latest}/`;
+      text(day, T.latestTitle);
+    }
+    const theme = make("button", "topbar__btn", nav);
+    theme.type = "button";
+    text(theme, T.themeToggle);
+    theme.addEventListener("click", toggleTheme);
+    return bar;
+  }
+
   function renderEntity() {
     const app = $("#app");
     text(app, "");
     app.className = "app app--entity";
+    renderSimpleTopbar(app);
     const header = make("header", "entity__header", app);
     const h = make("h1", "entity__title", header);
     text(h, payload.label || config.label);
@@ -1212,6 +1258,7 @@
     const app = $("#app");
     text(app, "");
     app.className = "app app--week";
+    renderSimpleTopbar(app);
     const header = make("header", "week__header", app);
     const h = make("h1", "week__title", header);
     text(h, T.weekRange(fmtDay(payload.start), fmtDay(payload.end)));

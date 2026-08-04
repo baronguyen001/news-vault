@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import base64
 import io
+import re
 from pathlib import Path
 
 import pytest
@@ -407,3 +408,29 @@ def test_plan_images_respects_mode_and_category_cap() -> None:
     assert categories_only[0].key != "cover"
     assert len(cover_only) == 1
     assert cover_only[0].key == "cover"
+
+
+def test_plan_images_never_sends_article_text_to_the_image_api() -> None:
+    """The prompt must carry no Vietnamese and no headline.
+
+    Two reasons, both learned the hard way: the model draws any supplied string as a
+    caption and renders it as misspelled nonsense, and this is a private archive whose
+    headlines must not be handed to a third-party image endpoint.
+    """
+    headlines = [
+        "Fed: Barkin cho rằng việc lãi suất đã đủ cao hay chưa là 'quyết định khó khăn'",
+        "Giá dầu lao dốc khi nhà đầu tư phản ứng trước lệnh tạm ngừng chiến sự tại Iran",
+        "Lợi nhuận Aramco tăng 33% nhờ chiến tranh Mỹ-Iran đẩy giá dầu vọt lên",
+    ]
+    articles = [
+        make_article(i, title=h, topic="Kinh tế/Tài chính")
+        for i, h in enumerate(headlines, start=1)
+    ] + [make_article(9, title="Kimi K3 gây chú ý toàn cầu", topic="Công nghệ/AI")]
+
+    prompts = " ".join(r.prompt for r in plan_images("2026-08-04", articles, mode="all"))
+
+    for headline in headlines:
+        assert headline not in prompts
+        # also reject a substantial fragment, in case something re-wraps the text
+        assert headline[:25] not in prompts
+    assert not re.search(r"[àáâãèéêìíòóôõùúýăđĩũơưạ-ỹ]", prompts, re.IGNORECASE)

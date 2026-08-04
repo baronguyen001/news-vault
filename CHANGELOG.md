@@ -4,6 +4,39 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-08-04
+
+### Changed
+- **AI Hub is now the default illustration provider**, with Gemini as the automatic fallback
+  (`NEWSVAULT_IMAGE_PROVIDER`). Already-generated images are cached on prompt and size, so the
+  existing archive keeps its current artwork and only new days are drawn by the hub. The trade-off is
+  documented rather than hidden: `orchestration` rewrites the prompt before drawing, so house-style
+  adherence varies run to run — its ceiling is higher than Gemini's and its floor is lower.
+- Entity and week pages now carry a header with links home and to the latest day. They were
+  navigational dead ends.
+
+### Fixed
+- **The image prompt was sending real article headlines to the image API.** The 0.2.0 rewrite of
+  `images.py` stopped calling `newsvault.prompts` and built its own prompt with the day's Vietnamese
+  headlines embedded as "Story cues". That both destroyed the locked house style — the model drew the
+  headlines into the picture as misspelled text — and shipped the content of a deliberately private
+  archive to a third-party endpoint. `plan_images` uses `newsvault.prompts` again, and a test now
+  asserts that no generated prompt contains a headline or any Vietnamese character at all.
+- **77 of the 126 CSS classes the application emits had no rule at all.** Whole components rendered as
+  browser defaults: the command palette opened as a blank white overlay, the watchlist dialog had no
+  box, archive search results were bare text, and value/label pairs ran together as `193Tổng số bài`
+  and `Chính trị/Chính sáchhôm nay 18%`. All of them are styled now, mobile-first.
+- The overlay scrim was mixed from `--bg`, which in the light theme is the same white as the page it
+  was meant to dim — the palette and dialog were invisible. Added a dedicated `--scrim` token per theme.
+- The home calendar placed every date one weekday column off: the header starts on Sunday while the
+  leading pad was computed Monday-first. It also skipped days with no articles entirely, which shifted
+  every following date. Every date of the month is now rendered, quiet days included but inert.
+- The sort select and the archive-search button kept the browser's default chrome, rendering white on
+  white in dark mode.
+- The month grid collapsed into a single column on a phone, and short wide charts were letterboxed
+  into tall empty boxes with ~6px labels — both regressions from the previous release's touch-target
+  and chart-sizing rules.
+
 ## [0.2.0] - 2026-08-04
 
 ### Added
