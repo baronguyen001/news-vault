@@ -9,13 +9,16 @@
 
 [CmdletBinding()]
 param(
-    [string]$RepoPath = $PSScriptRoot | Split-Path -Parent,
+    # A pipeline expression is not legal in a parameter default - it is a parse error,
+    # which would kill this script every night before it printed anything. Resolve below.
+    [string]$RepoPath,
     [string]$Images = "all",
     [switch]$NoPush,
     [switch]$Backfill
 )
 
 $ErrorActionPreference = "Stop"
+if (-not $RepoPath) { $RepoPath = Split-Path -Parent $PSScriptRoot }
 Set-Location $RepoPath
 
 $python = Join-Path $RepoPath ".venv\Scripts\python.exe"
