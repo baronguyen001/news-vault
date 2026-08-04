@@ -20,7 +20,10 @@ venv/
 .ruff_cache/
 .cache/
 
-.image-cache/
+# Any cache directory: these hold generated briefs (real Vietnamese article text) and
+# images. A NEWSVAULT_CACHE override must not be able to smuggle them into the repo.
+.image-cache*/
+.cache*/
 out/
 tmp/
 
