@@ -442,6 +442,28 @@ textarea {
   margin-top: var(--space-sm);
 }
 
+/* Tags are links to entity pages, so they must look and behave like chips.
+   A bare "AI" anchor is a 15px-wide tap target. */
+.card__tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-dim);
+  font-size: 0.8125rem;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.card__tag:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
 .card__actions {
   display: flex;
   flex-wrap: wrap;
@@ -547,6 +569,15 @@ textarea {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: var(--space-md);
+  align-items: start;
+}
+
+/* The heading lives inside the grid, so it would otherwise occupy a single cell
+   and push the first card off to the side. */
+.grid__title {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 1.125rem;
 }
 
 .topbar__nav {
@@ -555,6 +586,159 @@ textarea {
   align-items: center;
   gap: var(--space-sm);
   margin-left: auto;
+}
+
+.topbar__site {
+  font-weight: 700;
+  color: var(--accent);
+  text-decoration: none;
+  /* Without this "Kho tin" wraps into a 28px-wide two-line column on a 360px screen. */
+  white-space: nowrap;
+}
+
+.topbar__title {
+  margin: 0;
+  font-weight: 700;
+  /* It is an <h1>; the browser default renders the date at 2em and swallows the header. */
+  font-size: clamp(1.05rem, 4.2vw, 1.6rem);
+  white-space: nowrap;
+}
+
+.topbar__link,
+.topbar__btn,
+.topbar__chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35em;
+  min-height: 36px;
+  padding: 0.35rem 0.7rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.topbar__link {
+  color: var(--accent);
+}
+
+.topbar__btn,
+.topbar__chip {
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.topbar__btn:hover,
+.topbar__chip:hover {
+  border-color: var(--accent);
+}
+
+/* --- Phone layout -------------------------------------------------------- */
+/* The actions used to stack vertically, so six buttons ate an entire screen
+   before the reader saw a single headline. Give them their own scrolling strip. */
+@media (max-width: 719px) {
+  .topbar {
+    flex-wrap: wrap;
+    row-gap: var(--space-sm);
+    padding: var(--space-sm);
+  }
+
+  .topbar__nav {
+    order: 3;
+    width: 100%;
+    margin-left: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+
+  .topbar__nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Fade the right edge so the strip reads as scrollable rather than clipped. */
+  .topbar__nav {
+    mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent 100%);
+  }
+
+  .topbar__nav > * {
+    flex: 0 0 auto;
+  }
+
+  .chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .chips::-webkit-scrollbar {
+    display: none;
+  }
+
+  .chips > * {
+    flex: 0 0 auto;
+  }
+
+  /* `flex: 1; min-width: 0` lets the sort select and the archive button squeeze the
+     input down to 4px on a 360px screen. Give it a row of its own instead. */
+  .searchbar {
+    flex-wrap: wrap;
+  }
+
+  .searchbar__input {
+    flex: 1 1 100%;
+    min-width: 8rem;
+  }
+}
+
+/* --- Touch targets ------------------------------------------------------- */
+/* Measured at 26-32px before this rule; 44px is the documented minimum for a
+   finger, and the whole archive is read on a phone. */
+@media (pointer: coarse) {
+  .topbar__link,
+  .topbar__btn,
+  .topbar__chip,
+  .topbar__site,
+  .chip,
+  .trending__term,
+  .blindspots__item,
+  .cat,
+  .card__actions button,
+  .card__tag,
+  .card__tags a,
+  .card__tags button,
+  .searchbar__input,
+  .searchbar__select,
+  .searchbar__vault,
+  .searchbar__sort,
+  .empty__btn,
+  .cluster__more,
+  .cal__cell,
+  summary {
+    min-height: 44px;
+  }
+
+  .card__actions button,
+  .chip,
+  .trending__term,
+  .card__tag {
+    padding-inline: 0.85rem;
+  }
+
+  .card__tag {
+    min-width: 3.25rem;
+  }
+
+  .cal__cell {
+    min-width: 44px;
+  }
 }
 
 .cover {
@@ -593,9 +777,39 @@ textarea {
 }
 
 .cat__caption {
-  padding: var(--space-sm);
+  padding: 0 var(--space-sm) var(--space-sm);
+  color: var(--text-dim);
+  font-size: 0.8125rem;
+}
+
+.cat__caption:empty {
+  display: none;
+}
+
+/* The label and the count are adjacent inline elements, so without this they render
+   as "Kinh tế/Tài chính37". */
+.cat__label,
+.cat__count {
+  display: block;
+  text-align: left;
+}
+
+.cat__label {
+  padding: var(--space-sm) var(--space-sm) 0;
   font-weight: 600;
   font-size: 0.9375rem;
+  line-height: 1.3;
+}
+
+.cat__count {
+  padding: 0 var(--space-sm) var(--space-sm);
+  color: var(--text-dim);
+  font-size: 0.8125rem;
+  font-weight: 400;
+}
+
+.cat__count::after {
+  content: " tin";
 }
 
 /* Calendar */

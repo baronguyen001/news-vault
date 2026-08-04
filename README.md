@@ -47,15 +47,39 @@ when there is no API key, no quota, or no network.
 
 **Illustrates the day**: one cover plus one editorial illustration per category, generated from that
 category's strongest headlines under a house style locked in
-[`newsvault/prompts.py`](newsvault/prompts.py) so hundreds of images stay visually coherent. Flat
-vector art compresses hard — measured at about 10 KB per WebP, so a year of daily illustration costs
-roughly 18 MB of repository. No Vietnamese text ever reaches the image prompt: the model treats any
-supplied string as a caption to draw and renders it as misspelled nonsense across the picture.
+[`newsvault/prompts.py`](newsvault/prompts.py) so hundreds of images stay visually coherent.
+
+Two back-ends, chosen with `NEWSVAULT_IMAGE_PROVIDER`; whichever you pick, the other one takes over
+automatically if it fails, and the cache is keyed on the prompt alone so switching never orphans an
+existing archive:
+
+| | `gemini` (default) | `aihub` |
+|---|---|---|
+| endpoint | `gemini-2.5-flash-image` | MK1 AI Hub, model `orchestration` |
+| style stability | honours the locked house style | **rewrites the prompt** — see below |
+| latency | ~15 s | ~70 s |
+| size after resize | ~21 KB WebP → ~18 MB/year | ~59 KB WebP → ~61 MB/year |
+
+The hub's `orchestration` model is a routing model, not a raw image model: it expands the request
+before drawing. Measured on the same house-style brief, one run produced a clean flat-vector editorial
+illustration and the next produced a lotus-and-pagoda tourism poster with rendered text and a national
+flag in it. Its best output beats Gemini's; its worst is unusable, and an archive whose value is
+hundreds of visually coherent images cannot absorb that variance. Gemini is therefore the default and
+the hub is one env var away for anyone who wants to gamble on the upside.
+
+No Vietnamese text ever reaches the image prompt: the model treats any supplied string as a caption to
+draw and renders it as misspelled nonsense across the picture, so topics are translated into English
+scene wording first.
 
 **In the browser**: diacritic-insensitive Vietnamese search across the whole archive, search operators
 (`source:reuters topic:AI impact:cao score:>70`), a `⌘K` command palette, saved articles, a keyword
 watchlist, read tracking, “new since your last visit”, dark mode, offline PWA caching, Markdown/PDF
 export and share cards — all vanilla JavaScript, no framework, no CDN, no tracking.
+
+**On a phone**: the layout is verified by measurement, not by eye. `tests/` aside, a Playwright pass
+across iPhone SE / iPhone 14 / Android / tablet asserts the page never scrolls horizontally and that
+every interactive control clears the 44px touch minimum. The header collapses to two compact rows with
+a horizontally scrolling action strip instead of stacking six buttons down the screen.
 
 ## Security model
 

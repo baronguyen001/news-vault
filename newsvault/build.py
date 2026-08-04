@@ -233,7 +233,8 @@ def _categories(
                 "label": labels[key],
                 "count": count,
                 "image": f"img/{key}.webp" if has_image(key) else "",
-                "caption": labels[key],
+                # The label is already rendered above it; repeating it reads as a bug.
+                "caption": "",
             }
         )
     if has_image("cover"):
