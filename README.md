@@ -53,19 +53,18 @@ Two back-ends, chosen with `NEWSVAULT_IMAGE_PROVIDER`; whichever you pick, the o
 automatically if it fails, and the cache is keyed on the prompt alone so switching never orphans an
 existing archive:
 
-| | `gemini` (default) | `aihub` |
+| | `aihub` (default) | `gemini` |
 |---|---|---|
-| endpoint | `gemini-2.5-flash-image` | MK1 AI Hub, model `orchestration` |
-| style stability | honours the locked house style | **rewrites the prompt** — see below |
-| latency | ~15 s | ~70 s |
-| size after resize | ~21 KB WebP → ~18 MB/year | ~59 KB WebP → ~61 MB/year |
+| endpoint | MK1 AI Hub, model `orchestration` | `gemini-2.5-flash-image` |
+| style stability | **rewrites the prompt** — see below | honours the locked house style |
+| latency | ~70 s | ~15 s |
+| size after resize | ~59 KB WebP → ~61 MB/year | ~21 KB WebP → ~18 MB/year |
 
-The hub's `orchestration` model is a routing model, not a raw image model: it expands the request
-before drawing. Measured on the same house-style brief, one run produced a clean flat-vector editorial
-illustration and the next produced a lotus-and-pagoda tourism poster with rendered text and a national
-flag in it. Its best output beats Gemini's; its worst is unusable, and an archive whose value is
-hundreds of visually coherent images cannot absorb that variance. Gemini is therefore the default and
-the hub is one env var away for anyone who wants to gamble on the upside.
+Know what you are choosing. The hub's `orchestration` is a routing model, not a raw image model: it
+expands the request before drawing. Measured on the same house-style brief, one run produced a clean
+flat-vector editorial illustration and the next produced a lotus-and-pagoda tourism poster carrying
+rendered text and a national flag. Its best output beats Gemini's and its worst is unusable, so it
+trades consistency for a higher ceiling. `NEWSVAULT_IMAGE_PROVIDER=gemini` picks the steady one.
 
 No Vietnamese text ever reaches the image prompt: the model treats any supplied string as a caption to
 draw and renders it as misspelled nonsense across the picture, so topics are translated into English
