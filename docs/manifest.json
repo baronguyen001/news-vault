@@ -1,0 +1,521 @@
+{
+  "days": [
+    {
+      "d": "2026-07-19",
+      "months": "2026-07",
+      "n": 25
+    },
+    {
+      "d": "2026-07-20",
+      "months": "2026-07",
+      "n": 273
+    },
+    {
+      "d": "2026-07-21",
+      "months": "2026-07",
+      "n": 50
+    },
+    {
+      "d": "2026-07-22",
+      "months": "2026-07",
+      "n": 48
+    },
+    {
+      "d": "2026-07-23",
+      "months": "2026-07",
+      "n": 27
+    },
+    {
+      "d": "2026-07-24",
+      "months": "2026-07",
+      "n": 89
+    },
+    {
+      "d": "2026-07-26",
+      "months": "2026-07",
+      "n": 54
+    },
+    {
+      "d": "2026-07-27",
+      "months": "2026-07",
+      "n": 67
+    },
+    {
+      "d": "2026-07-28",
+      "months": "2026-07",
+      "n": 203
+    },
+    {
+      "d": "2026-07-29",
+      "months": "2026-07",
+      "n": 143
+    },
+    {
+      "d": "2026-07-30",
+      "months": "2026-07",
+      "n": 81
+    },
+    {
+      "d": "2026-07-31",
+      "months": "2026-07",
+      "n": 98
+    },
+    {
+      "d": "2026-08-01",
+      "months": "2026-08",
+      "n": 95
+    },
+    {
+      "d": "2026-08-02",
+      "months": "2026-08",
+      "n": 70
+    },
+    {
+      "d": "2026-08-03",
+      "months": "2026-08",
+      "n": 100
+    },
+    {
+      "d": "2026-08-04",
+      "months": "2026-08",
+      "n": 93
+    }
+  ],
+  "entities": [
+    {
+      "label": "AI",
+      "n": 530,
+      "slug": "ai"
+    },
+    {
+      "label": "đầu tư",
+      "n": 171,
+      "slug": "dau-tu"
+    },
+    {
+      "label": "thuế",
+      "n": 93,
+      "slug": "thue"
+    },
+    {
+      "label": "công nghệ",
+      "n": 92,
+      "slug": "cong-nghe"
+    },
+    {
+      "label": "luật",
+      "n": 90,
+      "slug": "luat"
+    },
+    {
+      "label": "doanh nghiệp",
+      "n": 87,
+      "slug": "doanh-nghiep"
+    },
+    {
+      "label": "chính phủ",
+      "n": 74,
+      "slug": "chinh-phu"
+    },
+    {
+      "label": "ngân hàng",
+      "n": 74,
+      "slug": "ngan-hang"
+    },
+    {
+      "label": "trung ương",
+      "n": 69,
+      "slug": "trung-uong"
+    },
+    {
+      "label": "chính sách",
+      "n": 68,
+      "slug": "chinh-sach"
+    },
+    {
+      "label": "lãi suất",
+      "n": 63,
+      "slug": "lai-suat"
+    },
+    {
+      "label": "chip",
+      "n": 58,
+      "slug": "chip"
+    },
+    {
+      "label": "lạm phát",
+      "n": 57,
+      "slug": "lam-phat"
+    },
+    {
+      "label": "chứng khoán",
+      "n": 56,
+      "slug": "chung-khoan"
+    },
+    {
+      "label": "dữ liệu",
+      "n": 54,
+      "slug": "du-lieu"
+    },
+    {
+      "label": "đảng",
+      "n": 48,
+      "slug": "dang"
+    },
+    {
+      "label": "xung đột",
+      "n": 44,
+      "slug": "xung-dot"
+    },
+    {
+      "label": "nghị quyết",
+      "n": 43,
+      "slug": "nghi-quyet"
+    },
+    {
+      "label": "xuất khẩu",
+      "n": 34,
+      "slug": "xuat-khau"
+    },
+    {
+      "label": "năng lượng",
+      "n": 33,
+      "slug": "nang-luong"
+    },
+    {
+      "label": "quốc hội",
+      "n": 31,
+      "slug": "quoc-hoi"
+    },
+    {
+      "label": "pháp lý",
+      "n": 29,
+      "slug": "phap-ly"
+    },
+    {
+      "label": "nhập khẩu",
+      "n": 27,
+      "slug": "nhap-khau"
+    },
+    {
+      "label": "startup",
+      "n": 27,
+      "slug": "startup"
+    },
+    {
+      "label": "chiến tranh",
+      "n": 26,
+      "slug": "chien-tranh"
+    },
+    {
+      "label": "thuế quan",
+      "n": 21,
+      "slug": "thue-quan"
+    },
+    {
+      "label": "nghị định",
+      "n": 20,
+      "slug": "nghi-dinh"
+    },
+    {
+      "label": "trí tuệ nhân tạo",
+      "n": 19,
+      "slug": "tri-tue-nhan-tao"
+    },
+    {
+      "label": "bảo hiểm",
+      "n": 18,
+      "slug": "bao-hiem"
+    },
+    {
+      "label": "hành chính",
+      "n": 16,
+      "slug": "hanh-chinh"
+    },
+    {
+      "label": "bán dẫn",
+      "n": 15,
+      "slug": "ban-dan"
+    },
+    {
+      "label": "bộ chính trị",
+      "n": 15,
+      "slug": "bo-chinh-tri"
+    },
+    {
+      "label": "cải cách",
+      "n": 15,
+      "slug": "cai-cach"
+    },
+    {
+      "label": "bất động sản",
+      "n": 12,
+      "slug": "bat-dong-san"
+    },
+    {
+      "label": "FDI",
+      "n": 12,
+      "slug": "fdi"
+    },
+    {
+      "label": "trừng phạt",
+      "n": 11,
+      "slug": "trung-phat"
+    },
+    {
+      "label": "chuyển đổi số",
+      "n": 8,
+      "slug": "chuyen-doi-so"
+    },
+    {
+      "label": "Địa chính trị",
+      "n": 7,
+      "slug": "dia-chinh-tri"
+    },
+    {
+      "label": "kinh tế",
+      "n": 7,
+      "slug": "kinh-te"
+    },
+    {
+      "label": "thông tư",
+      "n": 7,
+      "slug": "thong-tu"
+    },
+    {
+      "label": "dầu mỏ",
+      "n": 6,
+      "slug": "dau-mo"
+    },
+    {
+      "label": "Hàn Quốc",
+      "n": 6,
+      "slug": "han-quoc"
+    },
+    {
+      "label": "Iran",
+      "n": 6,
+      "slug": "iran"
+    },
+    {
+      "label": "kinh tế vĩ mô",
+      "n": 6,
+      "slug": "kinh-te-vi-mo"
+    },
+    {
+      "label": "Mỹ",
+      "n": 6,
+      "slug": "my"
+    },
+    {
+      "label": "Việt Nam",
+      "n": 6,
+      "slug": "viet-nam"
+    },
+    {
+      "label": "xe điện",
+      "n": 6,
+      "slug": "xe-dien"
+    },
+    {
+      "label": "Trung Đông",
+      "n": 5,
+      "slug": "trung-dong"
+    },
+    {
+      "label": "Trung Quốc",
+      "n": 5,
+      "slug": "trung-quoc"
+    },
+    {
+      "label": "Ấn Độ",
+      "n": 4,
+      "slug": "an-do"
+    },
+    {
+      "label": "Argentina",
+      "n": 4,
+      "slug": "argentina"
+    },
+    {
+      "label": "Bóng đá",
+      "n": 4,
+      "slug": "bong-da"
+    },
+    {
+      "label": "châu Âu",
+      "n": 4,
+      "slug": "chau-au"
+    },
+    {
+      "label": "Chính trị",
+      "n": 4,
+      "slug": "chinh-tri"
+    },
+    {
+      "label": "Nhật Bản",
+      "n": 4,
+      "slug": "nhat-ban"
+    },
+    {
+      "label": "tăng trưởng kinh tế",
+      "n": 4,
+      "slug": "tang-truong-kinh-te"
+    },
+    {
+      "label": "Tây Ban Nha",
+      "n": 4,
+      "slug": "tay-ban-nha"
+    },
+    {
+      "label": "Tô Lâm",
+      "n": 4,
+      "slug": "to-lam"
+    },
+    {
+      "label": "World Cup 2026",
+      "n": 4,
+      "slug": "world-cup-2026"
+    },
+    {
+      "label": "Âm nhạc",
+      "n": 3,
+      "slug": "am-nhac"
+    },
+    {
+      "label": "Bảo vệ dữ liệu cá nhân",
+      "n": 3,
+      "slug": "bao-ve-du-lieu-ca-nhan"
+    },
+    {
+      "label": "biến đổi khí hậu",
+      "n": 3,
+      "slug": "bien-doi-khi-hau"
+    },
+    {
+      "label": "điện toán đám mây",
+      "n": 3,
+      "slug": "dien-toan-dam-may"
+    },
+    {
+      "label": "Đổi mới sáng tạo",
+      "n": 3,
+      "slug": "doi-moi-sang-tao"
+    },
+    {
+      "label": "Donald Trump",
+      "n": 3,
+      "slug": "donald-trump"
+    },
+    {
+      "label": "Du lịch",
+      "n": 3,
+      "slug": "du-lich"
+    },
+    {
+      "label": "eo biển Hormuz",
+      "n": 3,
+      "slug": "eo-bien-hormuz"
+    },
+    {
+      "label": "giá dầu",
+      "n": 3,
+      "slug": "gia-dau"
+    },
+    {
+      "label": "giá vàng",
+      "n": 3,
+      "slug": "gia-vang"
+    },
+    {
+      "label": "hạ tầng",
+      "n": 3,
+      "slug": "ha-tang"
+    },
+    {
+      "label": "Hong Kong",
+      "n": 3,
+      "slug": "hong-kong"
+    },
+    {
+      "label": "Lai Châu",
+      "n": 3,
+      "slug": "lai-chau"
+    },
+    {
+      "label": "lợi nhuận",
+      "n": 3,
+      "slug": "loi-nhuan"
+    },
+    {
+      "label": "lũ quét",
+      "n": 3,
+      "slug": "lu-quet"
+    },
+    {
+      "label": "nắng nóng",
+      "n": 3,
+      "slug": "nang-nong"
+    },
+    {
+      "label": "Nga",
+      "n": 3,
+      "slug": "nga"
+    },
+    {
+      "label": "Ninh Bình",
+      "n": 3,
+      "slug": "ninh-binh"
+    },
+    {
+      "label": "Phát triển kinh tế",
+      "n": 3,
+      "slug": "phat-trien-kinh-te"
+    },
+    {
+      "label": "Quảng Trị",
+      "n": 3,
+      "slug": "quang-tri"
+    },
+    {
+      "label": "thị trường chứng khoán",
+      "n": 3,
+      "slug": "thi-truong-chung-khoan"
+    },
+    {
+      "label": "thị trường tài chính",
+      "n": 3,
+      "slug": "thi-truong-tai-chinh"
+    },
+    {
+      "label": "thiên tai",
+      "n": 3,
+      "slug": "thien-tai"
+    },
+    {
+      "label": "Ukraine",
+      "n": 3,
+      "slug": "ukraine"
+    },
+    {
+      "label": "Vietstock",
+      "n": 3,
+      "slug": "vietstock"
+    },
+    {
+      "label": "Xây dựng Đảng",
+      "n": 3,
+      "slug": "xay-dung-dang"
+    }
+  ],
+  "generated_at": "2026-08-04T11:32:14.391747+00:00",
+  "kdf_iterations": 250000,
+  "months": [
+    "2026-07",
+    "2026-08"
+  ],
+  "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
+  "site": "Kho tin",
+  "v": 1,
+  "version": "0.1.0"
+}

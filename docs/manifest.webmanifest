@@ -1,0 +1,9 @@
+{
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "lang": "vi",
+  "name": "Kho tin",
+  "short_name": "Kho tin",
+  "start_url": ".",
+  "theme_color": "#0f172a"
+}

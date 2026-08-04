@@ -1,0 +1,26 @@
+{% extends "base.html.j2" %}
+
+{% block body %}
+<script type="application/json" id="nv-config">{{ config_json }}</script>
+<div id="gate" class="gate">
+  <form class="gate__box" id="gate-form">
+    <h1 class="gate__title">{{ meta.site }}</h1>
+    <p class="gate__hint">Nhập mật khẩu để mở nội dung.</p>
+    <input class="gate__input" id="gate-pass" type="password" autocomplete="current-password"
+           autofocus aria-label="Mật khẩu" required>
+    <button class="gate__btn" id="gate-go" type="submit">Mở</button>
+    <p class="gate__err" id="gate-err" role="alert" hidden></p>
+  </form>
+</div>
+<main id="app" hidden></main>
+<noscript>Trang này cần JavaScript để giải mã nội dung.</noscript>
+{% endblock %}
+
+{% block scripts %}
+<script defer src="{{ base }}assets/crypto.js"></script>
+<script defer src="{{ base }}assets/search.js"></script>
+<script defer src="{{ base }}assets/user.js"></script>
+<script defer src="{{ base }}assets/share.js"></script>
+<script defer src="{{ base }}assets/palette.js"></script>
+<script defer src="{{ base }}assets/app.js"></script>
+{% endblock %}
