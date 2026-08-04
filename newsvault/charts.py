@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import html
 import math
-from collections.abc import Mapping, Sequence
+from collections.abc import Collection, Mapping, Sequence
 
 _COLOR_FALLBACKS = [
     "#4f7cff",
@@ -84,8 +84,16 @@ def bar_chart(
     width: int = 720,
     bar_height: int = 26,
     max_bars: int = 10,
+    emphasis: Collection[str] = (),
+    emphasis_label: str = "",
+    rest_label: str = "",
 ) -> str:
-    """Render a horizontal bar chart as a deterministic inline SVG."""
+    """Render a horizontal bar chart as a deterministic inline SVG.
+
+    Pass ``max_bars=len(data)`` to show every row instead of folding the tail into a
+    "Khác" bucket. ``emphasis`` colours the named rows differently and, together with
+    ``emphasis_label``/``rest_label``, draws a two-swatch legend explaining the split.
+    """
     if not data or max_bars < 1:
         height = 60
         return (
@@ -102,24 +110,39 @@ def bar_chart(
     else:
         display = sorted_data
 
+    emphasised = set(emphasis)
+    legend = bool(emphasised and emphasis_label and rest_label)
+
     margin_left = 200
     margin_right = 80
-    top_margin = 40
+    top_margin = 40 if not legend else 62
     plot_width = width - margin_left - margin_right
     max_value = max(max(0.0, value) for _, value in display)
     chart_height = top_margin + len(display) * bar_height + 16
 
     parts = [_svg_open(width, chart_height, title)]
 
+    if legend:
+        for offset, (swatch, label) in enumerate(
+            ((_color(1), emphasis_label), (_color(0), rest_label))
+        ):
+            x = 8 + offset * 180
+            parts.append(
+                f'<rect x="{x}" y="18" width="10" height="10" rx="2" fill="{swatch}"/>'
+                f'<text x="{x + 16}" y="27" font-size="12" fill="currentColor">'
+                f"{html.escape(label)}</text>"
+            )
+
     for index, (label, value) in enumerate(display):
         draw_value = max(0.0, value)
         bar_width = (draw_value / max_value * plot_width) if max_value > 0 else 0.0
         y = top_margin + index * bar_height
         text_y = y + bar_height / 2
+        fill = _color(1) if label in emphasised else _color(0)
 
         parts.append(
             f'<rect x="{margin_left}" y="{y + 2}" width="{bar_width:.2f}" '
-            f'height="{bar_height - 4}" rx="2" fill="{_color(0)}"/>'
+            f'height="{bar_height - 4}" rx="2" fill="{fill}"/>'
         )
         parts.append(
             f'<text x="8" y="{text_y:.2f}" text-anchor="start" '

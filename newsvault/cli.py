@@ -81,24 +81,6 @@ def build_parser() -> argparse.ArgumentParser:
     build_cmd.add_argument("--backfill", action="store_true", help="dựng mọi ngày có trong CSDL")
     build_cmd.add_argument("--force", action="store_true", help="bỏ qua cache, dựng lại tất cả")
     build_cmd.add_argument(
-        "--images",
-        choices=["all", "cover", "none"],
-        default="all",
-        help="sinh ảnh minh hoạ: tất cả chuyên mục / chỉ ảnh bìa / không sinh",
-    )
-    build_cmd.add_argument(
-        "--image-days",
-        type=int,
-        default=0,
-        help="chỉ sinh ảnh cho N ngày gần nhất trong lần dựng này (0 = mọi ngày dựng)",
-    )
-    build_cmd.add_argument(
-        "--max-image-calls", type=int, default=8, help="trần số lần gọi API ảnh mỗi lần chạy"
-    )
-    build_cmd.add_argument(
-        "--dry-run-images", action="store_true", help="in prompt ảnh, không gọi API"
-    )
-    build_cmd.add_argument(
         "--no-brief", action="store_true", help="bỏ qua Gemini, dùng brief tự sinh"
     )
     build_cmd.add_argument(
@@ -134,9 +116,7 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _options_from(
-    args: argparse.Namespace, *, images: str, force: bool, use_brief: bool
-) -> BuildOptions:
+def _options_from(args: argparse.Namespace, *, force: bool, use_brief: bool) -> BuildOptions:
     out = args.out or os.environ.get("NEWSVAULT_OUT", "docs")
     return BuildOptions(
         db_path=_resolve_db(args.db),
@@ -147,12 +127,8 @@ def _options_from(
         site=args.site or os.environ.get("NEWSVAULT_SITE", DEFAULT_SITE),
         site_url=args.site_url or os.environ.get("NEWSVAULT_SITE_URL", ""),
         min_relevance=getattr(args, "min_relevance", 0),
-        images=images,
-        image_days=getattr(args, "image_days", 0),
-        max_image_calls=getattr(args, "max_image_calls", 8),
-        dry_run_images=getattr(args, "dry_run_images", False),
         api_key=os.environ.get("GEMINI_API_KEY") or None,
-        cache_dir=Path(os.environ.get("NEWSVAULT_CACHE", ".image-cache")),
+        cache_dir=Path(os.environ.get("NEWSVAULT_CACHE", ".cache")),
         use_brief=use_brief,
         feed_full=getattr(args, "feed_full", False),
         export_markdown=getattr(args, "export_markdown", False),
@@ -162,7 +138,7 @@ def _options_from(
 
 def cmd_build(args: argparse.Namespace) -> int:
     """Run a normal build."""
-    options = _options_from(args, images=args.images, force=args.force, use_brief=not args.no_brief)
+    options = _options_from(args, force=args.force, use_brief=not args.no_brief)
     if options.feed_full:
         logger.warning("--feed-full bật: tiêu đề bài sẽ công khai trong feed.xml và feed.json")
     report = build_site(options)
@@ -173,7 +149,7 @@ def cmd_build(args: argparse.Namespace) -> int:
 def cmd_rekey(args: argparse.Namespace) -> int:
     """Re-encrypt every page with the current password, touching no external API."""
     args.backfill = True
-    options = _options_from(args, images="none", force=True, use_brief=False)
+    options = _options_from(args, force=True, use_brief=False)
     report = build_site(options)
     print("Đã mã hoá lại bằng mật khẩu mới.")
     print(report.summary())

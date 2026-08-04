@@ -13,8 +13,7 @@ docs/
 ├── manifest.json           plain: dates, counts, entity names — never a headline
 ├── d/2026-08-04/
 │   ├── index.html          empty shell
-│   ├── data.enc            the day, encrypted
-│   └── img/*.webp          AI illustrations, one cover + one per category
+│   └── data.enc            the day, encrypted
 ├── e/<entity>/             per-entity page, aggregated across every day
 ├── w/2026-W32/             weekly roll-up
 ├── idx/2026-08.enc         monthly search-index shard
@@ -45,33 +44,26 @@ z-score, and topics whose share of coverage has fallen unusually far below their
 **Writes a daily brief** — five Vietnamese bullets from Gemini, or a deterministic top-five fallback
 when there is no API key, no quota, or no network.
 
-**Illustrates the day**: one cover plus one editorial illustration per category, generated from that
-category's strongest headlines under a house style locked in
-[`newsvault/prompts.py`](newsvault/prompts.py) so hundreds of images stay visually coherent.
+**Marks paid coverage.** Thirteen of the sixty-two sources cost a subscription. news-vault derives
+that tier from the source key ([`newsvault/sources.py`](newsvault/sources.py)), badges it on the card,
+sorts paid coverage first by default, and gives it its own filter chip — the point of paying for
+Reuters and the FT is reading them before everything else.
 
-Two back-ends, chosen with `NEWSVAULT_IMAGE_PROVIDER`; whichever you pick, the other one takes over
-automatically if it fails, and the cache is keyed on the prompt alone so switching never orphans an
-existing archive:
+**Shows every source it collected.** The source panel is a full bar chart, not a donut: a donut folds
+its tail into "Khác", and the question the panel answers is which sources ran today, paid ones marked.
 
-| | `aihub` (default) | `gemini` |
-|---|---|---|
-| endpoint | MK1 AI Hub, model `orchestration` | `gemini-2.5-flash-image` |
-| style stability | **rewrites the prompt** — see below | honours the locked house style |
-| latency | ~70 s | ~15 s |
-| size after resize | ~59 KB WebP → ~61 MB/year | ~21 KB WebP → ~18 MB/year |
+**Reads headline-first.** A card is a headline, a source and a score until you open it; the summary,
+key points and the four analysis sections are one tap away. Ninety expanded articles is a wall nobody
+scrolls. The category, chart and trend panels start folded for the same reason, and remember whether
+you opened them.
 
-Know what you are choosing. The hub's `orchestration` is a routing model, not a raw image model: it
-expands the request before drawing. Measured on the same house-style brief, one run produced a clean
-flat-vector editorial illustration and the next produced a lotus-and-pagoda tourism poster carrying
-rendered text and a national flag. Its best output beats Gemini's and its worst is unusable, so it
-trades consistency for a higher ceiling. `NEWSVAULT_IMAGE_PROVIDER=gemini` picks the steady one.
-
-No Vietnamese text ever reaches the image prompt: the model treats any supplied string as a caption to
-draw and renders it as misspelled nonsense across the picture, so topics are translated into English
-scene wording first.
+**Illustrates categories with fixed icons** — a line icon per topic, drawn from a table in
+[`newsvault/assets/icons.js`](newsvault/assets/icons.js). Earlier releases generated an AI picture per
+category per day. That cost an API call and about a minute per day, sent this archive's headlines to a
+third-party endpoint to decorate a page, and gave the same category a different look on every date.
 
 **In the browser**: diacritic-insensitive Vietnamese search across the whole archive, search operators
-(`source:reuters topic:AI impact:cao score:>70`), a `⌘K` command palette, saved articles, a keyword
+(`source:reuters topic:AI impact:cao tier:paid score:>70`), a `⌘K` command palette, saved articles, a keyword
 watchlist, read tracking, “new since your last visit”, dark mode, offline PWA caching, Markdown/PDF
 export and share cards — all vanilla JavaScript, no framework, no CDN, no tracking.
 
@@ -86,7 +78,7 @@ a horizontally scrolling action strip instead of stacking six buttons down the s
 |---|---|
 | Encryption | AES-256-GCM, key from PBKDF2-HMAC-SHA256, 250 000 iterations |
 | What is encrypted | day payloads, entity pages, weekly pages, search index shards |
-| What is not | dates, article counts, entity names, generated illustrations |
+| What is not | dates, article counts, entity names |
 | Where the password lives | `NEWSVAULT_PASSWORD` in `.env`, git-ignored, never in the output |
 | Session | the password is held in `sessionStorage`; closing the tab clears it |
 | Crawlers | `robots.txt` disallows everything, every page is `noindex` |
@@ -117,8 +109,7 @@ Optional spoken digest: `pip install -e ".[audio]"`.
 ```bash
 newsvault days                                  # what the database holds
 newsvault build                                 # today only
-newsvault build --backfill --images cover       # whole history, one image per day
-newsvault build --date 2026-08-04 --dry-run-images
+newsvault build --backfill                      # whole history
 newsvault export --date 2026-08-04 --to day.md  # server-side Markdown
 newsvault verify --date 2026-08-04              # decrypt a built day and describe it
 newsvault rekey                                 # re-encrypt everything after a password change
@@ -128,7 +119,7 @@ Rebuilds are incremental: each page's payload is hashed into `docs/.build-state.
 day is neither re-encrypted nor re-committed. The PBKDF2 salt is stored there too and deliberately
 reused, so a daily commit stays a small diff instead of rewriting every byte in the archive.
 
-Illustrations and briefs are cached by content hash — rebuilding costs nothing and calls no API.
+Briefs are cached on disk per day, so a rebuild — including a `rekey` — costs nothing and calls no API.
 
 ### Publishing
 

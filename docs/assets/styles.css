@@ -156,6 +156,15 @@ textarea {
   color: inherit;
 }
 
+/* `color: inherit` above makes an unstyled button take the page text colour while its
+   background stays the OS ButtonFace - light grey. In the dark theme that is near-white
+   text on near-white: the button is there, sized and clickable, and unreadable. Killing
+   the OS background makes an unstyled button legible in both themes by default, so a
+   class that forgets to declare one degrades to plain text rather than to nothing. */
+button {
+  background-color: transparent;
+}
+
 /* Layout */
 
 .app {
@@ -743,24 +752,6 @@ textarea {
 
 }
 
-.cover {
-  position: relative;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  background: var(--surface-2);
-  /* A 16:9 cover at full content width eats an entire viewport before the reader
-     reaches a single headline. Cap it and let the image crop. */
-  max-height: 320px;
-}
-
-.cover img {
-  width: 100%;
-  height: 100%;
-  max-height: 320px;
-  object-fit: cover;
-  display: block;
-}
-
 /* Category card */
 
 .cat {
@@ -768,14 +759,6 @@ textarea {
   border-radius: var(--radius-md);
   overflow: hidden;
   background: var(--surface-2);
-}
-
-.cat__img {
-  width: 100%;
-  height: auto;
-  display: block;
-  aspect-ratio: 16 / 10;
-  object-fit: cover;
 }
 
 .cat__caption {
@@ -936,8 +919,7 @@ textarea {
 pre,
 code,
 .cal,
-.panel svg,
-.cover svg {
+.panel svg {
   overflow-x: auto;
   max-width: 100%;
 }
@@ -1093,16 +1075,6 @@ code {
 
 .brief__item {
   line-height: 1.55;
-}
-
-.cover__img {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  height: auto;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-  object-fit: cover;
 }
 
 .entity__header,
@@ -1309,12 +1281,15 @@ code {
   text-decoration: underline;
 }
 
+/* Left-aligned, not space-between: with three or four badges the old rule flung them to
+   opposite edges of a phone, so a headline's score, tier and impact read as unrelated
+   labels instead of one strip. */
 .card__header {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
   gap: var(--space-xs);
+  margin-bottom: var(--space-xs);
 }
 
 .card__link {
@@ -1331,28 +1306,9 @@ code {
 }
 
 .card__summary__first,
-.card__summary__rest {
+.card__summary p {
   line-height: 1.6;
   overflow-wrap: anywhere;
-}
-
-.card__summary__rest {
-  margin-top: var(--space-xs);
-}
-
-.card__summary__toggle {
-  appearance: none;
-  border: 0;
-  padding: 0;
-  margin-top: var(--space-xs);
-  background: transparent;
-  color: var(--accent);
-  font: inherit;
-  font-weight: 600;
-  line-height: 1.4;
-  text-decoration: underline;
-  text-underline-offset: 0.16em;
-  cursor: pointer;
 }
 
 .card__analysis {
@@ -1724,7 +1680,6 @@ code {
   .trending__term,
   .archive__load-all,
   .dialog__btn,
-  .card__summary__toggle,
   .palette__item,
   .topbar__link--home,
   .topbar__link--prev,
@@ -1736,7 +1691,6 @@ code {
   }
 
   .trending__term,
-  .card__summary__toggle,
   .cluster__link,
   .archive__day,
   .archive__title {
@@ -1810,8 +1764,7 @@ code {
   .palette__item,
   .dialog__btn,
   .archive__load-all,
-  .trending__term,
-  .card__summary__toggle {
+  .trending__term {
     animation: none !important;
     transition: none !important;
     scroll-behavior: auto !important;
@@ -1940,4 +1893,324 @@ code {
 .searchbar__select option {
   background: var(--surface);
   color: var(--text);
+}
+
+/* ==========================================================================
+   0.4.0 - headline-first reading, folded analysis, source tier
+   ========================================================================== */
+
+/* --- Collapsible panels --------------------------------------------------
+   Everything above the headline list is analysis. It now lives in <details>
+   panels that start closed, so a phone opens on the brief and the list. */
+
+.panel--fold {
+  padding: 0;
+  overflow: hidden;
+}
+
+.panel__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  min-height: 44px;
+  font-weight: 600;
+  line-height: 1.35;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+/* The default disclosure triangle is drawn by the OS and ignores our tokens. */
+.panel__toggle::-webkit-details-marker {
+  display: none;
+}
+
+.panel__toggle-label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.panel__toggle-mark {
+  flex: none;
+  width: 0.6rem;
+  height: 0.6rem;
+  margin-inline-end: 0.2rem;
+  border-right: 2px solid var(--text-dim);
+  border-bottom: 2px solid var(--text-dim);
+  transform: rotate(45deg) translate(-0.1rem, -0.1rem);
+  transition: transform 0.15s ease;
+}
+
+.panel--fold[open] > .panel__toggle .panel__toggle-mark {
+  transform: rotate(-135deg) translate(-0.15rem, -0.15rem);
+}
+
+.panel__toggle:hover,
+.panel__toggle:focus-visible {
+  color: var(--accent);
+}
+
+.panel__body {
+  padding: 0 var(--space-md) var(--space-md);
+}
+
+/* The outer fold holds the inner ones; its children must not repeat the frame. */
+.panel--outer > .panel__body > .panel--fold {
+  margin-bottom: var(--space-sm);
+  background: var(--surface-2);
+}
+
+.panel--outer > .panel__body > .panel--fold:last-child {
+  margin-bottom: 0;
+}
+
+/* --- Category icons ------------------------------------------------------
+   Fixed line icons replaced the generated illustrations: same look on every
+   page of the archive, no API call, about a kilobyte for the whole set. */
+
+.cat {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  padding: var(--space-sm);
+  text-align: left;
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.cat:hover,
+.cat:focus-visible {
+  border-color: var(--accent);
+}
+
+.cat__icon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--accent);
+}
+
+.cat__label,
+.cat__count {
+  padding: 0;
+}
+
+.cat__label {
+  flex: 1 1 6rem;
+  min-width: 0;
+}
+
+.cat__count {
+  flex: none;
+}
+
+.cat__caption {
+  flex: 1 1 100%;
+  padding: 0;
+  color: var(--accent);
+  font-size: 0.78rem;
+}
+
+/* --- Headline-first cards ------------------------------------------------
+   A card is a headline until asked otherwise. Ninety expanded summaries is a
+   wall of text nobody scrolls; ninety headlines is a page you can scan. */
+
+.card--closed .card__meta {
+  margin-bottom: 0;
+}
+
+.card__body {
+  margin-top: var(--space-sm);
+}
+
+.card__more {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  margin-top: var(--space-xs);
+  padding: 0.3rem 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.card__more::after {
+  content: "▾";
+  font-size: 0.7em;
+  line-height: 1;
+}
+
+.card:not(.card--closed) .card__more::after {
+  content: "▴";
+}
+
+.card__more:hover,
+.card__more:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+/* Actions sit inside the folded body and need a real frame there. Without a
+   background they were invisible in the dark theme. */
+.card__action {
+  appearance: none;
+  min-width: 0;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.card__action:hover,
+.card__action:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.card__action--save {
+  color: var(--accent);
+}
+
+.card__action--saved {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+}
+
+/* --- Source tier ---------------------------------------------------------
+   Paid sources sort first, so the badge has to be readable at a glance
+   without competing with the score. */
+
+.badge--paid {
+  background: var(--ok);
+  color: var(--accent-contrast);
+  border-color: transparent;
+}
+
+.badge--analysis {
+  background: transparent;
+  color: var(--text-dim);
+}
+
+.searchbar__expand {
+  appearance: none;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 0.875rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.searchbar__expand:hover,
+.searchbar__expand:focus-visible {
+  border-color: var(--accent);
+}
+
+/* --- Phone --------------------------------------------------------------- */
+
+@media (max-width: 719px) {
+  /* Two category cards per row instead of one: the icon layout is short enough
+     that a full-width row wasted half the screen. */
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: var(--space-sm);
+  }
+
+  .app {
+    padding: var(--space-sm);
+  }
+
+  .card {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  /* A closed card is one row of badges, a headline and a meta line. Tightening
+     it fits roughly twice as many headlines per screen. */
+  .card--closed {
+    padding-bottom: var(--space-xs);
+  }
+
+  .card__title {
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+
+  .card__meta {
+    font-size: 0.8125rem;
+  }
+
+  .searchbar {
+    flex-wrap: wrap;
+    row-gap: var(--space-xs);
+  }
+
+  .searchbar__input {
+    flex: 1 1 100%;
+  }
+
+  .panel__body {
+    padding-inline: var(--space-sm);
+  }
+
+  .panel__toggle {
+    padding-inline: var(--space-sm);
+  }
+}
+
+@media (pointer: coarse) {
+  .card__more,
+  .searchbar__expand,
+  .panel__toggle,
+  .cat {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel__toggle-mark {
+    transition: none;
+  }
+}
+
+/* The foot row: the fold toggle plus the one action worth taking without unfolding. */
+.card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-top: var(--space-xs);
+}
+
+.card__foot .card__action--save {
+  flex: none;
+}
+
+/* The headline is the primary tap target now that a card is a headline first. A
+   one-line Vietnamese title renders at 21px, well under the 44px a finger needs. */
+@media (pointer: coarse) {
+  .card__link {
+    display: block;
+    min-block-size: 44px;
+    padding-block: 0.4rem;
+  }
 }

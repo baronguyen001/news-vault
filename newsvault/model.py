@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 
 from newsvault.score import compute_score
+from newsvault.sources import tier as source_tier
 from newsvault.text import fold
 
 _VI_DATE_RE = re.compile(r"(\d{1,2})/(\d{1,2})/(\d{4})(?:[,\s]*(\d{1,2}):(\d{2}))?")
@@ -40,6 +41,17 @@ class Article:
     is_law_policy: bool
     relevance: int
     score: int
+
+    @property
+    def tier(self) -> str:
+        """'paid' or 'free', derived from the source rather than stored.
+
+        The database has no tier column - whether a source costs a subscription is a
+        property of the source, not of the row - so deriving it here means the answer
+        can never drift from :mod:`newsvault.sources`, and no caller can construct an
+        Article whose tier disagrees with its source.
+        """
+        return source_tier(self.source_key)
 
 
 def parse_json_list(raw: str | None) -> tuple[str, ...]:

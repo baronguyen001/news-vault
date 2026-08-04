@@ -2,7 +2,7 @@
 
 This is the orchestration layer. Every step it calls lives in a focused module; the value
 here is the wiring, the incremental-rebuild logic and the guarantee that a failure in an
-optional feature (illustrations, brief, audio) never stops the site from being generated.
+optional feature (brief, audio) never stops the site from being generated.
 """
 
 from __future__ import annotations
@@ -23,8 +23,8 @@ from newsvault.brief import BriefResult, fallback_brief, generate_brief
 from newsvault.cluster import cluster_articles
 from newsvault.entities import Entity, EntityIndex, build_entity_index
 from newsvault.exports import day_markdown, write_markdown
-from newsvault.images import ImageResult, generate_images, plan_images
 from newsvault.model import Article
+from newsvault.sources import PAID
 from newsvault.text import slugify
 from newsvault.trends import trending_terms
 
@@ -53,12 +53,8 @@ class BuildOptions:
     site: str = "Kho tin"
     site_url: str = ""
     min_relevance: int = 0
-    images: str = "all"
-    image_days: int = 0  # 0 = illustrate every built day
-    max_image_calls: int = 8
-    dry_run_images: bool = False
     api_key: str | None = None
-    cache_dir: Path = Path(".image-cache")
+    cache_dir: Path = Path(".cache")
     use_brief: bool = True
     feed_full: bool = False
     export_markdown: bool = False
@@ -74,9 +70,6 @@ class BuildReport:
     entity_pages: int = 0
     week_pages: int = 0
     index_shards: int = 0
-    images_generated: int = 0
-    images_cached: int = 0
-    images_failed: int = 0
     brief_source: dict[str, str] = field(default_factory=dict)
     bytes_written: int = 0
 
@@ -85,8 +78,7 @@ class BuildReport:
         return (
             f"{len(self.days_built)} ngày dựng, {len(self.days_skipped)} bỏ qua (không đổi), "
             f"{self.entity_pages} trang thực thể, {self.week_pages} trang tuần, "
-            f"{self.index_shards} shard tìm kiếm, "
-            f"ảnh: {self.images_generated} mới / {self.images_cached} cache / {self.images_failed} lỗi"
+            f"{self.index_shards} shard tìm kiếm"
         )
 
 
@@ -175,13 +167,22 @@ def _shift(day: str, delta: int) -> str:
 
 
 def _day_charts(articles: Sequence[Article]) -> dict[str, str]:
-    """The three server-rendered SVG charts shown on a day page."""
+    """The three server-rendered SVG charts shown on a day page.
+
+    The source chart is a full bar chart rather than a donut on purpose: a donut folds
+    everything past its sixth slice into "Khác", and the point of this panel is to show
+    every source collected that day, paid ones marked.
+    """
     topics: dict[str, int] = {}
     sources: dict[str, int] = {}
     impacts: dict[str, int] = {}
+    paid_sources: set[str] = set()
     for article in articles:
         topics[article.topic or "Khác"] = topics.get(article.topic or "Khác", 0) + 1
-        sources[article.source or "?"] = sources.get(article.source or "?", 0) + 1
+        source = article.source or "?"
+        sources[source] = sources.get(source, 0) + 1
+        if article.tier == PAID:
+            paid_sources.add(source)
         impacts[article.impact_level or "không rõ"] = (
             impacts.get(article.impact_level or "không rõ", 0) + 1
         )
@@ -189,8 +190,13 @@ def _day_charts(articles: Sequence[Article]) -> dict[str, str]:
         "topics": charts.bar_chart(
             [(k, float(v)) for k, v in topics.items()], title="Tin theo chủ đề"
         ),
-        "sources": charts.donut_chart(
-            [(k, float(v)) for k, v in sources.items()], title="Tỉ trọng nguồn"
+        "sources": charts.bar_chart(
+            [(k, float(v)) for k, v in sources.items()],
+            title=f"Tất cả {len(sources)} nguồn thu thập",
+            max_bars=max(1, len(sources)),
+            emphasis=paid_sources,
+            emphasis_label="Trả phí",
+            rest_label="Miễn phí",
         ),
         "impact": charts.donut_chart(
             [(k, float(v)) for k, v in impacts.items()], title="Mức tác động"
@@ -198,57 +204,33 @@ def _day_charts(articles: Sequence[Article]) -> dict[str, str]:
     }
 
 
-def _categories(
-    articles: Sequence[Article],
-    images: Sequence[ImageResult],
-    image_dir: Path | None = None,
-) -> list[dict[str, object]]:
-    """Category cards for the day page, wired to whatever illustrations exist.
+def _categories(articles: Sequence[Article]) -> list[dict[str, object]]:
+    """Category cards for the day page.
 
-    `images` holds only what this run generated. A rebuild with --images none generates
-    nothing, so fall back to what is already on disk - otherwise a text-only rebuild
-    would quietly strip every illustration off the page.
+    The card carries the topic slug as its `key`; the front end maps that to a fixed
+    icon. Nothing here is generated per day, so the grid costs no API call and looks the
+    same in the archive as it does today.
     """
-    by_image = {result.key: result for result in images}
-
-    def has_image(key: str) -> bool:
-        result = by_image.get(key)
-        if result is not None and result.path:
-            return True
-        return image_dir is not None and (image_dir / f"{key}.webp").exists()
-
     counts: dict[str, int] = {}
+    paid: dict[str, int] = {}
     labels: dict[str, str] = {}
     for article in articles:
         label = article.topic or "Khác"
         key = slugify(label)
         counts[key] = counts.get(key, 0) + 1
+        if article.tier == PAID:
+            paid[key] = paid.get(key, 0) + 1
         labels[key] = label
 
-    cards: list[dict[str, object]] = []
-    for key, count in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0])):
-        cards.append(
-            {
-                "key": key,
-                "label": labels[key],
-                "count": count,
-                "image": f"img/{key}.webp" if has_image(key) else "",
-                # The label is already rendered above it; repeating it reads as a bug.
-                "caption": "",
-            }
-        )
-    if has_image("cover"):
-        cards.insert(
-            0,
-            {
-                "key": "cover",
-                "label": "Toàn cảnh",
-                "count": len(articles),
-                "image": "img/cover.webp",
-                "caption": "Bức tranh chung của ngày",
-            },
-        )
-    return cards
+    return [
+        {
+            "key": key,
+            "label": labels[key],
+            "count": count,
+            "paid": paid.get(key, 0),
+        }
+        for key, count in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
+    ]
 
 
 def _brief_for(day: str, articles: Sequence[Article], options: BuildOptions) -> BriefResult:
@@ -345,10 +327,6 @@ def build_site(options: BuildOptions) -> BuildReport:
         entity_index = build_entity_index(loaded, min_mentions=ENTITY_MIN_MENTIONS)
         entity_map = entity_index.by_article
 
-        image_days = set(target_days)
-        if options.image_days > 0:
-            image_days = set(sorted(target_days)[-options.image_days :])
-
         index_by_month: dict[str, list[dict[str, object]]] = {}
         weeks: dict[str, list[str]] = {}
 
@@ -356,25 +334,6 @@ def build_site(options: BuildOptions) -> BuildReport:
             articles = by_day.get(day, [])
             if not articles:
                 continue
-
-            image_results: list[ImageResult] = []
-            if options.images != "none" and day in image_days:
-                requests_ = plan_images(day, articles, mode=options.images)
-                image_results = generate_images(
-                    requests_,
-                    out_dir / "d" / day / "img",
-                    api_key=options.api_key,
-                    cache_dir=Path(options.cache_dir),
-                    max_calls=options.max_image_calls,
-                    dry_run=options.dry_run_images,
-                )
-                for result in image_results:
-                    if result.path and result.cached:
-                        report.images_cached += 1
-                    elif result.path:
-                        report.images_generated += 1
-                    else:
-                        report.images_failed += 1
 
             brief = _brief_for(day, articles, options)
             report.brief_source[day] = brief.source
@@ -388,7 +347,7 @@ def build_site(options: BuildOptions) -> BuildReport:
                 trending=trending_terms(articles, history),
                 blindspots=blindspots(articles, history),
                 brief=brief.bullets,
-                categories=_categories(articles, image_results, out_dir / "d" / day / "img"),
+                categories=_categories(articles),
                 charts=_day_charts(articles),
                 generated_at=_day_anchor(day),
             )
@@ -500,8 +459,14 @@ def _write_week_pages(
             (day, float(len(by_day.get(day, [])))) for day in sorted(by_day) if start <= day <= end
         ]
         topics: dict[str, int] = {}
+        week_sources: dict[str, int] = {}
+        week_paid: set[str] = set()
         for article in articles:
             topics[article.topic or "Khác"] = topics.get(article.topic or "Khác", 0) + 1
+            source = article.source or "?"
+            week_sources[source] = week_sources.get(source, 0) + 1
+            if article.tier == PAID:
+                week_paid.add(source)
         data = payload.week_payload(
             week,
             start,
@@ -513,18 +478,16 @@ def _write_week_pages(
                 "topics": charts.bar_chart(
                     [(k, float(v)) for k, v in topics.items()], title="Chủ đề trong tuần"
                 ),
-                "volume": charts.bar_chart(volume, title="Số tin mỗi ngày"),
-                "sources": charts.donut_chart(
-                    [
-                        (source, float(count))
-                        for source, count in sorted(
-                            {
-                                a.source: sum(1 for x in articles if x.source == a.source)
-                                for a in articles
-                            }.items()
-                        )
-                    ],
-                    title="Tỉ trọng nguồn",
+                "volume": charts.bar_chart(
+                    volume, title="Số tin mỗi ngày", max_bars=max(1, len(volume))
+                ),
+                "sources": charts.bar_chart(
+                    [(source, float(count)) for source, count in sorted(week_sources.items())],
+                    title=f"Tất cả {len(week_sources)} nguồn trong tuần",
+                    max_bars=max(1, len(week_sources)),
+                    emphasis=week_paid,
+                    emphasis_label="Trả phí",
+                    rest_label="Miễn phí",
                 ),
             },
         )
@@ -592,9 +555,12 @@ def _write_entity_pages(
             related,
             entity_map=entity_index.by_article,
             charts={
+                # A timeline must show every day it covers; folding the tail into a
+                # "Khác" bar would turn dates into a meaningless bucket.
                 "timeline": charts.bar_chart(
                     [(day, float(count)) for day, count in sorted(timeline.items())],
                     title=f"Nhắc tới {entity.label} theo ngày",
+                    max_bars=max(1, len(timeline)),
                 )
             },
         )
