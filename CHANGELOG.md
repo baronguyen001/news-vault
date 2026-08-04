@@ -4,6 +4,57 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-08-05
+
+### Removed
+- **The AI illustration pipeline is gone.** `newsvault/images.py`, the image prompts, the
+  `--images` / `--image-days` / `--max-image-calls` / `--dry-run-images` flags and the
+  `NEWSVAULT_IMAGE_PROVIDER` / `AI_HUB_*` settings all go with it, along with 35 generated WebP files.
+  Every category now carries a fixed line icon from `newsvault/assets/icons.js`. Generating a picture
+  per category per day cost an API call and about a minute per day, sent this archive's headlines to a
+  third-party endpoint to decorate a page, and gave the same category a different look on every date.
+  The whole icon set is about a kilobyte.
+
+### Added
+- **Source tier.** Thirteen of the sixty-two sources cost a subscription; `newsvault/sources.py` mirrors
+  the flag news-hunter keeps on each source, and `Article.tier` derives from the source key rather than
+  being stored, so the two can never drift. Paid coverage is badged on the card, sorted first by
+  default (a new `Trả phí trước` sort mode), filterable with `tier:paid` / `tier:free` and their two
+  Vietnamese chips, counted per category, and coloured in the source chart.
+- **Headline-first reading.** A card shows its badges, headline and source line only; the summary, key
+  points, tags and the four analysis sections are behind one `Xem thêm` toggle (`x` or Enter on the
+  keyboard cursor, `Mở tất cả` in the search bar). Saving stays outside the fold — it is the one action
+  worth taking off a bare headline. A text query auto-expands its matches so highlights stay visible.
+- **Folded analysis panels.** Categories, the three charts, trends and blind spots start collapsed
+  inside one `Chuyên mục · Biểu đồ · Xu hướng` row and remember whether you opened them, so a phone
+  opens on the brief and the headline list instead of three screens of charts.
+- `tests/js/search.test.mjs` — 33 tests over the real query engine, run by `node --test` in CI with no
+  browser and no dependencies. It exists because a filter that matches nothing fails silently.
+
+### Changed
+- **The source chart shows every source collected, not the top six.** It was a donut, which folds its
+  tail into a `Khác` slice; the question the panel answers is which sources ran that day. It is now a
+  full bar chart with paid sources coloured and a legend. Week pages and the entity timeline get the
+  same treatment — a timeline truncated to ten bars turns dates into a meaningless bucket.
+- The brief cache moved from `.image-cache/brief` to `.cache/brief` now that nothing else lives there.
+
+### Fixed
+- **A quoted operator value containing a space matched nothing.** `tokenize()` only recognised a quote
+  at the *start* of a token, so `topic:"Kinh tế/Tài chính"` — exactly what every category chip and
+  topic chip emits — split into `topic:"Kinh` plus a stray `tế/Tài chính"`, and the unbalanced quote
+  was never stripped. Clicking a category returned an empty list.
+- **Four filter chips could never match.** `law:`, `analysis:`, `saved:` and `unread:` were missing
+  from the operator key set, so each fell through to a full-text search for the literal string
+  `law:true` and returned nothing. They are operators now, `analysis` aliases `analyzed`, and
+  `law:false` means the same as `-law:true`.
+- **Unstyled buttons were invisible in the dark theme.** The reset gave every button `color: inherit`
+  while its background stayed the OS ButtonFace — near-white text on near-white. Buttons now default to
+  a transparent background, and `.card__action` has a real frame of its own.
+- Card badges were laid out `space-between`, flinging score, tier and impact to opposite edges of a
+  phone. They read as one strip now.
+- The headline is the primary tap target in a headline-first list, and a one-line Vietnamese title
+  renders at 21px. It gets 44px on touch.
+
 ## [0.3.0] - 2026-08-04
 
 ### Changed

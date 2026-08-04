@@ -15,6 +15,7 @@ const SHELL_URLS = [
   "/manifest.json",
   "/assets/styles.css",
   "/assets/crypto.js",
+  "/assets/icons.js",
   "/assets/search.js",
   "/assets/user.js",
   "/assets/share.js",

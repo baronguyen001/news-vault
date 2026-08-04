@@ -47,6 +47,7 @@ def test_compact_article_full_key_set_no_none() -> None:
         "u",
         "s",
         "sk",
+        "tr",
         "r",
         "c",
         "tp",

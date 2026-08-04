@@ -12,7 +12,6 @@ param(
     # A pipeline expression is not legal in a parameter default - it is a parse error,
     # which would kill this script every night before it printed anything. Resolve below.
     [string]$RepoPath,
-    [string]$Images = "all",
     [switch]$NoPush,
     [switch]$Backfill
 )
@@ -35,9 +34,9 @@ function Write-Log([string]$message) {
     Add-Content -Path $log -Value $line -Encoding utf8
 }
 
-Write-Log "build start (images=$Images backfill=$Backfill)"
+Write-Log "build start (backfill=$Backfill)"
 
-$buildArgs = @("-m", "newsvault.cli", "build", "--images", $Images)
+$buildArgs = @("-m", "newsvault.cli", "build")
 if ($Backfill) { $buildArgs += "--backfill" }
 
 & $python @buildArgs 2>&1 | ForEach-Object { Write-Log $_ }

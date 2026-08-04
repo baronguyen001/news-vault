@@ -14,12 +14,13 @@
     home: "Trang chủ",
     prev: "← Trước",
     next: "Sau →",
-    dayCoverAlt: (day) => `Ảnh bìa ngày ${day}`,
     briefTitle: "Tóm tắt ngày",
+    analysisPanels: "Chuyên mục · Biểu đồ · Xu hướng",
     categoriesTitle: "Chuyên mục",
     trendingTitle: "Xu hướng",
     blindspotsTitle: "Góc chưa phủ",
     searchPlaceholder: "Tìm kiếm…",
+    sortLabel: "Sắp xếp",
     searchVault: "Tìm toàn kho (!)",
     all: "Tất cả",
     highImpact: "Tác động cao",
@@ -29,11 +30,16 @@
     analysis: "Có phân tích",
     saved: "Đã lưu",
     unread: "Chưa đọc",
+    paid: "Trả phí",
+    free: "Miễn phí",
+    paidFirst: "Trả phí trước",
     score: "Điểm",
     newest: "Mới nhất",
     source: "Nguồn",
     readMore: "Xem thêm",
     readLess: "Thu gọn",
+    expandAll: "Mở tất cả",
+    collapseAll: "Thu gọn tất cả",
     analysisTitle: "Phân tích",
     context: "Bối cảnh",
     cause: "Nguyên nhân",
@@ -72,6 +78,7 @@
     noMatches: "Chưa có bài phù hợp.",
     sinceLast: (n) => `${n} bài mới từ lần trước`,
     entityTotal: (n) => `${n} bài`,
+    paidOfTotal: (n) => `${n} bài trả phí`,
     weekRange: (a, b) => `Tuần ${a} – ${b}`,
     statsTitle: "Thống kê",
     topStories: "Tin nổi bật",
@@ -91,7 +98,8 @@
   let manifest = null;
   let clusterInfo = {};
   let currentText = "";
-  let currentSort = "score";
+  let currentSort = "paid";
+  let expandAll = false;
   let archiveCache = {};
   let selectedCardIndex = -1;
   let userWired = false;
@@ -306,6 +314,47 @@
     return map;
   }
 
+  /* ---------- Collapsible panels ----------
+   * Everything above the headline list is analysis, not news. On a phone the panels
+   * pushed the first headline three screens down, so they open closed and remember the
+   * choice; the list itself is always the first thing under the search bar. */
+  const PANEL_KEY = "nv.panels";
+
+  function panelState() {
+    try {
+      const raw = localStorage.getItem(PANEL_KEY);
+      const data = raw ? JSON.parse(raw) : null;
+      return data && typeof data === "object" ? data : {};
+    } catch (err) {
+      return {};
+    }
+  }
+
+  function setPanelState(id, open) {
+    try {
+      const data = panelState();
+      data[id] = !!open;
+      localStorage.setItem(PANEL_KEY, JSON.stringify(data));
+    } catch (err) {
+      /* private mode: the panel still works, it just will not be remembered */
+    }
+  }
+
+  /**
+   * Create a <details> panel that is closed unless the reader opened it before.
+   * Returns the body element callers fill in.
+   */
+  function makePanel(parent, id, title, extraClass) {
+    const details = make("details", `panel panel--fold ${extraClass || ""}`.trim(), parent);
+    details.open = panelState()[id] === true;
+    const summary = make("summary", "panel__toggle", details);
+    const label = make("span", "panel__toggle-label", summary);
+    text(label, title);
+    make("span", "panel__toggle-mark", summary);
+    details.addEventListener("toggle", () => setPanelState(id, details.open));
+    return make("div", "panel__body", details);
+  }
+
   /* ---------- Day page ---------- */
   function renderDay() {
     const app = $("#app");
@@ -313,11 +362,13 @@
     app.className = "app app--day";
     renderDayTopbar(app);
     renderBrief(app);
-    renderCover(app);
-    renderCategoryGrid(app);
-    renderDayCharts(app);
-    renderTrending(app);
-    renderBlindspots(app);
+    // One outer fold for all the analysis. Six separate collapsed panels still cost six
+    // rows before the first headline; nested inside one row they cost none.
+    const analysis = makePanel(app, "day-analysis", T.analysisPanels, "panel--outer");
+    renderCategoryGrid(analysis);
+    renderDayCharts(analysis);
+    renderTrending(analysis);
+    renderBlindspots(analysis);
     renderSearchbar(app);
     const wrap = make("div", "cards-wrap", app);
     const countEl = make("div", "result-count sr-only", wrap);
@@ -400,39 +451,22 @@
     }
   }
 
-  function renderCover(parent) {
-    const cats = payload.categories || [];
-    const cover = cats.find((c) => c && (c.key === "cover" || (c.image && c.image.includes("cover"))));
-    if (!cover || !cover.image) return;
-    const fig = make("figure", "cover", parent);
-    const img = make("img", "cover__img", fig);
-    img.src = cover.image;
-    img.loading = "lazy";
-    img.alt = T.dayCoverAlt(fmtDay(config.day || payload.day));
-  }
-
   function renderCategoryGrid(parent) {
-    const cats = payload.categories || [];
+    const cats = (payload.categories || []).filter(Boolean);
     if (!cats.length) return;
-    const sec = make("section", "grid", parent);
-    const h = make("h2", "grid__title", sec);
-    text(h, T.categoriesTitle);
+    const body = makePanel(parent, "day-categories", T.categoriesTitle);
+    const sec = make("div", "grid", body);
     for (const c of cats) {
-      if (!c) continue;
       const card = make("button", "cat", sec);
       card.type = "button";
-      if (c.image) {
-        const img = make("img", "cat__img", card);
-        img.src = c.image;
-        img.loading = "lazy";
-        img.alt = c.label || "";
-      }
+      if (NV.icons) NV.icons.render(card, c.key, "cat__icon");
       const label = make("span", "cat__label", card);
       text(label, c.label);
       const count = make("span", "cat__count", card);
       text(count, String(c.count || 0));
       const cap = make("span", "cat__caption", card);
-      text(cap, c.caption || "");
+      // Paid coverage is the reason to open a category first, so surface it here.
+      text(cap, c.paid ? T.paidOfTotal(c.paid) : "");
       card.addEventListener("click", () => setQuery(`topic:"${c.label}"`));
     }
   }
@@ -443,10 +477,8 @@
     for (const key of ["topics", "sources", "impact"]) {
       const svg = charts[key];
       if (!svg) continue;
-      const panel = make("section", "panel panel--chart", parent);
-      const h = make("h2", "panel__title", panel);
-      text(h, titles[key]);
-      const wrap = make("div", "panel__chart", panel);
+      const body = makePanel(parent, `day-chart-${key}`, titles[key], "panel--chart");
+      const wrap = make("div", "panel__chart", body);
       wrap.style.overflowX = "auto";
       wrap.innerHTML = svg;
     }
@@ -455,9 +487,7 @@
   function renderTrending(parent) {
     const list = payload.trending || [];
     if (!list.length) return;
-    const panel = make("section", "panel panel--trending", parent);
-    const h = make("h2", "panel__title", panel);
-    text(h, T.trendingTitle);
+    const panel = makePanel(parent, "day-trending", T.trendingTitle, "panel--trending");
     const ul = make("ul", "trending__list", panel);
     for (const t of list) {
       const li = make("li", "trending__item", ul);
@@ -473,9 +503,7 @@
   function renderBlindspots(parent) {
     const list = payload.blindspots || [];
     if (!list.length) return;
-    const panel = make("section", "panel panel--blindspots", parent);
-    const h = make("h2", "panel__title", panel);
-    text(h, T.blindspotsTitle);
+    const panel = makePanel(parent, "day-blindspots", T.blindspotsTitle, "panel--blindspots");
     const ul = make("ul", "blindspots__list", panel);
     for (const b of list) {
       const li = make("li", "blindspots__item", ul);
@@ -509,13 +537,23 @@
     });
     const sortWrap = make("label", "searchbar__sort", bar);
     const sort = make("select", "searchbar__select", sortWrap);
-    for (const [val, lab] of [["score", T.score], ["newest", T.newest], ["source", T.source]]) {
+    sort.setAttribute("aria-label", T.sortLabel);
+    const options = [["paid", T.paidFirst], ["score", T.score], ["newest", T.newest], ["source", T.source]];
+    for (const [val, lab] of options) {
       const o = make("option", "", sort);
       o.value = val;
       text(o, lab);
     }
     sort.value = currentSort;
     sort.addEventListener("change", () => { currentSort = sort.value; refresh(); });
+    const toggleAll = make("button", "searchbar__expand", bar);
+    toggleAll.type = "button";
+    text(toggleAll, expandAll ? T.collapseAll : T.expandAll);
+    toggleAll.addEventListener("click", () => {
+      expandAll = !expandAll;
+      text(toggleAll, expandAll ? T.collapseAll : T.expandAll);
+      for (const card of $$("#app .card")) setCardOpen(card, expandAll);
+    });
     const vault = make("button", "searchbar__vault", bar);
     vault.type = "button";
     text(vault, T.searchVault);
@@ -531,6 +569,8 @@
 
   const QUICK_CHIPS = [
     { label: T.all, token: null },
+    { label: T.paid, token: "tier:paid" },
+    { label: T.free, token: "tier:free" },
     { label: T.highImpact, token: "impact:cao" },
     { label: T.domestic, token: "region:domestic" },
     { label: T.international, token: "region:international" },
@@ -636,6 +676,7 @@
       f: NV.search.fold(`${a.t || ""} ${(a.tg || []).join(" ")} ${a.sum || ""} ${a.s || ""} ${a.tp || ""} ${a.c || ""}`),
       s: a.s || "",
       sk: a.sk || "",
+      tr: a.tr || "free",
       tp: a.tp || "",
       im: a.im || "",
       sc: a.sc ?? 0,
@@ -643,7 +684,7 @@
       tg: a.tg || [],
       u: a.u || "",
       law: !!a.law,
-      analysis: Object.values(a.an || {}).some((v) => v && String(v).trim()),
+      analyzed: hasAnalysis(a),
       raw: a
     }));
   }
@@ -702,7 +743,11 @@
     observeCards();
   }
 
-  /* ---------- Article card ---------- */
+  /* ---------- Article card ----------
+   * A card shows a headline and nothing else until it is asked to. The summary, the key
+   * points and the four analysis sections run to a couple of hundred words per article;
+   * at ninety articles a day that is an unreadable wall on a phone. They all live in
+   * .card__body, which is built once and then shown or hidden. */
   function renderCard(a, item, parsed) {
     const li = make("li", "card");
     li.id = `a-${a.i}`;
@@ -722,27 +767,64 @@
     link.addEventListener("click", () => { if (NV.user) NV.user.markRead(a.u); });
     const meta = make("div", "card__meta", li);
     text(meta, [a.s, a.tp, getTimeText(a)].filter(Boolean).join(" · "));
-    renderSummary(li, a, parsed);
-    renderKeyPoints(li, a, parsed);
-    renderTags(li, a);
-    if (a.an && Object.values(a.an).some((v) => v && String(v).trim())) {
-      li.appendChild(renderAnalysis(a, parsed));
-    }
+
+    const body = make("div", "card__body", li);
+    body.id = `b-${a.i}`;
+    renderSummary(body, a, parsed);
+    renderKeyPoints(body, a, parsed);
+    renderTags(body, a);
+    if (hasAnalysis(a)) body.appendChild(renderAnalysis(a, parsed));
     const ci = clusterInfo[a.i];
     if (ci && ci.isLead && ci.cluster.members.length > 1) {
-      li.appendChild(renderCluster(ci.cluster));
+      body.appendChild(renderCluster(ci.cluster));
     }
-    li.appendChild(renderCardActions(a));
+    body.appendChild(renderCardActions(a));
+
+    // Saving is the one action worth doing straight off a headline, so it stays out of
+    // the fold; copy, share and open live inside with the rest of the detail.
+    const foot = make("div", "card__foot", li);
+    const more = make("button", "card__more", foot);
+    more.type = "button";
+    more.setAttribute("aria-controls", body.id);
+    more.addEventListener("click", () => setCardOpen(li, li.classList.contains("card--closed")));
+    if (NV.user) renderSaveButton(a, foot);
+
+    // Open on a text query so the highlighted match is visible without a second click.
+    const hasQuery = parsed && !parsed.isEmpty && (parsed.terms.length || parsed.phrases.length);
+    setCardOpen(li, expandAll || !!hasQuery);
     return li;
+  }
+
+  function hasAnalysis(a) {
+    return !!(a.an && Object.values(a.an).some((v) => v && String(v).trim()));
+  }
+
+  /** Show or hide one card's body and keep the toggle's label and ARIA state in step. */
+  function setCardOpen(card, open) {
+    const body = card.querySelector(".card__body");
+    const more = card.querySelector(".card__more");
+    if (!body || !more) return;
+    card.classList.toggle("card--closed", !open);
+    body.hidden = !open;
+    more.setAttribute("aria-expanded", open ? "true" : "false");
+    text(more, open ? T.readLess : T.readMore);
   }
 
   function renderCardHeader(a) {
     const header = make("div", "card__header", null);
     const score = make("span", "badge badge--score", header);
     text(score, a.sc ?? 0);
+    if (a.tr === "paid") {
+      const paid = make("span", "badge badge--paid", header);
+      text(paid, T.paid);
+    }
     if (a.im && a.im !== "không xác định") {
       const imp = make("span", `badge badge--impact impact-${impactClass(a.im)}`, header);
       text(imp, a.im);
+    }
+    if (hasAnalysis(a)) {
+      const an = make("span", "badge badge--analysis", header);
+      text(an, T.analysisTitle);
     }
     const ci = clusterInfo[a.i];
     if (ci && ci.isLead && ci.cluster.members.length > 1) {
@@ -760,26 +842,15 @@
     }
   }
 
+  // The whole card body is now behind one toggle, so the summary no longer needs a
+  // second "read more" of its own - every paragraph is rendered.
   function renderSummary(parent, a, parsed) {
     const paras = splitParagraphs(a.sum || "");
     if (!paras.length) return;
     const wrap = make("div", "card__summary", parent);
-    const first = make("p", "card__summary__first", wrap);
-    setHighlighted(first, paras[0], parsed);
-    if (paras.length > 1) {
-      const rest = make("div", "card__summary__rest", wrap);
-      rest.hidden = true;
-      for (let i = 1; i < paras.length; i++) {
-        const p = make("p", "", rest);
-        setHighlighted(p, paras[i], parsed);
-      }
-      const toggle = make("button", "card__summary__toggle", wrap);
-      toggle.type = "button";
-      text(toggle, T.readMore);
-      toggle.addEventListener("click", () => {
-        rest.hidden = !rest.hidden;
-        text(toggle, rest.hidden ? T.readMore : T.readLess);
-      });
+    for (let i = 0; i < paras.length; i++) {
+      const p = make("p", i === 0 ? "card__summary__first" : "", wrap);
+      setHighlighted(p, paras[i], parsed);
     }
   }
 
@@ -859,19 +930,22 @@
     return details;
   }
 
+  /** The save button, which stays out of the fold - see renderCard. */
+  function renderSaveButton(a, parent) {
+    const save = make("button", "card__action card__action--save", parent);
+    save.type = "button";
+    updateSaveButton(save, a.u);
+    save.addEventListener("click", () => {
+      NV.user.toggleSave(a.u);
+      updateSaveButton(save, a.u);
+      updateSavedChip($(".topbar__chip"));
+      NV.app.refresh();
+    });
+    return save;
+  }
+
   function renderCardActions(a) {
     const actions = make("div", "card__actions", null);
-    if (NV.user) {
-      const save = make("button", "card__action card__action--save", actions);
-      save.type = "button";
-      updateSaveButton(save, a.u);
-      save.addEventListener("click", () => {
-        NV.user.toggleSave(a.u);
-        updateSaveButton(save, a.u);
-        updateSavedChip($(".topbar__chip"));
-        NV.app.refresh();
-      });
-    }
     const copy = make("button", "card__action", actions);
     copy.type = "button";
     text(copy, T.copy);
@@ -1007,7 +1081,7 @@
       dayLink.href = `${config.base}d/${it.d}/#a-${it.i}`;
       text(dayLink, fmtDay(it.d));
       const src = make("span", "archive__source", li);
-      text(src, it.s || "");
+      text(src, it.tr === "paid" ? `${it.s || ""} · ${T.paid}` : it.s || "");
       const score = make("span", "archive__score", li);
       text(score, it.sc ?? 0);
       const title = make("a", "archive__title", li);
@@ -1403,6 +1477,9 @@
       { id: "export-md", label: "Xuất Markdown", hint: "e", group: "Chia sẻ", run: exportMarkdown },
       { id: "print", label: "In / PDF", hint: "p", group: "Chia sẻ", run: () => { if (NV.share) NV.share.printPage(); } },
       { id: "toggle-saved", label: "Chỉ tin đã lưu", hint: "f", group: "Lọc", run: () => toggleChipByToken("saved:true") },
+      { id: "only-paid", label: "Chỉ nguồn trả phí", group: "Lọc", run: () => toggleChipByToken("tier:paid") },
+      { id: "only-unread", label: "Chỉ tin chưa đọc", group: "Lọc", run: () => toggleChipByToken("unread:true") },
+      { id: "expand-card", label: "Mở rộng bài đang chọn", hint: "x", group: "Đọc", run: expandSelected },
       { id: "clear-filters", label: "Xóa bộ lọc", hint: "c", group: "Lọc", run: () => setQuery("") },
       { id: "watchlist", label: "Danh sách theo dõi", hint: "w", group: "Cá nhân", run: openWatchlist }
     ];
@@ -1436,6 +1513,14 @@
       if (NV.user) NV.user.markRead(link.href);
       window.open(link.href, "_blank", "noopener,noreferrer");
     }
+  }
+
+  /** Expand or collapse the card the keyboard cursor is on. */
+  function expandSelected() {
+    const cards = $$(".card");
+    if (selectedCardIndex < 0 || selectedCardIndex >= cards.length) return;
+    const card = cards[selectedCardIndex];
+    setCardOpen(card, card.classList.contains("card--closed"));
   }
 
   function toggleSelectedSave() {
@@ -1487,6 +1572,11 @@
       case "o":
         ev.preventDefault();
         openSelectedArticle();
+        break;
+      case "Enter":
+      case "x":
+        ev.preventDefault();
+        expandSelected();
         break;
       case "s":
         ev.preventDefault();

@@ -5,7 +5,17 @@
 
   const FILTER_KEYS = new Set([
     "source", "sk", "topic", "tp", "impact", "region", "tag", "day", "is", "score",
+    "tier",
+    // Boolean facets. They read as `law:true` in the query bar and used to be missing
+    // from this set, so every one of them fell through to a full-text search for the
+    // literal string "law:true" and silently matched nothing.
+    "law", "analysis", "analyzed", "saved", "unread",
   ]);
+
+  // `law:true` means the flag `law`; `law:false` means its negation.
+  const BOOLEAN_KEYS = new Set(["law", "analysis", "analyzed", "saved", "unread"]);
+
+  const FLAG_ALIASES = { analysis: "analyzed" };
 
   function fold(value) {
     return String(value ?? "")
@@ -57,6 +67,24 @@
       } else {
         let value = "";
         while (i < query.length && !/\s/.test(query[i])) {
+          // A quote *inside* a token opens a quoted operator value: `topic:"kinh te"`.
+          // Without this the scan stopped at the space and produced `topic:"kinh` plus a
+          // stray `te"`, so the unbalanced quote never got stripped and the filter
+          // matched nothing at all - which is what every category chip emitted, since
+          // most topic names contain a space.
+          if (query[i] === '"') {
+            value += '"';
+            i++;
+            while (i < query.length && query[i] !== '"') {
+              value += query[i];
+              i++;
+            }
+            if (i < query.length) {
+              value += '"';
+              i++;
+            }
+            continue;
+          }
           value += query[i];
           i++;
         }
@@ -132,8 +160,12 @@
       terms: [],
       phrases: [],
       negatives: [],
-      filters: { source: [], topic: [], impact: [], region: [], tag: [], day: [], flags: [] },
-      filterNegatives: { source: [], topic: [], impact: [], region: [], tag: [], day: [], flags: [] },
+      filters: {
+        source: [], topic: [], impact: [], region: [], tag: [], day: [], tier: [], flags: [],
+      },
+      filterNegatives: {
+        source: [], topic: [], impact: [], region: [], tag: [], day: [], tier: [], flags: [],
+      },
       scoreMin: null,
       scoreMax: null,
       raw: query,
@@ -153,8 +185,17 @@
 
       const op = parseOperator(token);
       if (op) {
-        const target = token.negative ? parsed.filterNegatives : parsed.filters;
+        let target = token.negative ? parsed.filterNegatives : parsed.filters;
         const { key, rawVal, foldedVal } = op;
+
+        if (BOOLEAN_KEYS.has(key)) {
+          // `law:false` is the same request as `-law:true`.
+          if (foldedVal === "false" || foldedVal === "0" || foldedVal === "no") {
+            target = target === parsed.filters ? parsed.filterNegatives : parsed.filters;
+          }
+          target.flags.push(FLAG_ALIASES[key] || key);
+          continue;
+        }
 
         switch (key) {
           case "source":
@@ -181,6 +222,19 @@
           case "tag":
             target.tag.push(foldedVal);
             break;
+          case "tier": {
+            // Accept the Vietnamese words as well; the chips read "Trả phí"/"Miễn phí".
+            // Spaces and hyphens are stripped so the hyphenated form works unquoted.
+            const compact = foldedVal.replace(/[\s-]+/g, "");
+            let mapped = foldedVal;
+            if (compact === "traphi" || compact === "premium" || compact === "paid") {
+              mapped = "paid";
+            } else if (compact === "mienphi" || compact === "free") {
+              mapped = "free";
+            }
+            target.tier.push(mapped);
+            break;
+          }
           case "day":
             target.day.push(rawVal);
             break;
@@ -217,8 +271,8 @@
     if (flag === "law") {
       return !!item.law;
     }
-    if (flag === "analyzed") {
-      return !!item.analyzed;
+    if (flag === "analyzed" || flag === "analysis") {
+      return !!(item.analyzed || item.analysis);
     }
     if (flag === "saved") {
       return !!item.saved;
@@ -302,6 +356,15 @@
           }
           break;
         }
+        case "tier": {
+          for (const v of vals) {
+            if ((item.tr || "free") === v) {
+              matched = true;
+              break;
+            }
+          }
+          break;
+        }
         case "flags": {
           for (const v of vals) {
             if (checkFlag(item, v)) {
@@ -361,12 +424,26 @@
 
   function run(items, query, options) {
     const parsed = typeof query === "string" ? parse(query) : query;
-    const sortMode = options?.sort || "score";
+    const sortMode = options?.sort || "paid";
     const limit = options?.limit;
 
     const result = items.filter((item) => matches(item, parsed));
 
+    const paidRank = (item) => ((item.tr || "free") === "paid" ? 0 : 1);
+
     result.sort((a, b) => {
+      // Default order. A paid subscription is only worth having if its reporting is
+      // read first, so tier outranks score and score breaks the tie inside each tier.
+      if (sortMode === "paid") {
+        if (paidRank(a) !== paidRank(b)) {
+          return paidRank(a) - paidRank(b);
+        }
+        if (b.sc !== a.sc) {
+          return b.sc - a.sc;
+        }
+        return (b.d || "").localeCompare(a.d || "");
+      }
+
       if (sortMode === "score") {
         if (b.sc !== a.sc) {
           return b.sc - a.sc;

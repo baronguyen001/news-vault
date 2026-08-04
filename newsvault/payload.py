@@ -69,6 +69,7 @@ def compact_article(
         "u": article.url,
         "s": article.source or "",
         "sk": article.source_key or "",
+        "tr": article.tier,
         "r": article.region or "",
         "c": article.category or "",
         "tp": article.topic or "",
@@ -241,6 +242,7 @@ def index_items(day: str, articles: Sequence[Article]) -> list[dict[str, object]
                     "f": searchable,
                     "s": article.source or "",
                     "sk": article.source_key or "",
+                    "tr": article.tier,
                     "tp": article.topic or "",
                     "im": article.impact_level or "",
                     "sc": article.score,
@@ -306,5 +308,6 @@ def stats_for(articles: Sequence[Article]) -> dict[str, object]:
             "by_topic": _count_values(a.topic for a in articles),
             "by_impact": _count_values(a.impact_level for a in articles),
             "by_region": _count_values(a.region for a in articles),
+            "by_tier": _count_values(a.tier for a in articles),
         }
     )
