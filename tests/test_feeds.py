@@ -297,3 +297,40 @@ class TestJsonFeed:
             limit=3,
         )
         assert len(result["items"]) == 3
+
+
+def _two_days() -> list[FeedDay]:
+    return [
+        FeedDay(day="2026-08-04", count=3, topics={"Kinh tế/Tài chính": 3}, url="/d/2026-08-04/"),
+        FeedDay(day="2026-08-05", count=2, topics={"Công nghệ/AI": 2}, url="/d/2026-08-05/"),
+    ]
+
+
+def test_entry_dates_do_not_move_when_the_build_time_does():
+    """Two builds of unchanged content must produce byte-identical feeds.
+
+    Entries used to be stamped with the build time, so the nightly job committed a diff on
+    every run and every subscriber saw all sixty entries as newly published each time.
+    """
+    days = _two_days()
+    kwargs = {"site": "Kho tin", "site_url": "https://example.test"}
+
+    morning_xml = atom_feed(days, updated="2026-08-05T04:00:00+00:00", **kwargs)
+    evening_xml = atom_feed(days, updated="2026-08-05T14:30:00+00:00", **kwargs)
+    morning_json = json_feed(days, updated="2026-08-05T04:00:00+00:00", **kwargs)
+    evening_json = json_feed(days, updated="2026-08-05T14:30:00+00:00", **kwargs)
+
+    # The JSON feed carries no build stamp at all, so it must be identical.
+    assert morning_json == evening_json
+
+    # The Atom feed keeps one <updated> for the feed itself; every entry stays put.
+    def entry_dates(xml: str) -> list[str | None]:
+        return [
+            el.text
+            for el in ET.fromstring(xml).findall(
+                "{http://www.w3.org/2005/Atom}entry/{http://www.w3.org/2005/Atom}updated"
+            )
+        ]
+
+    assert entry_dates(morning_xml) == entry_dates(evening_xml)
+    assert entry_dates(morning_xml) == ["2026-08-05T00:00:00+07:00", "2026-08-04T00:00:00+07:00"]

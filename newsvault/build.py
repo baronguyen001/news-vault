@@ -681,7 +681,15 @@ def _write_root_files(
     salt: bytes,
 ) -> None:
     """Manifest, feeds, assets and the static root files."""
-    generated_at = dt.datetime.now(dt.UTC).isoformat()
+    # Anchored to the newest day, not to the clock, for the same reason `_day_anchor` exists:
+    # a wall-clock stamp rewrites manifest.json and feed.xml on every single build, so the
+    # nightly job commits a diff even when not one article has changed. With the job running
+    # twice a day that is two empty commits daily. Sorted ascending, so [-1] is the newest.
+    generated_at = (
+        _day_anchor(all_days[-1])
+        if all_days
+        else _day_anchor(dt.datetime.now(dt.UTC).date().isoformat())
+    )
 
     manifest_data = payload.manifest(
         [(day, counts.get(day, 0)) for day in all_days],

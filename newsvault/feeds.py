@@ -15,6 +15,17 @@ class FeedDay:
     url: str
 
 
+def entry_timestamp(day: str) -> str:
+    """Return a stable ISO timestamp for a day's feed entry.
+
+    Not the build time. Stamping every entry with "now" rewrote the whole feed on each
+    build, so the nightly job committed a diff even when no article had changed, and every
+    subscriber saw all sixty entries as newly published each time. A day's entry is dated by
+    the day it covers, which never moves.
+    """
+    return f"{day}T00:00:00+07:00"
+
+
 def _day_label(day: str) -> str:
     """Convert 'YYYY-MM-DD' to 'DD/MM/YYYY'."""
     parts = day.split("-")
@@ -106,7 +117,7 @@ def atom_feed(
                 count=day.count,
                 topics=day.topics,
                 url=day.url,
-                updated=updated,
+                updated=entry_timestamp(day.day),
                 full=full,
                 articles=articles,
             )
@@ -161,7 +172,7 @@ def json_feed(
             if not full
             else _metadata_title(day.day, day.count),
             "summary": _metadata_summary(day.topics) if not full else _full_summary(articles),  # type: ignore[arg-type]
-            "date_published": updated,
+            "date_published": entry_timestamp(day.day),
         }
         items.append(item)
 
