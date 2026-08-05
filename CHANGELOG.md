@@ -4,6 +4,25 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.1] - 2026-08-05
+
+### Changed
+- **The nightly job now runs twice**, both times Asia/Ho_Chi_Minh: **14:00**, right after
+  news-hunter's 13:00 digest, so the day's articles are readable in the early afternoon instead of
+  waiting for the evening; and **21:15**, after the 20:00 YouTube summariser, which is the run that
+  brings in the videos.
+
+### Fixed
+- **A build with nothing new no longer produces a commit.** Every feed entry was stamped with the
+  build time and `manifest.json` carried a wall-clock `generated_at`, so `feed.json`, `feed.xml` and
+  `manifest.json` changed on every single run — the job committed a diff even when not one article
+  had moved, and any RSS subscriber saw all sixty entries as newly published each time. Entries are
+  now dated by the day they cover and the site stamp is anchored to the newest day, the same rule
+  `_day_anchor` already applied to day pages. Two consecutive builds of unchanged content are now
+  byte-identical, which is what makes running twice a day cost nothing.
+- The nightly log was mojibake (`1 ng├áy dß╗▒ng`) because Python wrote the console codepage and
+  PowerShell decoded it as something else. That log is the only record of an unattended run.
+
 ## [0.7.0] - 2026-08-05
 
 ### Fixed

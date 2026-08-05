@@ -1,11 +1,21 @@
-# run_daily.ps1 - build today's pages and publish them.
+# run_daily.ps1 - build every changed day and publish it.
 #
-# Runs AFTER the news-hunter daily job, so the database already holds today's articles.
+# Task \NewsVault\Daily fires this TWICE a day, both times Asia/Ho_Chi_Minh:
+#
+#   14:00 - after news-hunter's 13:00 digest, so the day's articles are readable by early
+#           afternoon instead of waiting for the evening.
+#   21:15 - after the 20:00 YouTube summariser, which is the run that picks up the videos.
+#
+# Two runs are cheap: the build hashes each day and skips what has not changed, and the
+# publish step exits early when `git status -- docs` is empty, so an afternoon with no new
+# articles costs about ten seconds and produces no commit.
+#
 # Register with Task Scheduler and QUOTE the executable path: an unquoted path with a space
 # fails as 0x800700C1 and the task then dies silently every night.
 #
-#   schtasks /Create /TN "NewsVault\Daily" /SC DAILY /ST 18:30 ^
-#     /TR "\"C:\Program Files\PowerShell\7\pwsh.exe\" -NoProfile -File \"E:\news-vault\scripts\run_daily.ps1\""
+#   $a = New-ScheduledTaskTrigger -Daily -At '14:00'
+#   $b = New-ScheduledTaskTrigger -Daily -At '21:15'
+#   Set-ScheduledTask -TaskPath '\NewsVault\' -TaskName 'Daily' -Trigger @($a, $b)
 
 [CmdletBinding()]
 param(
@@ -21,6 +31,13 @@ param(
 $ErrorActionPreference = "Stop"
 if (-not $RepoPath) { $RepoPath = Split-Path -Parent $PSScriptRoot }
 Set-Location $RepoPath
+
+# The build reports in Vietnamese. Without these the log reads "1 ng├áy dß╗▒ng": Python writes
+# the console codepage and PowerShell decodes it as something else. This log is the only
+# record of what happened when the job runs unattended, so it has to be readable.
+$env:PYTHONUTF8 = "1"
+$env:PYTHONIOENCODING = "utf-8"
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 $python = Join-Path $RepoPath ".venv\Scripts\python.exe"
 if (-not (Test-Path $python)) { $python = "python" }
