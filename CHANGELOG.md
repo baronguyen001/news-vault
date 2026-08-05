@@ -4,6 +4,26 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.2] - 2026-08-05
+
+### Added
+- **A Telegram message when the site actually updates.** After a successful push the job reports the
+  newest day, its article count, the build's own summary line and a link straight to that day's page.
+  It reads the published `manifest.json` rather than what the script hoped it published. Nothing is
+  sent when a run finds no new content, which is the normal afternoon case.
+- **Alerts on the two silent failures**: a build that exits non-zero, and a push that fails after a
+  successful build. This job once sat dead for a week without anyone noticing. The password-leak
+  abort also alerts, and deliberately does not name the offending file — an alert must not leak what
+  the check exists to protect.
+- Credentials come from `NEWSVAULT_TELEGRAM_TOKEN` and `NEWSVAULT_TELEGRAM_CHAT` in the git-ignored
+  `.env`; with neither set the job logs one line and carries on, so a fresh checkout still builds.
+  A failing notification never fails the run — the published site is the product.
+
+### Fixed
+- `scripts/run_daily.ps1` is now saved **UTF-8 with a BOM**. Windows PowerShell 5.1 decodes a
+  BOM-less `.ps1` with the ANSI codepage, so the Vietnamese in the new messages turned into mojibake
+  and the parser died on the fragments — a scheduled run would have failed before building anything.
+
 ## [0.7.1] - 2026-08-05
 
 ### Changed
