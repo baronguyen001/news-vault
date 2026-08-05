@@ -1,4 +1,4 @@
-# run_daily.ps1 - build every changed day and publish it.
+﻿# run_daily.ps1 - build every changed day and publish it.
 #
 # Task \NewsVault\Daily fires this TWICE a day, both times Asia/Ho_Chi_Minh:
 #
@@ -53,6 +53,45 @@ function Write-Log([string]$message) {
     Add-Content -Path $log -Value $line -Encoding utf8
 }
 
+# Read one key from .env. Values never reach the log or the console - the bot token lives
+# here and this repo is public.
+$envFile = Join-Path $RepoPath ".env"
+function Get-EnvValue([string]$name) {
+    $fromProcess = [Environment]::GetEnvironmentVariable($name)
+    if ($fromProcess) { return $fromProcess }
+    if (-not (Test-Path $envFile)) { return $null }
+    $match = Select-String -Path $envFile -Pattern ("^{0}=(.*)$" -f [regex]::Escape($name))
+    if (-not $match) { return $null }
+    return $match.Matches[0].Groups[1].Value.Trim().Trim('"').Trim("'")
+}
+
+# Telegram. Silent no-op when the keys are absent, so a checkout without them still builds.
+$tgToken = Get-EnvValue "NEWSVAULT_TELEGRAM_TOKEN"
+$tgChat = Get-EnvValue "NEWSVAULT_TELEGRAM_CHAT"
+
+function Send-Telegram([string]$text) {
+    if (-not $tgToken -or -not $tgChat) {
+        Write-Log "telegram: chua cau hinh, bo qua"
+        return
+    }
+    try {
+        # JSON as raw UTF-8 bytes: a hashtable body gets form-encoded with the system
+        # codepage and Vietnamese arrives as mojibake on the phone.
+        $payload = @{ chat_id = $tgChat; text = $text; disable_web_page_preview = $false }
+        $json = $payload | ConvertTo-Json -Compress
+        $bytes = [System.Text.Encoding]::UTF8.GetBytes($json)
+        $uri = "https://api.telegram.org/bot$tgToken/sendMessage"
+        Invoke-RestMethod -Method Post -Uri $uri -Body $bytes `
+            -ContentType 'application/json; charset=utf-8' -TimeoutSec 30 | Out-Null
+        Write-Log "telegram: da gui"
+    }
+    catch {
+        # Never let the notification take down a build that already succeeded. The message
+        # is the point of the run only for the reader; the published site is the product.
+        Write-Log ("telegram: gui that bai - {0}" -f $_.Exception.Message)
+    }
+}
+
 Write-Log "build start (todayOnly=$TodayOnly)"
 
 # Every day, not just the newest one. A video is filed under the day it was UPLOADED, so a
@@ -62,26 +101,37 @@ Write-Log "build start (todayOnly=$TodayOnly)"
 $buildArgs = @("-m", "newsvault.cli", "build")
 if (-not $TodayOnly) { $buildArgs += "--backfill" }
 
-& $python @buildArgs 2>&1 | ForEach-Object { Write-Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Write-Log "BUILD FAILED exit=$LASTEXITCODE"
-    exit $LASTEXITCODE
+# Keep the build's own summary line - it is what the Telegram message reports.
+$buildSummary = ""
+# $ErrorActionPreference = "Stop" plus `2>&1` on a NATIVE command is a trap: PowerShell
+# wraps each stderr line in an ErrorRecord and throws NativeCommandError, so a Python
+# traceback killed this script AT this line - past the log, past the failure alert, past
+# everything. The build then failed in total silence, which is the one thing the alert
+# below exists to prevent. Verified by pointing NEWSVAULT_DB at a missing file.
+$previousEAP = $ErrorActionPreference
+$ErrorActionPreference = "Continue"
+& $python @buildArgs 2>&1 | ForEach-Object {
+    Write-Log $_
+    if ($_ -match "ngày dựng") { $buildSummary = "$_".Trim() }
+}
+$buildExit = $LASTEXITCODE
+$ErrorActionPreference = $previousEAP
+if ($buildExit -ne 0) {
+    Write-Log "BUILD FAILED exit=$buildExit"
+    # A nightly job that dies quietly is how this task once sat dead for a week.
+    Send-Telegram "❌ Kho tin: BUILD HỎNG (exit $buildExit)`nXem logs\build-$stamp.log"
+    exit $buildExit
 }
 
 # Refuse to publish a site that still carries the plaintext password anywhere.
-$password = $env:NEWSVAULT_PASSWORD
-if (-not $password) {
-    $envFile = Join-Path $RepoPath ".env"
-    if (Test-Path $envFile) {
-        $match = Select-String -Path $envFile -Pattern '^NEWSVAULT_PASSWORD=(.*)$'
-        if ($match) { $password = $match.Matches[0].Groups[1].Value.Trim('"').Trim("'") }
-    }
-}
+$password = Get-EnvValue "NEWSVAULT_PASSWORD"
 if ($password) {
     $leak = Get-ChildItem -Path (Join-Path $RepoPath "docs") -Recurse -File |
         Select-String -SimpleMatch -Pattern $password -List
     if ($leak) {
         Write-Log "ABORT: mat khau xuat hien trong docs/: $($leak.Path)"
+        # Deliberately does not name the file: the alert itself must not leak anything.
+        Send-Telegram "🚨 Kho tin: DỪNG XUẤT BẢN - mật khẩu lọt vào docs/. Chưa push gì cả."
         exit 2
     }
 }
@@ -101,4 +151,39 @@ git add -- docs
 git -c user.name="baronguyen001" -c user.email="265752715+baronguyen001@users.noreply.github.com" `
     commit -m "docs: nhat bao $stamp" | ForEach-Object { Write-Log $_ }
 git push origin main | ForEach-Object { Write-Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Write-Log "PUSH FAILED exit=$LASTEXITCODE"
+    Send-Telegram "❌ Kho tin: dựng xong nhưng PUSH HỎNG (exit $LASTEXITCODE). Site chưa cập nhật."
+    exit $LASTEXITCODE
+}
 Write-Log "published"
+
+# What actually landed. The manifest is the built site's own record, so this reports the
+# published state rather than what the script hoped it published.
+$newestDay = $null
+$newestCount = 0
+$manifestPath = Join-Path $RepoPath "docs\manifest.json"
+if (Test-Path $manifestPath) {
+    try {
+        $manifest = Get-Content -Path $manifestPath -Raw -Encoding utf8 | ConvertFrom-Json
+        $last = $manifest.days[-1]
+        $newestDay = $last.d
+        $newestCount = $last.n
+    }
+    catch {
+        Write-Log ("khong doc duoc manifest: {0}" -f $_.Exception.Message)
+    }
+}
+
+$siteUrl = (Get-EnvValue "NEWSVAULT_SITE_URL")
+if (-not $siteUrl) { $siteUrl = "https://baronguyen001.github.io/news-vault" }
+$siteUrl = $siteUrl.TrimEnd("/")
+
+$lines = @("📰 Kho tin đã cập nhật")
+if ($newestDay) {
+    $pretty = ([datetime]::ParseExact($newestDay, "yyyy-MM-dd", $null)).ToString("dd/MM/yyyy")
+    $lines += "Mới nhất: {0} — {1} tin" -f $pretty, $newestCount
+}
+if ($buildSummary) { $lines += $buildSummary }
+if ($newestDay) { $lines += "$siteUrl/d/$newestDay/" } else { $lines += "$siteUrl/" }
+Send-Telegram ($lines -join "`n")
