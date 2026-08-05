@@ -27,10 +27,13 @@ class Cluster:
 
 
 DEFAULT_THRESHOLD: float = 0.45
+TAG_BOOST_FLOOR: float = 0.25
+MAX_TAG_BOOST: float = 0.2
+SAME_SOURCE_THRESHOLD: float = 0.7
 
 
 def similarity(left: Article, right: Article) -> float:
-    """Jaccard overlap of the significant title tokens, boosted by shared tags."""
+    """Return title similarity, with a limited bonus for shared tags."""
     left_tokens = tokens(left.title_vi)
     right_tokens = tokens(right.title_vi)
     if not left_tokens or not right_tokens:
@@ -38,42 +41,30 @@ def similarity(left: Article, right: Article) -> float:
 
     union_size = len(left_tokens | right_tokens)
     jaccard = len(left_tokens & right_tokens) / union_size if union_size else 0.0
+    if jaccard < TAG_BOOST_FLOOR:
+        return jaccard
 
     left_tags = {fold(tag) for tag in left.tags}
     right_tags = {fold(tag) for tag in right.tags}
     shared_tag_count = len(left_tags & right_tags)
+    tag_boost = min(0.1 * shared_tag_count, MAX_TAG_BOOST)
 
-    return min(jaccard + 0.1 * shared_tag_count, 1.0)
+    return min(jaccard + tag_boost, 1.0)
 
 
-class _UnionFind:
-    """Simple union-find with path compression and union by rank."""
+def _can_join_cluster(article: Article, leader: Article, threshold: float) -> bool:
+    if article.topic != leader.topic:
+        return False
 
-    __slots__ = ("parent", "rank")
+    title_tokens = tokens(article.title_vi)
+    leader_tokens = tokens(leader.title_vi)
+    union_size = len(title_tokens | leader_tokens)
+    jaccard = len(title_tokens & leader_tokens) / union_size if union_size else 0.0
 
-    def __init__(self, size: int) -> None:
-        self.parent: list[int] = list(range(size))
-        self.rank: list[int] = [0] * size
+    if fold(article.source) == fold(leader.source):
+        return jaccard >= SAME_SOURCE_THRESHOLD
 
-    def find(self, index: int) -> int:
-        parent = self.parent
-        while parent[index] != index:
-            parent[index] = parent[parent[index]]
-            index = parent[index]
-        return index
-
-    def union(self, left: int, right: int) -> None:
-        left_root = self.find(left)
-        right_root = self.find(right)
-        if left_root == right_root:
-            return
-        if self.rank[left_root] < self.rank[right_root]:
-            self.parent[left_root] = right_root
-        elif self.rank[left_root] > self.rank[right_root]:
-            self.parent[right_root] = left_root
-        else:
-            self.parent[right_root] = left_root
-            self.rank[left_root] += 1
+    return similarity(article, leader) >= threshold
 
 
 def cluster_articles(
@@ -81,39 +72,28 @@ def cluster_articles(
     *,
     threshold: float = DEFAULT_THRESHOLD,
 ) -> list[Cluster]:
-    """Single-link agglomeration over articles from one day.
+    """Group sufficiently similar articles from one day without chaining.
 
     Articles with fewer than three significant title tokens are ignored because
     their similarities are unreliable. The returned clusters are sorted by lead
     score descending.
     """
-    filtered = [
-        (index, article)
-        for index, article in enumerate(articles)
-        if len(tokens(article.title_vi)) >= 3
-    ]
-    count = len(filtered)
-    if count == 0:
+    filtered = [article for article in articles if len(tokens(article.title_vi)) >= 3]
+    ordered = sorted(filtered, key=lambda article: (-article.score, article.url))
+    if not ordered:
         return []
 
-    union_find = _UnionFind(count)
-    for left_pos in range(count):
-        left_article = filtered[left_pos][1]
-        for right_pos in range(left_pos + 1, count):
-            right_article = filtered[right_pos][1]
-            if left_article.topic != right_article.topic:
-                continue
-            if similarity(left_article, right_article) >= threshold:
-                union_find.union(left_pos, right_pos)
-
-    groups: dict[int, list[int]] = {}
-    for position in range(count):
-        root = union_find.find(position)
-        groups.setdefault(root, []).append(position)
+    grouped: list[list[Article]] = []
+    for article in ordered:
+        for group in grouped:
+            if _can_join_cluster(article, group[0], threshold):
+                group.append(article)
+                break
+        else:
+            grouped.append([article])
 
     clusters: list[Cluster] = []
-    for member_positions in groups.values():
-        members = tuple(filtered[position][1] for position in member_positions)
+    for members in grouped:
         sorted_members = tuple(sorted(members, key=lambda article: (-article.score, article.url)))
         lead = sorted_members[0]
         member_urls = sorted(article.url for article in sorted_members)
