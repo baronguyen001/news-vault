@@ -2214,3 +2214,136 @@ code {
     padding-block: 0.4rem;
   }
 }
+/* === Videos section === */
+.videos {
+  margin-top: var(--space-lg);
+}
+
+.videos__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+  font-size: 1.25rem;
+  color: var(--text);
+}
+
+.videos__count {
+  color: var(--text-dim);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.videos__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* === Video card layout === */
+.card--video {
+  border-inline-start: 3px solid var(--danger);
+  padding-inline-start: var(--space-sm);
+}
+
+.card--video .card__title {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.card__lead {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  align-items: stretch;
+}
+
+.card__lead > div {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.card__thumb {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-2);
+  box-shadow: var(--shadow-sm);
+  flex: none;
+}
+
+.card__thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* === Badges === */
+.badge--video {
+  background-color: var(--accent);
+  color: var(--accent-contrast);
+}
+
+/* === Video summary body === */
+.vsum__h {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: var(--space-sm) 0;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.vsum__p {
+  margin: var(--space-sm) 0;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.vsum__list {
+  list-style: disc inside;
+  margin: var(--space-sm) 0;
+  padding-inline-start: var(--space-md);
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.vsum__list li {
+  margin: var(--space-xs) 0;
+}
+
+/* === Responsive === */
+@media (min-width: 520px) {
+  .card__lead {
+    flex-direction: row;
+    gap: var(--space-md);
+    align-items: flex-start;
+  }
+  .card__thumb {
+    width: 128px;
+  }
+}
+
+@media (min-width: 720px) {
+  .card__thumb {
+    width: 176px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card__thumb,
+  .vsum__h,
+  .vsum__p,
+  .vsum__list {
+    transition: none;
+    animation: none;
+  }
+}

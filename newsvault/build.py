@@ -13,11 +13,13 @@ import hashlib
 import json
 import logging
 import shutil
-from collections.abc import Mapping, Sequence
+import sqlite3
+from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 
 from newsvault import __version__, charts, crypto, db, feeds, payload, render
+from newsvault import videos as videos_db
 from newsvault.blindspot import blindspots
 from newsvault.brief import BriefResult, fallback_brief, generate_brief
 from newsvault.cluster import cluster_articles
@@ -27,6 +29,7 @@ from newsvault.model import Article
 from newsvault.sources import PAID
 from newsvault.text import slugify
 from newsvault.trends import trending_terms
+from newsvault.videos import Video
 
 logger = logging.getLogger(__name__)
 
@@ -48,6 +51,7 @@ class BuildOptions:
     db_path: Path
     out_dir: Path
     password: str
+    video_db_path: Path | None = None
     days: tuple[str, ...] = ()
     backfill: bool = False
     site: str = "Kho tin"
@@ -70,6 +74,7 @@ class BuildReport:
     entity_pages: int = 0
     week_pages: int = 0
     index_shards: int = 0
+    videos_included: int = 0
     brief_source: dict[str, str] = field(default_factory=dict)
     bytes_written: int = 0
 
@@ -78,7 +83,7 @@ class BuildReport:
         return (
             f"{len(self.days_built)} ngày dựng, {len(self.days_skipped)} bỏ qua (không đổi), "
             f"{self.entity_pages} trang thực thể, {self.week_pages} trang tuần, "
-            f"{self.index_shards} shard tìm kiếm"
+            f"{self.index_shards} shard tìm kiếm, {self.videos_included} video"
         )
 
 
@@ -272,9 +277,35 @@ def _brief_for(day: str, articles: Sequence[Article], options: BuildOptions) -> 
 # --------------------------------------------------------------------------------------
 
 
-def select_days(conn, options: BuildOptions) -> list[str]:
+def _load_videos(options: BuildOptions) -> dict[str, list[Video]]:
+    """Group every summarised video by day, or return nothing at all on any problem.
+
+    The video database belongs to another tool that keeps writing while this build runs.
+    It is optional by design: a missing file, a schema this code does not recognise or a
+    lock must degrade to an archive without videos, never to a failed nightly build.
+    """
+    if not options.video_db_path:
+        return {}
+    try:
+        conn = videos_db.connect(options.video_db_path)
+    except (FileNotFoundError, sqlite3.Error) as err:
+        logger.warning("video database unavailable (%s); building without videos", err)
+        return {}
+    try:
+        grouped: dict[str, list[Video]] = {}
+        for video in videos_db.load_all(conn):
+            grouped.setdefault(video.day, []).append(video)
+        return grouped
+    except sqlite3.Error as err:
+        logger.warning("video database unreadable (%s); building without videos", err)
+        return {}
+    finally:
+        conn.close()
+
+
+def select_days(conn, options: BuildOptions, *, extra_days: Iterable[str] = ()) -> list[str]:
     """Resolve which day keys this invocation should build."""
-    available = db.available_days(conn)
+    available = sorted(set(db.available_days(conn)) | set(extra_days))
     if options.days:
         wanted = [d for d in options.days if d in available]
         missing = sorted(set(options.days) - set(wanted))
@@ -303,15 +334,21 @@ def build_site(options: BuildOptions) -> BuildReport:
         site_url=options.site_url,
     )
 
+    videos_by_day = _load_videos(options)
+
     conn = db.connect(options.db_path)
     try:
-        target_days = select_days(conn, options)
+        target_days = select_days(conn, options, extra_days=videos_by_day.keys())
         if not target_days:
             logger.warning("nothing to build")
             return report
 
-        all_days = db.available_days(conn)
+        # A day exists when it has articles OR videos: the YouTube archive reaches back
+        # months further than the news database, and those summaries are worth reading.
+        all_days = sorted(set(db.available_days(conn)) | set(videos_by_day))
         counts = db.counts_by_day(conn)
+        for day, day_videos in videos_by_day.items():
+            counts[day] = counts.get(day, 0) + len(day_videos)
 
         # One wide load covers the built days plus the baseline window behind them.
         history_start = _shift(min(target_days), -HISTORY_DAYS)
@@ -332,7 +369,8 @@ def build_site(options: BuildOptions) -> BuildReport:
 
         for day in target_days:
             articles = by_day.get(day, [])
-            if not articles:
+            day_videos = videos_by_day.get(day, [])
+            if not articles and not day_videos:
                 continue
 
             brief = _brief_for(day, articles, options)
@@ -350,11 +388,15 @@ def build_site(options: BuildOptions) -> BuildReport:
                 categories=_categories(articles),
                 charts=_day_charts(articles),
                 generated_at=_day_anchor(day),
+                videos=day_videos,
             )
 
             key = f"day:{day}"
             fresh[key] = _digest(data)
-            index_by_month.setdefault(day[:7], []).extend(payload.index_items(day, articles))
+            report.videos_included += len(day_videos)
+            month_items = index_by_month.setdefault(day[:7], [])
+            month_items.extend(payload.index_items(day, articles))
+            month_items.extend(payload.video_index_items(day_videos))
             weeks.setdefault(_iso_week(day)[0], []).append(day)
 
             if state.get(key) == fresh[key] and (out_dir / "d" / day / "data.enc").exists():

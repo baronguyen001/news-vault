@@ -16,6 +16,7 @@ const SHELL_URLS = [
   "/assets/styles.css",
   "/assets/crypto.js",
   "/assets/icons.js",
+  "/assets/videos.js",
   "/assets/search.js",
   "/assets/user.js",
   "/assets/share.js",

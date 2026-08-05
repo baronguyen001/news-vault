@@ -8,6 +8,7 @@ from newsvault.entities import Entity
 from newsvault.model import Article
 from newsvault.text import excerpt, fold
 from newsvault.trends import Trend
+from newsvault.videos import Video
 
 
 def _sorted(value: dict[str, object]) -> dict[str, object]:
@@ -83,12 +84,63 @@ def compact_article(
         "tg": list(article.tags),
         "an": article.analysis or {},
         "law": bool(article.is_law_policy),
+        "img": article.image_url,
         "ents": article_entities,
     }
     if with_day:
         data["d"] = article.day or ""
 
     return _sorted(data)
+
+
+def compact_video(video: Video) -> dict[str, object]:
+    """Return the compact JSON shape for one summarised video.
+
+    The summary travels as pre-parsed blocks rather than as text with markup in it. The
+    front end turns a block's runs into text nodes, so nothing a language model wrote can
+    ever be interpreted as markup by the browser.
+    """
+    return _sorted(
+        {
+            "id": video.id,
+            "t": video.title,
+            "c": video.channel,
+            "u": video.url,
+            "th": video.thumbnail,
+            "ty": video.video_type,
+            "p": video.processed_at,
+            "d": video.day,
+            "bl": [{"k": b.kind, "r": [[run, bold] for run, bold in b.runs]} for b in video.blocks],
+        }
+    )
+
+
+def video_index_items(videos: Sequence[Video]) -> list[dict[str, object]]:
+    """Build search-index items for videos so the whole-archive search reaches them too."""
+    items: list[dict[str, object]] = []
+    for index, video in enumerate(videos):
+        summary = " ".join(run for block in video.blocks for run, _ in block.runs)
+        searchable = fold(f"{video.title} {video.channel} {video.video_type} {summary}".strip())
+        items.append(
+            _sorted(
+                {
+                    "d": video.day,
+                    "i": index,
+                    "k": "v",
+                    "t": video.title,
+                    "f": searchable,
+                    "s": video.channel,
+                    "sk": "youtube",
+                    "tr": "free",
+                    "tp": video.video_type,
+                    "im": "",
+                    "sc": 0,
+                    "r": "",
+                    "tg": [],
+                }
+            )
+        )
+    return items
 
 
 def day_payload(
@@ -103,6 +155,7 @@ def day_payload(
     categories: Sequence[Mapping[str, object]],
     charts: Mapping[str, str],
     generated_at: str,
+    videos: Sequence[Video] = (),
 ) -> dict[str, object]:
     """Build the encrypted JSON payload for a single day page."""
     compact = [compact_article(a, i, entities=entity_map) for i, a in enumerate(articles)]
@@ -140,6 +193,7 @@ def day_payload(
             "categories": [_sorted(dict(c)) for c in categories],
             "clusters": cluster_objs,
             "articles": compact,
+            "videos": [compact_video(v) for v in videos],
         }
     )
 

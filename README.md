@@ -22,9 +22,14 @@ docs/
 
 ## What it does
 
-**Reads** a [news-hunter](https://github.com/baronguyen001) SQLite database read-only — it never
-writes to your source of truth. Articles already carry a relevance score, an impact level, a topic, a
-region, tags, key points and a deep-analysis block; news-vault turns those into navigation.
+**Reads two databases, both read-only** — it never writes to a source of truth. The
+[news-hunter](https://github.com/baronguyen001) database supplies the articles; `youtube_summarizer.db`
+supplies AI summaries of YouTube videos, listed in their own folded section on each day page. A day
+exists when it has articles *or* videos, which is why the archive reaches back further than the news
+crawler does. Set `NEWSVAULT_VIDEO_DB` to switch videos on; leave it unset and nothing changes.
+
+Articles already carry a relevance score, an impact level, a topic, a region, tags, key points and a
+deep-analysis block; news-vault turns those into navigation.
 
 **Scores** every article `0.5·relevance + 0.3·impact + 0.2·source tier`, normalised to 0–100. The
 weights live in one dict in [`newsvault/score.py`](newsvault/score.py).
@@ -56,6 +61,12 @@ its tail into "Khác", and the question the panel answers is which sources ran t
 key points and the four analysis sections are one tap away. Ninety expanded articles is a wall nobody
 scrolls. The category, chart and trend panels start folded for the same reason, and remember whether
 you opened them.
+
+**Shows real pictures, not generated ones.** Videos carry their YouTube thumbnail; articles carry the
+image the publisher chose in their own `og:image`. Both urls live inside the encrypted payload, so
+nobody who has not typed the password learns one exists, and both load with `referrerpolicy="no-referrer"`
+so the publisher's CDN is never told which page linked to it. A thumbnail that fails to load removes
+itself instead of leaving a broken-image glyph.
 
 **Illustrates categories with fixed icons** — a line icon per topic, drawn from a table in
 [`newsvault/assets/icons.js`](newsvault/assets/icons.js). Earlier releases generated an AI picture per
