@@ -119,8 +119,14 @@
     const header = make("div", "card__header", li);
     const typeKey = typeof v.ty === "string" ? v.ty : "";
     if (typeKey && T.typeMap[typeKey]) {
-      const typeBadge = make("span", "badge", header);
-      text(typeBadge, T.typeMap[typeKey]);
+      // Same colour scheme as an article's topic, keyed off the Vietnamese label rather
+      // than the raw type so "tech" and "Công nghệ/AI" land on one hue.
+      const label = T.typeMap[typeKey];
+      const topics = window.NV.topics;
+      const topicClass = topics ? topics.className(label) : "";
+      if (topicClass) li.classList.add(topicClass);
+      const typeBadge = make("span", "badge badge--topic", header);
+      text(typeBadge, label);
     }
     if (v.sh) {
       const shortBadge = make("span", "badge badge--short", header);
