@@ -4,6 +4,38 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] - 2026-08-05
+
+### Changed
+- **A card is no longer marked read just for being on screen.** The old rule was one
+  `IntersectionObserver`: 50% visible for two seconds and the article was read — so opening a day
+  page on a desktop marked the whole first screen read while the reader was still looking at the top
+  of it. The signal now follows the pointer. On a fine pointer the reader must rest the mouse on a
+  card for two seconds, and moving away cancels it. On a coarse pointer the card must be scrolled up
+  and off the top of the viewport; leaving through the bottom — scrolling back up — never counts, and
+  neither does a card that was never really on screen. `newsvault/assets/read.js`, 15 tests.
+- **"Xem thêm" opens a dialog on a desktop** instead of expanding the card in place. On a
+  three-column grid an inline expansion reflows every neighbour and the reader loses their place.
+  Touch keeps the inline fold: one column, nothing to lose. Bulk expansion (expand-all, a text query)
+  stays inline in both — forty dialogs is not a thing. The dialog borrows the card's own body node
+  rather than copying it, so every listener and every search highlight travels with it, and puts it
+  back exactly where it was on close. `newsvault/assets/modal.js`, 17 tests.
+- A read card is no longer dimmed while the pointer is on it (`.card--read:hover`); on a fine
+  pointer that is the very card the dwell timer just marked.
+
+### Added
+- **Topic colour.** Every article carries a hue drawn from its topic — a chip in the card header and
+  a 7% tint plus a coloured edge on the card itself — so finance and war are distinguishable without
+  reading a word. Seven hues, each with its own light and dark value. Unknown topics (the classifier
+  can invent one, and video cards reuse the field for a video type) are hashed onto the same seven
+  rather than falling back to grey. Video cards take the tint and the chip but keep their
+  YouTube-red edge, which is how the eye separates the two kinds of card.
+  `newsvault/assets/topics.js`, 10 tests.
+- **A "Về mặc định" button** in the search bar, and the `c` shortcut and the command-palette entry
+  now do the same thing. Query, chips, sort order and the expand-all toggle are four separate pieces
+  of state, and clearing them one at a time is how a reader ends up convinced the archive has lost
+  half its articles.
+
 ## [0.7.4] - 2026-08-05
 
 ### Changed

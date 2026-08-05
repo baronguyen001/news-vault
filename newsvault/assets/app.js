@@ -67,6 +67,8 @@
     cancel: "Hủy",
     emptyResults: "Không có kết quả.",
     clearFilters: "Xóa bộ lọc",
+    resetFilters: "Về mặc định",
+    resetFiltersHint: "Xóa từ khóa, bộ lọc, thứ tự sắp xếp và thu gọn mọi thẻ",
     resultCount: (n) => `${n} kết quả`,
     loadingVault: "Đang tìm trong kho lưu trữ…",
     loadAllMonths: "Tìm toàn bộ các tháng",
@@ -101,7 +103,8 @@
   let manifest = null;
   let clusterInfo = {};
   let currentText = "";
-  let currentSort = "paid";
+  const DEFAULT_SORT = "paid";
+  let currentSort = DEFAULT_SORT;
   let expandAll = false;
   let archiveCache = {};
   let selectedCardIndex = -1;
@@ -619,6 +622,14 @@
     }
     sort.value = currentSort;
     sort.addEventListener("change", () => { currentSort = sort.value; refresh(); });
+    // One button back to the default view. Chips, a typed query, the sort order and the
+    // expand-all toggle are four separate pieces of state and clearing them one at a time
+    // is how a reader ends up convinced the archive has lost half its articles.
+    const reset = make("button", "searchbar__reset", bar);
+    reset.type = "button";
+    text(reset, T.resetFilters);
+    reset.title = T.resetFiltersHint;
+    reset.addEventListener("click", resetFilters);
     const toggleAll = make("button", "searchbar__expand", bar);
     toggleAll.type = "button";
     text(toggleAll, expandAll ? T.collapseAll : T.expandAll);
@@ -790,6 +801,9 @@
     const empty = $("#app .cards-wrap .empty");
     const countEl = $("#app .cards-wrap .result-count");
     if (!list) return;
+    // The list is about to be wiped. A dialog is holding one card's body, and it would
+    // survive the wipe with its content orphaned, so it closes first.
+    if (NV.modal && NV.modal.isOpen()) NV.modal.close();
     text(list, "");
     const queryActive = (currentText || "").trim() !== "";
     let shown = 0;
@@ -810,7 +824,7 @@
         const btn = make("button", "empty__btn", empty);
         btn.type = "button";
         text(btn, T.clearFilters);
-        btn.addEventListener("click", () => setQuery(""));
+        btn.addEventListener("click", resetFilters);
       }
     }
     observeCards();
@@ -824,6 +838,11 @@
   function renderCard(a, item, parsed) {
     const li = make("li", "card");
     li.id = `a-${a.i}`;
+    // The topic drives a hue on both the card and its chip; NV.topics decides which.
+    if (NV.topics) {
+      const topicClass = NV.topics.className(a.tp);
+      if (topicClass) li.classList.add(topicClass);
+    }
     if (NV.user && NV.user.isRead(a.u)) li.classList.add("card--read");
     if (NV.user && NV.user.isSaved(a.u)) li.classList.add("card--saved");
     li.appendChild(renderCardHeader(a));
@@ -845,7 +864,9 @@
     }
     link.addEventListener("click", () => { if (NV.user) NV.user.markRead(a.u); });
     const meta = make("div", "card__meta", textWrap);
-    text(meta, [a.s, a.tp, getTimeText(a)].filter(Boolean).join(" · "));
+    // The topic has moved to a coloured chip in the header, so it comes out of the grey
+    // meta line rather than being printed twice.
+    text(meta, [a.s, getTimeText(a)].filter(Boolean).join(" · "));
 
     const body = make("div", "card__body", li);
     body.id = `b-${a.i}`;
@@ -865,7 +886,14 @@
     const more = make("button", "card__more", foot);
     more.type = "button";
     more.setAttribute("aria-controls", body.id);
-    more.addEventListener("click", () => setCardOpen(li, li.classList.contains("card--closed")));
+    more.addEventListener("click", () => {
+      const closed = li.classList.contains("card--closed");
+      if (closed && useModal()) {
+        openCardModal(li);
+        return;
+      }
+      setCardOpen(li, closed);
+    });
     if (NV.user) renderSaveButton(a, foot);
 
     // Open on a text query so the highlighted match is visible without a second click.
@@ -876,6 +904,31 @@
 
   function hasAnalysis(a) {
     return !!(a.an && Object.values(a.an).some((v) => v && String(v).trim()));
+  }
+
+  /* A mouse user reading a three-column grid loses their place when a card grows under the
+   * pointer and pushes its neighbours around, so on a fine pointer the body opens in a
+   * dialog instead. Touch keeps the inline fold: there is one column, nothing to lose.
+   * Bulk expansion (expand-all, a text query) stays inline in both - forty dialogs is not
+   * a thing. */
+  function useModal() {
+    return !!(NV.modal && NV.read && NV.read.pointerFine());
+  }
+
+  /** Lend the card's own body to the dialog - not a copy, so every listener and every
+   * search highlight travels with it - and fold the card back up when it returns. */
+  function openCardModal(card) {
+    const body = card.querySelector(".card__body");
+    const more = card.querySelector(".card__more");
+    const link = card.querySelector(".card__link");
+    if (!body || !more) return;
+    body.hidden = false;
+    more.setAttribute("aria-expanded", "true");
+    NV.modal.open({
+      title: link ? link.textContent : "",
+      node: body,
+      onClose: () => setCardOpen(card, false)
+    });
   }
 
   /** Show or hide one card's body and keep the toggle's label and ARIA state in step. */
@@ -896,6 +949,10 @@
     if (a.tr === "paid") {
       const paid = make("span", "badge badge--paid", header);
       text(paid, T.paid);
+    }
+    if (a.tp) {
+      const topic = make("span", "badge badge--topic", header);
+      text(topic, a.tp);
     }
     if (a.im && a.im !== "không xác định") {
       const imp = make("span", `badge badge--impact impact-${impactClass(a.im)}`, header);
@@ -1075,21 +1132,21 @@
     text(btn, saved ? T.savedBtn : T.save);
   }
 
+  /* Read-marking. NV.read owns the *rule* - dwell on a mouse, scrolled-past on a phone -
+   * and this owns what "read" means here: the stored set plus the dimmed class, applied
+   * live so the reader gets some confirmation rather than a silent state change. The old
+   * handle is dropped on every render; the cards it was watching no longer exist. */
+  let readHandle = null;
+
   function observeCards() {
-    if (!NV.user || !window.IntersectionObserver) return;
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        const card = entry.target;
-        if (card._readTimer) return;
-        card._readTimer = setTimeout(() => {
-          const link = card.querySelector(".card__link");
-          if (link) NV.user.markRead(link.href);
-          obs.unobserve(card);
-        }, 2000);
-      });
-    }, { threshold: 0.5 });
-    $$(".cards-wrap .card").forEach((c) => obs.observe(c));
+    if (!NV.user || !NV.read) return;
+    if (readHandle) readHandle.disconnect();
+    readHandle = NV.read.observe($$(".cards-wrap .card"), {
+      onRead: (url, card) => {
+        NV.user.markRead(url);
+        card.classList.add("card--read");
+      }
+    });
   }
 
   /* ---------- Archive search ---------- */
@@ -1174,6 +1231,20 @@
   }
 
   /* ---------- Query & hash ---------- */
+  /** Every filter back to how the page opens: no query, no chip, default sort, cards folded. */
+  function resetFilters() {
+    currentSort = DEFAULT_SORT;
+    const sort = $("#app .searchbar__select");
+    if (sort) sort.value = DEFAULT_SORT;
+    if (expandAll) {
+      expandAll = false;
+      const toggle = $("#app .searchbar__expand");
+      if (toggle) text(toggle, T.expandAll);
+    }
+    // Last: it repaints the list, so every flag above must already be right.
+    setQuery("");
+  }
+
   function setQuery(q) {
     const input = $("#search-input");
     if (input) input.value = q;
@@ -1560,7 +1631,7 @@
       { id: "only-paid", label: "Chỉ nguồn trả phí", group: "Lọc", run: () => toggleChipByToken("tier:paid") },
       { id: "only-unread", label: "Chỉ tin chưa đọc", group: "Lọc", run: () => toggleChipByToken("unread:true") },
       { id: "expand-card", label: "Mở rộng bài đang chọn", hint: "x", group: "Đọc", run: expandSelected },
-      { id: "clear-filters", label: "Xóa bộ lọc", hint: "c", group: "Lọc", run: () => setQuery("") },
+      { id: "clear-filters", label: "Xóa bộ lọc", hint: "c", group: "Lọc", run: resetFilters },
       { id: "watchlist", label: "Danh sách theo dõi", hint: "w", group: "Cá nhân", run: openWatchlist }
     ];
     NV.palette.register(commands);
@@ -1672,7 +1743,7 @@
         break;
       case "c":
         ev.preventDefault();
-        setQuery("");
+        resetFilters();
         break;
       case "w":
         ev.preventDefault();
