@@ -61,6 +61,7 @@ def test_compact_article_full_key_set_no_none() -> None:
         "tg",
         "an",
         "law",
+        "img",
         "ents",
     }
     assert set(compact.keys()) == expected

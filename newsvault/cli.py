@@ -47,6 +47,16 @@ def _resolve_password(explicit: str | None) -> str:
     return password
 
 
+def _resolve_video_db(explicit: str | None) -> Path | None:
+    """Path to the youtube-summarizer database, or None when the archive has no videos.
+
+    Optional on purpose: news-vault has to keep building on a machine that only runs the
+    news crawler, so an unset variable means "no videos", not a configuration error.
+    """
+    raw = explicit or os.environ.get("NEWSVAULT_VIDEO_DB", "")
+    return Path(raw) if raw else None
+
+
 def _resolve_db(explicit: str | None) -> Path:
     """Path to the news-hunter database."""
     raw = explicit or os.environ.get("NEWSVAULT_DB", "")
@@ -57,6 +67,10 @@ def _resolve_db(explicit: str | None) -> Path:
 
 def _add_common(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--db", help="đường dẫn news_hunter.db (mặc định: NEWSVAULT_DB)")
+    parser.add_argument(
+        "--video-db",
+        help="đường dẫn youtube_summarizer.db (mặc định: NEWSVAULT_VIDEO_DB; bỏ trống = không có video)",
+    )
     parser.add_argument(
         "--out", default=None, help="thư mục đầu ra (mặc định: NEWSVAULT_OUT hoặc docs)"
     )
@@ -127,6 +141,7 @@ def _options_from(args: argparse.Namespace, *, force: bool, use_brief: bool) -> 
         site=args.site or os.environ.get("NEWSVAULT_SITE", DEFAULT_SITE),
         site_url=args.site_url or os.environ.get("NEWSVAULT_SITE_URL", ""),
         min_relevance=getattr(args, "min_relevance", 0),
+        video_db_path=_resolve_video_db(getattr(args, "video_db", None)),
         api_key=os.environ.get("GEMINI_API_KEY") or None,
         cache_dir=Path(os.environ.get("NEWSVAULT_CACHE", ".cache")),
         use_brief=use_brief,

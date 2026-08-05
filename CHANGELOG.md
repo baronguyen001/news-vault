@@ -4,6 +4,36 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-08-05
+
+### Added
+- **A second source: YouTube.** The archive now reads `youtube_summarizer.db` alongside the news
+  database and lists each day's AI-summarised videos in their own folded section. That takes the
+  archive from 16 days to **114** (2026-03-30 onward) and adds **793 summaries**, because a day now
+  exists when it has articles *or* videos. Point `NEWSVAULT_VIDEO_DB` at the file; leave it unset and
+  the archive builds exactly as before.
+- **Pictures, taken rather than generated.** Videos show their YouTube thumbnail, articles show the
+  image the publisher put in their own `og:image`. Both urls travel inside the encrypted payload, so a
+  visitor who has not typed the password never learns one exists, and both are loaded with
+  `referrerpolicy="no-referrer"` so the publisher's CDN is not told which page linked to it. A
+  thumbnail that fails removes itself rather than leaving a broken-image glyph.
+- Video summaries are stored as **pre-parsed blocks**, not text with markup in it. `newsvault/videos.py`
+  turns the model's output into headings, paragraphs, bullets and bold runs, and the front end builds
+  text nodes from them. Nothing a language model wrote can be interpreted as markup by the browser.
+- Videos are in the whole-archive search index, so `!` search reaches them.
+
+### Fixed
+- **The article list rendered into the folded video panel.** `NV.videos` puts the shared `cards` class
+  on its own list, and `app.js` looked up `#app .cards` unscoped, so `querySelector` returned whichever
+  list came first in the DOM — the video one. Every article card was written into a collapsed
+  `<details>` and the day page came up empty. All article-list lookups are scoped to `.cards-wrap` now,
+  and entity and week pages carry that container too so the selector means the same thing everywhere.
+
+### Operations
+- The nightly publish task existed but had **never run**: it was registered at 18:38 for an 18:30
+  trigger. It is proven working now, and moved to **21:15** so it lands after news-hunter (13:00) and
+  the YouTube summariser (20:00) instead of a day behind them.
+
 ## [0.4.0] - 2026-08-05
 
 ### Removed

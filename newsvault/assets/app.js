@@ -16,6 +16,7 @@
     next: "Sau →",
     briefTitle: "Tóm tắt ngày",
     analysisPanels: "Chuyên mục · Biểu đồ · Xu hướng",
+    videosTitle: "Video YouTube",
     categoriesTitle: "Chuyên mục",
     trendingTitle: "Xu hướng",
     blindspotsTitle: "Góc chưa phủ",
@@ -370,6 +371,7 @@
     renderTrending(analysis);
     renderBlindspots(analysis);
     renderSearchbar(app);
+    renderVideos(app);
     const wrap = make("div", "cards-wrap", app);
     const countEl = make("div", "result-count sr-only", wrap);
     countEl.setAttribute("aria-live", "polite");
@@ -449,6 +451,22 @@
       const li = make("li", "brief__item", ul);
       li.appendChild(document.createTextNode(b));
     }
+  }
+
+  /**
+   * The day's YouTube summaries, folded like the analysis panels.
+   *
+   * They live in their own section rather than mixed into the article list because they
+   * are a different kind of thing: no relevance score, no impact level, no topic from
+   * the news taxonomy. Sorting them together would mean inventing numbers for them.
+   */
+  function renderVideos(parent) {
+    if (!NV.videos) return;
+    const list = payload.videos || [];
+    if (!list.length) return;
+    const body = makePanel(parent, "day-videos", `${T.videosTitle} (${list.length})`);
+    const section = NV.videos.section(list);
+    if (section) body.appendChild(section);
   }
 
   function renderCategoryGrid(parent) {
@@ -713,9 +731,9 @@
   }
 
   function renderResults(results, parsed) {
-    const list = $("#app .cards");
-    const empty = $("#app .empty");
-    const countEl = $("#app .result-count");
+    const list = $("#app .cards-wrap .cards");
+    const empty = $("#app .cards-wrap .empty");
+    const countEl = $("#app .cards-wrap .result-count");
     if (!list) return;
     text(list, "");
     const queryActive = (currentText || "").trim() !== "";
@@ -754,7 +772,13 @@
     if (NV.user && NV.user.isRead(a.u)) li.classList.add("card--read");
     if (NV.user && NV.user.isSaved(a.u)) li.classList.add("card--saved");
     li.appendChild(renderCardHeader(a));
-    const title = make("h3", "card__title", li);
+    // The article's own picture, when news-hunter found one. NV.videos owns the helper
+    // because it enforces the https-only rule and the drop-on-error behaviour that a
+    // url scraped off an arbitrary publisher page needs.
+    const lead = make("div", "card__lead", li);
+    if (NV.videos && a.img) NV.videos.thumb(lead, a.img, "");
+    const textWrap = make("div", "", lead);
+    const title = make("h3", "card__title", textWrap);
     const link = make("a", "card__link", title);
     link.href = a.u;
     link.target = "_blank";
@@ -765,7 +789,7 @@
       text(link, a.t || "");
     }
     link.addEventListener("click", () => { if (NV.user) NV.user.markRead(a.u); });
-    const meta = make("div", "card__meta", li);
+    const meta = make("div", "card__meta", textWrap);
     text(meta, [a.s, a.tp, getTimeText(a)].filter(Boolean).join(" · "));
 
     const body = make("div", "card__body", li);
@@ -1010,7 +1034,7 @@
         }, 2000);
       });
     }, { threshold: 0.5 });
-    $$(".card").forEach((c) => obs.observe(c));
+    $$(".cards-wrap .card").forEach((c) => obs.observe(c));
   }
 
   /* ---------- Archive search ---------- */
@@ -1019,9 +1043,9 @@
     const full = (input ? input.value : currentText || "").trim();
     if (!full.startsWith("!")) return;
     const query = full.slice(1).trim();
-    const list = $("#app .cards");
-    const empty = $("#app .empty");
-    const countEl = $("#app .result-count");
+    const list = $("#app .cards-wrap .cards");
+    const empty = $("#app .cards-wrap .empty");
+    const countEl = $("#app .cards-wrap .result-count");
     if (list) text(list, T.loadingVault + "…");
     try {
       if (!manifest) await loadManifest();
@@ -1063,7 +1087,7 @@
   }
 
   function renderArchiveResults(results, parsed, forceAll) {
-    const list = $("#app .cards");
+    const list = $("#app .cards-wrap .cards");
     if (!list) return;
     text(list, "");
     const header = make("li", "archive__header", list);
@@ -1320,7 +1344,7 @@
       const link = make("a", "", dh);
       link.href = `${config.base}d/${d}/`;
       text(link, fmtDay(d));
-      const list = make("ul", "cards", sec);
+      const list = make("ul", "cards", make("div", "cards-wrap", sec));
       for (const a of grouped.get(d)) {
         list.appendChild(renderCard(a, { raw: a, u: a.u, i: a.i }, parsed));
       }
@@ -1350,7 +1374,7 @@
     const topSec = make("section", "top-stories", app);
     const th = make("h2", "top-stories__title", topSec);
     text(th, T.topStories);
-    const list = make("ul", "cards", topSec);
+    const list = make("ul", "cards", make("div", "cards-wrap", topSec));
     const parsed = NV.search.parse("");
     for (const a of payload.top || []) {
       list.appendChild(renderCard(a, { raw: a, u: a.u, i: a.i }, parsed));
@@ -1393,7 +1417,7 @@
   }
 
   function getVisibleArticles() {
-    const cards = $$(".card");
+    const cards = $$(".cards-wrap .card");
     return cards.map((c) => {
       const id = c.id.replace("a-", "");
       if (config.kind === "day") {
@@ -1494,7 +1518,7 @@
   }
 
   function moveSelection(dir) {
-    const cards = $$(".card");
+    const cards = $$(".cards-wrap .card");
     if (!cards.length) return;
     if (selectedCardIndex >= 0) cards[selectedCardIndex].classList.remove("card--selected");
     selectedCardIndex += dir;
@@ -1506,7 +1530,7 @@
   }
 
   function openSelectedArticle() {
-    const cards = $$(".card");
+    const cards = $$(".cards-wrap .card");
     if (selectedCardIndex < 0 || selectedCardIndex >= cards.length) return;
     const link = cards[selectedCardIndex].querySelector(".card__link");
     if (link) {
@@ -1517,14 +1541,14 @@
 
   /** Expand or collapse the card the keyboard cursor is on. */
   function expandSelected() {
-    const cards = $$(".card");
+    const cards = $$(".cards-wrap .card");
     if (selectedCardIndex < 0 || selectedCardIndex >= cards.length) return;
     const card = cards[selectedCardIndex];
     setCardOpen(card, card.classList.contains("card--closed"));
   }
 
   function toggleSelectedSave() {
-    const cards = $$(".card");
+    const cards = $$(".cards-wrap .card");
     if (selectedCardIndex < 0 || selectedCardIndex >= cards.length) return;
     const link = cards[selectedCardIndex].querySelector(".card__link");
     if (!link || !NV.user) return;

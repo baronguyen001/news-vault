@@ -41,6 +41,7 @@ class Article:
     is_law_policy: bool
     relevance: int
     score: int
+    image_url: str = ""
 
     @property
     def tier(self) -> str:
@@ -132,6 +133,24 @@ def parse_published(raw: str | None) -> str:
     return ""
 
 
+def _image_url(row: sqlite3.Row) -> str:
+    """Read the article's representative image, tolerating a database without the column.
+
+    news-hunter adds `image_url` in its own release cycle, and this project must keep
+    building against a database that predates it — a missing column is a normal state
+    here, not an error worth crashing a nightly build over. Only http(s) survives: the
+    value is scraped from an arbitrary page and ends up in an <img src> in the browser.
+    """
+    # Bind the key list first. `"image_url" not in row` looks equivalent and is not:
+    # sqlite3.Row.__contains__ searches the row's *values*, so that form would answer a
+    # different question and happen to be right most of the time.
+    columns = row.keys()
+    if "image_url" not in columns:
+        return ""
+    value = (row["image_url"] or "").strip()
+    return value if value.startswith(("http://", "https://")) else ""
+
+
 def article_from_row(row: sqlite3.Row) -> Article:
     """Build an Article from a raw database row, applying every normalisation above."""
     title_vi_raw = row["title_vi"] or ""
@@ -165,4 +184,5 @@ def article_from_row(row: sqlite3.Row) -> Article:
         is_law_policy=bool(row["is_law_policy"] or 0),
         relevance=relevance,
         score=score,
+        image_url=_image_url(row),
     )
