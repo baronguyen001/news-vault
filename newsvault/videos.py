@@ -44,6 +44,8 @@ class Video:
     video_type: str  # may be ""
     summary: str  # verbatim
     blocks: tuple[Block, ...]
+    is_short: bool = False
+    thumbnail_fallback: str = ""
 
 
 def clean_title(title: str, channel: str) -> str:
@@ -68,8 +70,16 @@ def clean_title(title: str, channel: str) -> str:
     return cleaned if cleaned else title
 
 
-def thumbnail_url(video_id: str) -> str:
-    """Return YouTube's guaranteed thumbnail URL, or an empty string for an invalid id."""
+def thumbnail_url(video_id: str, *, is_short: bool = False) -> str:
+    """Return the appropriate YouTube thumbnail URL, or an empty string for an invalid id."""
+    if not _YOUTUBE_ID_RE.fullmatch(video_id or ""):
+        return ""
+    filename = "oar2.jpg" if is_short else "hqdefault.jpg"
+    return f"https://i.ytimg.com/vi/{video_id}/{filename}"
+
+
+def fallback_thumbnail_url(video_id: str) -> str:
+    """Return the always-present 4:3 thumbnail, or an empty string for an invalid id."""
     if _YOUTUBE_ID_RE.fullmatch(video_id or ""):
         return f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg"
     return ""
@@ -128,13 +138,18 @@ def connect(path: Path | str) -> sqlite3.Connection:
     return conn
 
 
-def has_upload_date(conn: sqlite3.Connection) -> bool:
-    """Return True when the ``videos`` table has an ``upload_date`` column."""
+def has_column(conn: sqlite3.Connection, name: str) -> bool:
+    """Return True when the ``videos`` table has the named column."""
     cursor = conn.execute("PRAGMA table_info(videos)")
     try:
-        return any(row["name"] == "upload_date" for row in cursor)
+        return any(row["name"] == name for row in cursor)
     finally:
         cursor.close()
+
+
+def has_upload_date(conn: sqlite3.Connection) -> bool:
+    """Return True when the ``videos`` table has an ``upload_date`` column."""
+    return has_column(conn, "upload_date")
 
 
 def available_days(conn: sqlite3.Connection) -> list[str]:
@@ -179,42 +194,58 @@ def _iter_videos(conn: sqlite3.Connection) -> Iterator[Video | None]:
         "success",
     ]
     upload_date_present = has_upload_date(conn)
+    is_short_present = has_column(conn, "is_short")
     if upload_date_present:
         columns.append("upload_date")
+    if is_short_present:
+        columns.append("is_short")
     query = (
         f"SELECT {', '.join(columns)} FROM videos WHERE success = 1 AND summary <> '' ORDER BY id"
     )
     cursor = conn.execute(query)
     try:
         for row in cursor:
-            yield _video_from_row(row, has_upload_date=upload_date_present)
+            yield _video_from_row(
+                row,
+                has_upload_date=upload_date_present,
+                has_is_short=is_short_present,
+            )
     finally:
         cursor.close()
 
 
-def _video_from_row(row: sqlite3.Row, *, has_upload_date: bool) -> Video | None:
+def _video_from_row(
+    row: sqlite3.Row,
+    *,
+    has_upload_date: bool,
+    has_is_short: bool,
+) -> Video | None:
     """Build a Video, returning None when the row cannot be placed on a calendar day."""
     raw_title = row["title"] or ""
     channel = row["channel"] or ""
     processed_at = row["processed_at"] or ""
     summary = row["summary"] or ""
     upload_date = row["upload_date"] if has_upload_date else None
+    is_short = bool(row["is_short"]) if has_is_short else False
+    video_id = row["id"] or ""
     day, source = _resolve_day(processed_at, upload_date)
     if not day:
         return None
     return Video(
-        id=row["id"] or "",
+        id=video_id,
         title=clean_title(raw_title, channel),
         raw_title=raw_title,
         channel=channel,
         url=row["url"] or "",
-        thumbnail=thumbnail_url(row["id"] or ""),
+        thumbnail=thumbnail_url(video_id, is_short=is_short),
         day=day,
         processed_at=processed_at,
         published_iso=_published_iso(day, source, processed_at),
         video_type=row["video_type"] or "",
         summary=summary,
         blocks=summary_blocks(summary),
+        is_short=is_short,
+        thumbnail_fallback=fallback_thumbnail_url(video_id) if is_short else "",
     )
 
 

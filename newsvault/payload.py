@@ -107,6 +107,11 @@ def compact_video(video: Video) -> dict[str, object]:
             "c": video.channel,
             "u": video.url,
             "th": video.thumbnail,
+            # A Short's thumbnail comes from an endpoint YouTube does not guarantee, so the
+            # front end needs somewhere to fall back to. Empty for an ordinary video, whose
+            # primary url already is the guaranteed one.
+            "thf": video.thumbnail_fallback,
+            "sh": 1 if video.is_short else 0,
             "ty": video.video_type,
             "p": video.processed_at,
             "d": video.day,

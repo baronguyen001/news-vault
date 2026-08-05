@@ -2348,6 +2348,49 @@ code {
   }
 }
 
+/* ===== YouTube Shorts ===== */
+
+.badge--short {
+  background-color: var(--danger);
+  color: var(--accent-contrast);
+}
+
+/* A Short's picture is a 9:16 frame shown in the same 16:9 box as everything else, so the
+   crop throws away most of its height. Bias it upward: in a vertical video the subject is
+   almost never in the bottom third. */
+.card--short .card__thumb img {
+  object-position: center 32%;
+}
+
+.videos__filter {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  margin-bottom: var(--space-md);
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-2);
+  color: var(--text);
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.videos__filter:hover {
+  border-color: var(--accent);
+}
+
+.videos__filter[aria-pressed="true"] {
+  background-color: var(--accent);
+  color: var(--accent-contrast);
+  border-color: var(--accent);
+}
+
+.videos__filter:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 /* ===== Desktop layout modes ===== */
 
 /* Fix the thumbnail flex bug: .card__lead .card__thumb has specificity (0,2,0),

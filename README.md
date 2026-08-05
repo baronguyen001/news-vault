@@ -69,6 +69,12 @@ on `<html>`, so switching costs no re-render, and it is remembered across days. 
 card in a multi-column mode gives it the whole row — a summary plus four analysis sections is
 unreadable in a third of a screen.
 
+**Handles Shorts as their own thing.** 42% of the video archive is YouTube Shorts. They carry a
+`Short` badge so a 45-second clip is not mistaken for a 40-minute interview, a toggle above the list
+hides them for anyone here only for long-form, and their thumbnail comes from `oar2.jpg` rather than
+`hqdefault.jpg` — the latter returns a 9:16 clip pillarboxed, which the site's fixed 16:9 crop turns
+into a black rectangle.
+
 **Shows real pictures, not generated ones.** Videos carry their YouTube thumbnail; articles carry the
 image the publisher chose in their own `og:image`. Both urls live inside the encrypted payload, so
 nobody who has not typed the password learns one exists, and both load with `referrerpolicy="no-referrer"`

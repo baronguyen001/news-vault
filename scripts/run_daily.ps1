@@ -13,7 +13,9 @@ param(
     # which would kill this script every night before it printed anything. Resolve below.
     [string]$RepoPath,
     [switch]$NoPush,
-    [switch]$Backfill
+    # Build only the newest day, the way this script used to. Kept for a quick manual run;
+    # the nightly job must NOT use it - see the comment on $buildArgs below.
+    [switch]$TodayOnly
 )
 
 $ErrorActionPreference = "Stop"
@@ -34,10 +36,14 @@ function Write-Log([string]$message) {
     Add-Content -Path $log -Value $line -Encoding utf8
 }
 
-Write-Log "build start (backfill=$Backfill)"
+Write-Log "build start (todayOnly=$TodayOnly)"
 
+# Every day, not just the newest one. A video is filed under the day it was UPLOADED, so a
+# clip summarised tonight can belong to last Tuesday - and a build of the newest day alone
+# would never write that page, leaving the video invisible forever. The build hashes each
+# day's content and skips what has not changed, so the full pass costs ~10s for 119 days.
 $buildArgs = @("-m", "newsvault.cli", "build")
-if ($Backfill) { $buildArgs += "--backfill" }
+if (-not $TodayOnly) { $buildArgs += "--backfill" }
 
 & $python @buildArgs 2>&1 | ForEach-Object { Write-Log $_ }
 if ($LASTEXITCODE -ne 0) {
