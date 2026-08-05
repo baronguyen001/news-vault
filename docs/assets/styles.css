@@ -2347,3 +2347,164 @@ code {
     animation: none;
   }
 }
+
+/* ===== Desktop layout modes ===== */
+
+/* Fix the thumbnail flex bug: .card__lead .card__thumb has specificity (0,2,0),
+   which beats .card__lead > div at (0,1,1). */
+.card__lead .card__thumb {
+  flex: none;
+  max-width: none;
+}
+
+@media (min-width: 1024px) {
+  .card__lead .card__thumb {
+    width: 208px;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* Two-column and three-column fallback (two columns until 1280px). */
+  [data-layout="two"] .cards-wrap .cards,
+  [data-layout="two"] .videos__list,
+  [data-layout="three"] .cards-wrap .cards,
+  [data-layout="three"] .videos__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  /* Grid mode: dense auto-fill columns and vertical cards. */
+  [data-layout="grid"] .cards-wrap .cards,
+  [data-layout="grid"] .videos__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    align-items: start;
+  }
+
+  /* An opened card should span the full row in every multi-column mode. */
+  [data-layout="two"] .cards-wrap .card:not(.card--closed),
+  [data-layout="two"] .videos__list .card:not(.card--closed),
+  [data-layout="three"] .cards-wrap .card:not(.card--closed),
+  [data-layout="three"] .videos__list .card:not(.card--closed),
+  [data-layout="grid"] .cards-wrap .card:not(.card--closed),
+  [data-layout="grid"] .videos__list .card:not(.card--closed) {
+    grid-column: 1 / -1;
+  }
+
+  /* In grid mode the thumbnail sits above the text at full card width. */
+  [data-layout="grid"] .cards-wrap .card__lead,
+  [data-layout="grid"] .videos__list .card__lead {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  [data-layout="grid"] .cards-wrap .card__lead .card__thumb,
+  [data-layout="grid"] .videos__list .card__lead .card__thumb {
+    width: 100%;
+    flex: none;
+  }
+}
+
+@media (min-width: 1280px) {
+  /* Let the app breathe on big screens while keeping line length readable. */
+  .app {
+    max-width: 2000px;
+    padding-inline: clamp(var(--space-lg), 2vw, var(--space-xl));
+  }
+
+  /* Three columns only from 1280px upward. */
+  [data-layout="three"] .cards-wrap .cards,
+  [data-layout="three"] .videos__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  /* A third of the screen is roughly 440px. At the 208px used in one and two
+     columns the headline is left with a 200px ribbon and wraps to five lines, so
+     the picture gives some width back. */
+  [data-layout="three"] .card__lead .card__thumb {
+    width: 144px;
+  }
+}
+
+/* Layout-mode switch: segmented pill, hidden on narrow viewports. */
+.layout-switch {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .layout-switch {
+    display: inline-flex;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+
+  .layout-switch__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35em;
+    min-height: 36px;
+    padding: 0.35rem 0.7rem;
+    border: 0;
+    border-inline-end: 1px solid var(--border);
+    border-radius: 0;
+    background-color: var(--surface-2);
+    color: var(--text);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+  }
+
+  .layout-switch__btn:first-child {
+    border-start-start-radius: var(--radius-sm);
+    border-end-start-radius: var(--radius-sm);
+  }
+
+  .layout-switch__btn:last-child {
+    border-inline-end: 0;
+    border-start-end-radius: var(--radius-sm);
+    border-end-end-radius: var(--radius-sm);
+  }
+
+  .layout-switch__btn[aria-pressed="true"] {
+    background-color: var(--accent);
+    color: var(--accent-contrast);
+  }
+
+  .layout-switch__btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    position: relative;
+    z-index: 1;
+  }
+}
+
+/* Print always falls back to a single column, whatever the active mode. */
+@media print {
+  .layout-switch {
+    display: none;
+  }
+
+  html[data-layout] .cards-wrap .cards,
+  html[data-layout] .videos__list {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  html[data-layout] .cards-wrap .card:not(.card--closed),
+  html[data-layout] .videos__list .card:not(.card--closed) {
+    grid-column: auto;
+  }
+
+  html[data-layout] .cards-wrap .card__lead,
+  html[data-layout] .videos__list .card__lead {
+    flex-direction: column;
+  }
+
+  html[data-layout] .cards-wrap .card__lead .card__thumb,
+  html[data-layout] .videos__list .card__lead .card__thumb {
+    width: 100%;
+    flex: none;
+  }
+}

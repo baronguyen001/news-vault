@@ -60,7 +60,14 @@ its tail into "Khác", and the question the panel answers is which sources ran t
 **Reads headline-first.** A card is a headline, a source and a score until you open it; the summary,
 key points and the four analysis sections are one tap away. Ninety expanded articles is a wall nobody
 scrolls. The category, chart and trend panels start folded for the same reason, and remember whether
-you opened them.
+you opened them. The day's videos start open — they are things to read, not a chart to consult.
+
+**Fits the screen it is on.** A phone gets one column. A desktop gets a switch in the top bar: one,
+two or three columns, or a card grid with the picture above the headline. The choice is one attribute
+on `<html>`, so switching costs no re-render, and it is remembered across days. Three columns need
+1280px of width; below that the mode falls back to two rather than producing 300px columns. Opening a
+card in a multi-column mode gives it the whole row — a summary plus four analysis sections is
+unreadable in a third of a screen.
 
 **Shows real pictures, not generated ones.** Videos carry their YouTube thumbnail; articles carry the
 image the publisher chose in their own `og:image`. Both urls live inside the encrypted payload, so

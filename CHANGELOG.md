@@ -4,6 +4,33 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2026-08-05
+
+### Added
+- **A layout switch for desktop reading.** One, two or three columns, or a card grid, chosen from the
+  top bar and remembered across days ([`newsvault/assets/layout.js`](newsvault/assets/layout.js)). The
+  choice is an attribute on `<html>`; the stylesheet does the rest, so nothing re-renders when it
+  changes. The control is hidden below 1024px — a phone has one column and no decision to make.
+  Three columns need 1280px; below that the mode falls back to two rather than producing 300px columns.
+- In the grid mode a card turns vertical, picture above the headline, four across a 1440px screen.
+- Opening a card in any multi-column mode gives it the full width of the row, because a summary plus
+  four analysis sections is unreadable in a third of a screen.
+
+### Changed
+- **The day's videos start open.** They are things to read, not a chart to consult; folding them made
+  them invisible. The analysis panels still start folded. Either way the reader's own choice is
+  remembered, and only a panel nobody has touched uses the default.
+- **The page fills a desktop screen.** Above 1280px the 1200px cap is replaced by a gutter of
+  1.5–2rem, with content capped at 2000px so a 4K monitor does not produce unreadable line lengths.
+- The video section no longer prints its own heading inside the fold that already names it.
+
+### Fixed
+- **Every thumbnail is now the same size.** `.card__lead > div` also matched `.card__thumb` — the
+  wrapper *is* a div — and its `flex: 1 1 auto` outranked `.card__thumb { flex: none }` by one element
+  selector. Each picture therefore grew into whatever space its headline left over: measured on one
+  page at 1440px, six thumbnails came out 197, 200, 320, 331, 349 and 405 px wide. They are now a
+  fixed 208px (144px at three columns, full width in the grid).
+
 ## [0.5.0] - 2026-08-05
 
 ### Added
