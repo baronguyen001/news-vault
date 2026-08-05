@@ -36,9 +36,22 @@ weights live in one dict in [`newsvault/score.py`](newsvault/score.py).
 
 **Clusters** stories: articles from the same day and topic whose title tokens overlap past a Jaccard
 threshold collapse into one card labelled *“9 nguồn đưa tin”*. No LLM call, fully deterministic.
-The threshold is deliberately strict (0.45). On a feed that news-hunter has already de-duplicated
-upstream it fires rarely — measured on real data, the closest unrelated pair scores 0.35, so loosening
-it would merge distinct stories rather than surface real multi-source coverage.
+Only the lead is rendered, so **a wrong merge deletes a headline from the day** — which makes
+precision matter more than recall here. Three rules keep it honest:
+
+- **Tags refine, they never decide.** A shared-tag bonus applies only once the headlines already
+  overlap (Jaccard ≥ 0.25) and is capped at 0.2. Tags in this database are generic — `ai`,
+  `chính phủ`, `lạm phát` — and three of them used to add 0.30, enough to merge two unrelated policy
+  stories whose headlines shared almost nothing.
+- **Two articles from one outlet must be near-identical** (0.7) to merge. A cluster means several
+  sources covering one story; the same outlet publishing twice is two stories, unless it is a genuine
+  duplicate.
+- **No chaining.** Each article is compared against a cluster's *leader*, not against any member.
+  Single-link agglomeration used to join A to C through B, producing clusters whose lead shared no
+  words at all with the article hidden behind it.
+
+Measured across the archive, these took the number of articles hidden behind a lead from 74 to 43,
+and merges below the overlap floor from 31 to zero.
 
 **Builds entity pages** from the tag column — any name mentioned three times or more gets its own page
 tracking coverage across the archive.

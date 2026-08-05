@@ -4,6 +4,30 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.3] - 2026-08-05
+
+### Fixed
+- **Clustering was hiding unrelated articles.** Only a cluster's lead is rendered, so every merge
+  removes a headline from the day. Measured over the whole archive, **74 articles were hidden behind
+  a lead and 31 of those merged on a headline overlap below 0.25** — including two pairs with a
+  Jaccard of exactly **0.00**, joined through a middleman by single-link agglomeration. Today's page
+  showed 95 cards for 96 articles because two unrelated VnEconomy policy stories were folded
+  together. Three changes:
+  - The shared-tag bonus now applies **only above a 0.25 headline overlap** and is capped at 0.2.
+    Tags here are generic (`ai`, `chính phủ`, `lạm phát`); three of them added 0.30, which cleared
+    the 0.45 bar from a Jaccard of 0.16 — the tags decided the outcome, not the headlines. One pair
+    shared *seven* tags, so those two would have merged whatever they said.
+  - Two articles from the **same source** must now be near-identical (0.7) on headline overlap
+    alone. A cluster means several outlets covering one story.
+  - **Single-link chaining is gone.** `_UnionFind` merged A with C whenever some B matched both;
+    each article is now compared against a cluster's leader, so every hidden article is genuinely
+    similar to the card it sits behind.
+
+  Result: 74 hidden → **43**, same-source merges 8 → **1** (a real duplicate at 0.92), merges below
+  the floor 31 → **0**. Thresholds are named constants at the top of `newsvault/cluster.py`.
+- `tests/test_cluster_precision.py` locks in the seven real cases this was measured against,
+  including the ones that must *keep* merging.
+
 ## [0.7.2] - 2026-08-05
 
 ### Added
