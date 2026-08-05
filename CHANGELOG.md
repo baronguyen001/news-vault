@@ -4,6 +4,29 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.4] - 2026-08-05
+
+### Changed
+- **Every completed run now reports, not just the ones that publish.** Previously a run that found
+  nothing new finished silently, so two of today's three runs said nothing at all and the job was
+  indistinguishable from one that never started — the exact failure this alerting exists to catch.
+  A quiet run now sends one line (`✅ Kho tin: chạy xong, không có tin mới`) plus the build summary;
+  a publishing run still sends the full report. `-NoPush` stays silent, being a manual dry run.
+- Every message ends with a run stamp — `🕒 14:55 · đầy đủ` — so two runs on the same day are told
+  apart and a missing one is obvious.
+
+### Added
+- `-DryRunNotify` composes and logs the message without calling the network, and
+  `scripts/test_notify.ps1` asserts all four outcomes — 20 checks, no Pester, no network. It runs in
+  CI under `pwsh`: the script body is skipped via `NEWSVAULT_SOURCING_ONLY`, so nothing builds,
+  pushes or sends.
+
+### Fixed
+- The dry-run branch used `-f` with a named placeholder (`{text}` instead of `{0}`), which throws
+  `Input string was not in a correct format`. Under `ErrorActionPreference = Stop` that killed the
+  run *after* a successful build. Found by running the script rather than by reading it; the
+  regression is now covered by a test.
+
 ## [0.7.3] - 2026-08-05
 
 ### Fixed

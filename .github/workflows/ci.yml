@@ -45,6 +45,13 @@ jobs:
       - name: Test browser modules
         run: node --test tests/js/search.test.mjs tests/js/layout.test.mjs tests/js/videos.test.mjs
 
+      # The nightly job's Telegram messages. pwsh is preinstalled on the runner and only the
+      # message-composing functions are exercised — the script body is skipped via
+      # NEWSVAULT_SOURCING_ONLY, so nothing builds, pushes or reaches the network here.
+      - name: Test notification messages
+        shell: pwsh
+        run: ./scripts/test_notify.ps1
+
       - name: Build smoke (fixture database, no network)
         run: |
           python -m tests.make_fixture tests/fixtures/sample.db
