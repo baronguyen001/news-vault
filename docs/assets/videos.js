@@ -73,7 +73,7 @@
     }
   }
 
-  function thumb(parent, url, alt, cls) {
+  function validHttpsUrl(url) {
     if (!url) return null;
     try {
       const parsed = new URL(url);
@@ -81,14 +81,29 @@
     } catch (e) {
       return null;
     }
+    return url;
+  }
+
+  function thumb(parent, url, alt, cls, fallbackUrl) {
+    const primary = validHttpsUrl(url);
+    if (!primary) return null;
+
+    const fallback = validHttpsUrl(fallbackUrl);
     const wrapper = make("div", "card__thumb" + (cls ? " " + cls : ""), parent);
     const img = make("img", "", wrapper);
-    img.src = url;
+    img.src = primary;
     img.loading = "lazy";
     img.decoding = "async";
     img.referrerPolicy = "no-referrer";
     img.alt = alt == null ? "" : String(alt);
+
+    let retried = false;
     img.onerror = function () {
+      if (!retried && fallback) {
+        retried = true;
+        img.src = fallback;
+        return;
+      }
       if (wrapper && wrapper.parentNode) {
         wrapper.parentNode.removeChild(wrapper);
       }
@@ -99,6 +114,7 @@
   function card(video) {
     const v = video && typeof video === "object" ? video : {};
     const li = make("li", "card card--video card--closed");
+    if (v.sh) li.classList.add("card--short");
 
     const header = make("div", "card__header", li);
     const typeKey = typeof v.ty === "string" ? v.ty : "";
@@ -106,11 +122,15 @@
       const typeBadge = make("span", "badge", header);
       text(typeBadge, T.typeMap[typeKey]);
     }
+    if (v.sh) {
+      const shortBadge = make("span", "badge badge--short", header);
+      text(shortBadge, "Short");
+    }
     const ytBadge = make("span", "badge badge--video", header);
     text(ytBadge, T.youtube);
 
     const lead = make("div", "card__lead", li);
-    thumb(lead, v.th, v.t, "");
+    thumb(lead, v.th, v.t, "", v.thf);
 
     const textWrap = make("div", "", lead);
 

@@ -4,6 +4,32 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] - 2026-08-05
+
+### Fixed
+- **Shorts no longer render as black rectangles.** The upstream summariser used to skip YouTube
+  Shorts and now keeps them: **344 of the 802 videos in the archive are Shorts**. Their thumbnail was
+  being requested from `hqdefault.jpg`, which is always 480x360, so a 9:16 clip came back pillarboxed
+  — measured on real ids, the left edge pixel is `(0, 0, 0)` — and the fixed 16:9 crop then showed
+  almost nothing but the black. A Short's picture now comes from `oar2.jpg`, the original-aspect
+  frame, verified to exist for 20 of 20 sampled Shorts and for all 18 on the test day. The crop is
+  biased to `center 32%` because the subject of a vertical video is never in the bottom third.
+- **A day whose videos changed is rebuilt.** `scripts/run_daily.ps1` ran a bare `build`, which
+  resolves to the newest day alone. But a video is filed under the day it was *uploaded*, so a clip
+  summarised tonight can belong to last Tuesday — and that page was never rewritten, leaving the
+  video invisible forever. The nightly job now passes `--backfill`; the build already hashes each
+  day and skips what has not changed, so the full pass over 119 days costs about ten seconds.
+
+### Added
+- Shorts carry a **`Short` badge**, so a 45-second clip is no longer indistinguishable from a
+  40-minute interview until you open it.
+- A **toggle above the video list** hides them — `Ẩn 18 Short` — and remembers the choice. At 42% of
+  the archive, someone here for long-form needed a way to put them aside.
+- `newsvault/videos.py` reads `is_short` **only when the column exists**, so an older copy of the
+  upstream database still loads, and every thumbnail now travels with a fallback url the front end
+  tries once before giving up on the picture.
+- `tests/js/videos.test.mjs` — 16 tests over the real `videos.js` against a stub DOM, no browser.
+
 ## [0.6.0] - 2026-08-05
 
 ### Added

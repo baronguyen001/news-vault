@@ -17,6 +17,8 @@
     briefTitle: "Tóm tắt ngày",
     analysisPanels: "Chuyên mục · Biểu đồ · Xu hướng",
     videosTitle: "Video YouTube",
+    hideShorts: (n) => `Ẩn ${n} Short`,
+    showShorts: (n) => `Hiện ${n} Short`,
     categoriesTitle: "Chuyên mục",
     trendingTitle: "Xu hướng",
     blindspotsTitle: "Góc chưa phủ",
@@ -320,6 +322,7 @@
    * pushed the first headline three screens down, so they open closed and remember the
    * choice; the list itself is always the first thing under the search bar. */
   const PANEL_KEY = "nv.panels";
+  const SHORTS_KEY = "nv.hideShorts";
 
   function panelState() {
     try {
@@ -470,16 +473,55 @@
     if (!NV.videos) return;
     const list = payload.videos || [];
     if (!list.length) return;
+    const shorts = list.filter((v) => v && v.sh);
     const body = makePanel(parent, "day-videos", `${T.videosTitle} (${list.length})`, "", true);
-    const section = NV.videos.section(list);
-    if (section) {
-      // The fold's own summary already names the section. While the panel opened
-      // closed nobody saw the second copy; now that it starts open, the heading would
-      // appear twice in a row.
-      const heading = section.querySelector(".videos__title");
-      if (heading) section.removeChild(heading);
-      body.appendChild(section);
+    // Shorts are 42% of the archive and a minute long. Someone here for the 40-minute
+    // interviews should be able to put them away without losing them.
+    if (shorts.length) body.appendChild(renderShortsToggle(shorts.length, list, body));
+    fillVideos(body, list);
+  }
+
+  /** Replace the video list inside `body`, honouring the current Shorts preference. */
+  function fillVideos(body, list) {
+    const previous = body.querySelector(".videos");
+    if (previous) body.removeChild(previous);
+    const visible = hideShorts() ? list.filter((v) => !(v && v.sh)) : list;
+    const section = NV.videos.section(visible);
+    if (!section) return;
+    // The fold's own summary already names the section. While the panel opened closed
+    // nobody saw the second copy; now that it starts open, the heading would appear twice.
+    const heading = section.querySelector(".videos__title");
+    if (heading) section.removeChild(heading);
+    body.appendChild(section);
+  }
+
+  function hideShorts() {
+    try {
+      return localStorage.getItem(SHORTS_KEY) === "1";
+    } catch (err) {
+      return false;
     }
+  }
+
+  function renderShortsToggle(count, list, body) {
+    const btn = make("button", "videos__filter", null);
+    btn.type = "button";
+    const paint = () => {
+      const hidden = hideShorts();
+      btn.setAttribute("aria-pressed", hidden ? "true" : "false");
+      text(btn, hidden ? T.showShorts(count) : T.hideShorts(count));
+    };
+    btn.addEventListener("click", () => {
+      try {
+        localStorage.setItem(SHORTS_KEY, hideShorts() ? "0" : "1");
+      } catch (err) {
+        /* private mode: the choice still applies to this page, it is just not remembered */
+      }
+      paint();
+      fillVideos(body, list);
+    });
+    paint();
+    return btn;
   }
 
   function renderCategoryGrid(parent) {
