@@ -43,7 +43,7 @@ jobs:
       # nothing fails silently. These run the real search.js and layout.js against a
       # stub DOM, no browser required.
       - name: Test browser modules
-        run: node --test tests/js/search.test.mjs tests/js/layout.test.mjs tests/js/videos.test.mjs
+        run: node --test tests/js/*.test.mjs
 
       # The nightly job's Telegram messages. pwsh is preinstalled on the runner and only the
       # message-composing functions are exercised — the script body is skipped via

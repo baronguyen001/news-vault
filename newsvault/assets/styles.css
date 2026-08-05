@@ -2109,6 +2109,7 @@ code {
   color: var(--text-dim);
 }
 
+.searchbar__reset,
 .searchbar__expand {
   appearance: none;
   padding: 0.4rem 0.75rem;
@@ -2121,6 +2122,8 @@ code {
   cursor: pointer;
 }
 
+.searchbar__reset:hover,
+.searchbar__reset:focus-visible,
 .searchbar__expand:hover,
 .searchbar__expand:focus-visible {
   border-color: var(--accent);
@@ -2179,6 +2182,7 @@ code {
 
 @media (pointer: coarse) {
   .card__more,
+  .searchbar__reset,
   .searchbar__expand,
   .panel__toggle,
   .cat {
@@ -2550,4 +2554,234 @@ code {
     width: 100%;
     flex: none;
   }
+}
+
+/* ---------- Dialog ----------
+ * Desktop "Xem thêm" opens the card body here instead of growing the card in place: on a
+ * wide grid an inline expansion reflows every neighbour and the reader loses their place. */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 230;
+  display: grid;
+  place-items: center;
+  padding: var(--space-md);
+}
+
+.modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--scrim);
+  backdrop-filter: blur(4px);
+}
+
+.modal__box {
+  position: relative;
+  inline-size: min(100%, 46rem);
+  max-block-size: min(84vh, 56rem);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.modal__title {
+  margin: 0;
+  color: var(--text);
+  font-size: 1.15rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.modal__close {
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.modal__close:hover,
+.modal__close:focus-visible {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.modal__close:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.modal__content {
+  min-block-size: 0;
+  overflow-y: auto;
+  padding: var(--space-md);
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Dimming the very card the reader is pointing at reads as broken - and on a fine pointer
+ * that card was just marked read by the dwell timer. */
+.card--read:hover {
+  opacity: 1;
+}
+
+@media (max-width: 40rem) {
+  .modal__box {
+    inline-size: 100%;
+    max-block-size: 100%;
+    border-radius: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes modal-rise {
+    from {
+      opacity: 0;
+      transform: translateY(var(--space-sm));
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .modal__box {
+    animation: modal-rise 140ms ease-out;
+  }
+}
+
+/* ---------- Topic colour ----------
+ * Ninety cards a day all in the same grey is a wall. The topic sets one custom property
+ * and both the chip and the card tint read from it, so a new topic needs one line here,
+ * not two rules. Light and dark carry their own hues: the dark values are lighter and
+ * less saturated, otherwise a 7% tint on a near-black surface is simply invisible. */
+:root {
+  --topic-kinh-te: #238b57;
+  --topic-chinh-tri: #7652b8;
+  --topic-cong-nghe: #168ca3;
+  --topic-xung-dot: #c44848;
+  --topic-phap-luat: #b98220;
+  --topic-van-hoa: #c65387;
+  --topic-khac: #64748b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --topic-kinh-te: #6fc497;
+    --topic-chinh-tri: #b49be5;
+    --topic-cong-nghe: #72c8d8;
+    --topic-xung-dot: #e28b8b;
+    --topic-phap-luat: #e2bb70;
+    --topic-van-hoa: #df91b3;
+    --topic-khac: #aab7c8;
+  }
+}
+
+:root[data-theme="dark"] {
+  --topic-kinh-te: #6fc497;
+  --topic-chinh-tri: #b49be5;
+  --topic-cong-nghe: #72c8d8;
+  --topic-xung-dot: #e28b8b;
+  --topic-phap-luat: #e2bb70;
+  --topic-van-hoa: #df91b3;
+  --topic-khac: #aab7c8;
+}
+
+:root[data-theme="light"] {
+  --topic-kinh-te: #238b57;
+  --topic-chinh-tri: #7652b8;
+  --topic-cong-nghe: #168ca3;
+  --topic-xung-dot: #c44848;
+  --topic-phap-luat: #b98220;
+  --topic-van-hoa: #c65387;
+  --topic-khac: #64748b;
+}
+
+/* A card with no topic still renders a valid colour rather than dropping the whole
+ * color-mix() declaration as invalid. */
+:root {
+  --topic-colour: var(--topic-khac);
+}
+
+.topic-kinh-te {
+  --topic-colour: var(--topic-kinh-te);
+}
+
+.topic-chinh-tri {
+  --topic-colour: var(--topic-chinh-tri);
+}
+
+.topic-cong-nghe {
+  --topic-colour: var(--topic-cong-nghe);
+}
+
+.topic-xung-dot {
+  --topic-colour: var(--topic-xung-dot);
+}
+
+.topic-phap-luat {
+  --topic-colour: var(--topic-phap-luat);
+}
+
+.topic-van-hoa {
+  --topic-colour: var(--topic-van-hoa);
+}
+
+.topic-khac {
+  --topic-colour: var(--topic-khac);
+}
+
+.badge--topic {
+  background: color-mix(in srgb, var(--topic-colour) 20%, var(--surface));
+  color: var(--topic-colour);
+  border: 1px solid color-mix(in srgb, var(--topic-colour) 45%, var(--surface));
+  border-radius: var(--radius-sm);
+  padding: var(--space-xs) var(--space-sm);
+  font-size: 0.8rem;
+}
+
+.card.topic-kinh-te,
+.card.topic-chinh-tri,
+.card.topic-cong-nghe,
+.card.topic-xung-dot,
+.card.topic-phap-luat,
+.card.topic-van-hoa,
+.card.topic-khac {
+  background: color-mix(in srgb, var(--topic-colour) 7%, var(--surface));
+  border-inline-start: 3px solid
+    color-mix(in srgb, var(--topic-colour) 65%, var(--surface));
+}
+
+/* A video keeps its YouTube-red edge - that stripe is how the eye separates the two
+ * kinds of card. It takes the topic tint on the body and the chip, not on the border. */
+.card--video.topic-kinh-te,
+.card--video.topic-chinh-tri,
+.card--video.topic-cong-nghe,
+.card--video.topic-xung-dot,
+.card--video.topic-phap-luat,
+.card--video.topic-van-hoa,
+.card--video.topic-khac {
+  border-inline-start-color: var(--danger);
 }
