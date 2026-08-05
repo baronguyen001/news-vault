@@ -342,12 +342,16 @@
   }
 
   /**
-   * Create a <details> panel that is closed unless the reader opened it before.
-   * Returns the body element callers fill in.
+   * Create a <details> panel and return the body element callers fill in.
+   *
+   * Panels are closed unless the reader opened them before. `defaultOpen` flips that
+   * for panels that carry content rather than analysis — the day's videos are things to
+   * read, not a chart to consult, so they start open until the reader closes them.
    */
-  function makePanel(parent, id, title, extraClass) {
+  function makePanel(parent, id, title, extraClass, defaultOpen) {
     const details = make("details", `panel panel--fold ${extraClass || ""}`.trim(), parent);
-    details.open = panelState()[id] === true;
+    const remembered = panelState()[id];
+    details.open = remembered === undefined ? !!defaultOpen : remembered === true;
     const summary = make("summary", "panel__toggle", details);
     const label = make("span", "panel__toggle-label", summary);
     text(label, title);
@@ -404,6 +408,8 @@
     const home = make("a", "topbar__link topbar__link--home", nav);
     home.href = config.base || "./";
     text(home, T.home);
+    // Column choice is a desktop affordance; the stylesheet hides it below 1024px.
+    if (NV.layout) NV.layout.mount(nav);
     const theme = make("button", "topbar__btn", nav);
     theme.type = "button";
     text(theme, T.themeToggle);
@@ -464,9 +470,16 @@
     if (!NV.videos) return;
     const list = payload.videos || [];
     if (!list.length) return;
-    const body = makePanel(parent, "day-videos", `${T.videosTitle} (${list.length})`);
+    const body = makePanel(parent, "day-videos", `${T.videosTitle} (${list.length})`, "", true);
     const section = NV.videos.section(list);
-    if (section) body.appendChild(section);
+    if (section) {
+      // The fold's own summary already names the section. While the panel opened
+      // closed nobody saw the second copy; now that it starts open, the heading would
+      // appear twice in a row.
+      const heading = section.querySelector(".videos__title");
+      if (heading) section.removeChild(heading);
+      body.appendChild(section);
+    }
   }
 
   function renderCategoryGrid(parent) {
@@ -1308,6 +1321,7 @@
       day.href = `${config.base || ""}d/${latest}/`;
       text(day, T.latestTitle);
     }
+    if (NV.layout) NV.layout.mount(nav);
     const theme = make("button", "topbar__btn", nav);
     theme.type = "button";
     text(theme, T.themeToggle);

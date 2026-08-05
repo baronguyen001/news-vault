@@ -40,9 +40,10 @@ jobs:
         run: python -m pytest
 
       # The query bar is the whole reading experience, and a filter that matches
-      # nothing fails silently. These run the real search.js, no browser required.
-      - name: Test query engine
-        run: node --test tests/js/search.test.mjs
+      # nothing fails silently. These run the real search.js and layout.js against a
+      # stub DOM, no browser required.
+      - name: Test browser modules
+        run: node --test tests/js/search.test.mjs tests/js/layout.test.mjs
 
       - name: Build smoke (fixture database, no network)
         run: |
