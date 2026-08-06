@@ -4,6 +4,28 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.0] - 2026-08-06
+
+### Changed
+- **A video's "Xem thêm" opens the same dialog an article's does.** 0.8.0 moved article summaries into
+  a dialog on a fine pointer and left the 35-odd video cards below them still unfolding in place — so
+  the same button, on the same page, behaved two different ways depending on which half of the page it
+  sat in, and a video summary is the longer of the two. Video cards now take the identical rule: fine
+  pointer opens the dialog, touch keeps the inline fold, and a collapse click never opens anything.
+  The dialog borrows the card's own `.card__body` rather than a copy, so it comes home to exactly the
+  place it left. `newsvault/assets/videos.js`, 16 tests.
+- The card in the grid stays visually folded while its body is in the dialog — the label would
+  otherwise read "Thu gọn" over a card with nothing to collapse.
+- Shell cache bumped to `nv-shell-v4`; `videos.js` is a pre-cached shell asset, so without it a
+  returning reader would keep being served the old file and never see any of this.
+
+### Fixed
+- Repainting the video list (the Shorts filter) while the dialog holds a video body would have left
+  the dialog showing a card that no longer existed on the page. `fillVideos` now closes the dialog
+  first, the way `renderResults` already did for articles.
+- `__version__` still said `0.7.4` after the 0.8.0 release, so `newsvault --version` reported the
+  wrong version. Bumped with `pyproject.toml` this time.
+
 ## [0.8.0] - 2026-08-05
 
 ### Changed
