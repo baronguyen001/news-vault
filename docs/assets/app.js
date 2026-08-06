@@ -487,6 +487,9 @@
   /** Replace the video list inside `body`, honouring the current Shorts preference. */
   function fillVideos(body, list) {
     const previous = body.querySelector(".videos");
+    // The dialog may be holding one video card's body. Dropping the old section under it
+    // would leave the dialog showing a card that no longer exists on the page.
+    if (previous && NV.modal && NV.modal.isOpen()) NV.modal.close();
     if (previous) body.removeChild(previous);
     const visible = hideShorts() ? list.filter((v) => !(v && v.sh)) : list;
     const section = NV.videos.section(visible);

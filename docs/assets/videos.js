@@ -73,6 +73,46 @@
     }
   }
 
+  // Fine pointers can use the dialog without disturbing a multi-column grid; touch keeps the inline fold.
+  function useModal() {
+    try {
+      const nv = window.NV;
+      return !!(nv && nv.modal && typeof nv.modal.open === "function" &&
+        nv.read && typeof nv.read.pointerFine === "function" &&
+        nv.read.pointerFine());
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /* Lend the card's own body to the dialog rather than a copy, so nothing is rebuilt and the
+   * card folds back up when the body comes home. The card itself stays visually closed while
+   * the dialog is up: its summary is somewhere else, and a "Thu gọn" label would lie. */
+  function openModal(card) {
+    const body = card.querySelector(".card__body");
+    const more = card.querySelector(".card__more");
+    const link = card.querySelector(".card__link");
+    if (!body || !more) return false;
+
+    body.hidden = false;
+    more.setAttribute("aria-expanded", "true");
+
+    try {
+      window.NV.modal.open({
+        title: link ? link.textContent : "",
+        node: body,
+        onClose: function () {
+          setOpen(card, false);
+        }
+      });
+      return true;
+    } catch (e) {
+      body.hidden = true;
+      more.setAttribute("aria-expanded", "false");
+      return false;
+    }
+  }
+
   function validHttpsUrl(url) {
     if (!url) return null;
     try {
@@ -195,6 +235,9 @@
     text(more, T.expand);
     more.addEventListener("click", function () {
       const opening = li.classList.contains("card--closed");
+      if (opening && useModal() && openModal(li)) {
+        return;
+      }
       setOpen(li, opening);
     });
 
@@ -224,6 +267,8 @@
     thumb: thumb,
     card: card,
     section: section,
-    setOpen: setOpen
+    setOpen: setOpen,
+    useModal: useModal,
+    openModal: openModal
   };
 })();
