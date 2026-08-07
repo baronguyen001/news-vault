@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import base64
 import datetime as dt
+import functools
 import hashlib
 import json
 import logging
@@ -139,9 +140,41 @@ def _site_salt(out_dir: Path) -> bytes:
     return crypto.new_salt()
 
 
-def _digest(data: object) -> str:
-    """Stable content hash of a payload, used to skip unchanged pages."""
+def _templates_root() -> Path:
+    """Where the Jinja templates live. Separate so a test can point it somewhere else."""
+    return Path(__file__).parent / "templates"
+
+
+@functools.cache
+def _shell_digest() -> str:
+    """Hash of the HTML shell every page is rendered into.
+
+    Hashing the payload alone is not enough to decide a page is unchanged. Edit a template -
+    add a script tag, change the gate markup - and every payload still hashes identically, so
+    not one already-built page is rewritten and the change silently reaches only whichever
+    pages happened to have new content that run. Shipping a gate checkbox this way updated the
+    home page and none of the 120 day pages. Folding the shell into the key makes a template
+    edit invalidate the whole archive, which is what editing a template means.
+    """
+    blob = "".join(
+        path.name + "\n" + path.read_text(encoding="utf-8")
+        for path in sorted(_templates_root().glob("*.j2"))
+    )
+    # The version is stamped into every page's inline config, so it is part of the rendered
+    # HTML too. Without it a release left 209 pages claiming the previous version while the
+    # manifest beside them claimed the new one.
+    return hashlib.sha256((blob + "\x00" + __version__).encode("utf-8")).hexdigest()[:16]
+
+
+def _digest(data: object, *, with_shell: bool = False) -> str:
+    """Stable content hash of a payload, used to skip unchanged pages.
+
+    Pages that render an `index.html` pass `with_shell=True`; the encrypted-only search shards
+    have no HTML and must not churn when a template changes.
+    """
     blob = json.dumps(data, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    if with_shell:
+        blob += "\x00shell:" + _shell_digest()
     return hashlib.sha256(blob.encode("utf-8")).hexdigest()[:32]
 
 
@@ -392,7 +425,7 @@ def build_site(options: BuildOptions) -> BuildReport:
             )
 
             key = f"day:{day}"
-            fresh[key] = _digest(data)
+            fresh[key] = _digest(data, with_shell=True)
             report.videos_included += len(day_videos)
             month_items = index_by_month.setdefault(day[:7], [])
             month_items.extend(payload.index_items(day, articles))
@@ -440,14 +473,21 @@ def build_site(options: BuildOptions) -> BuildReport:
         report.index_shards = _write_index_shards(
             out_dir, index_by_month, options, salt, state, fresh
         )
-        report.week_pages = _write_week_pages(
+        report.week_pages, live_weeks = _write_week_pages(
             out_dir, weeks, by_day, entity_map, options, meta, salt, state, fresh
         )
+        # `weeks` only covers the days this run targeted. Publishing that partial list would
+        # tell the pruner that every week outside it is an orphan, and deleting a week page is
+        # not reversible - so a run that did not sweep the whole archive publishes no week list
+        # at all, and the pruner's existing "no weeks means hands off docs/w" guard holds.
+        manifest_weeks = live_weeks if set(target_days) >= set(all_days) else []
         report.entity_pages = _write_entity_pages(
             out_dir, entity_index, loaded, options, meta, salt, state, fresh
         )
         _write_home(out_dir, all_days, counts, options, meta)
-        _write_root_files(out_dir, all_days, counts, entity_index, by_day, options, meta, salt)
+        _write_root_files(
+            out_dir, all_days, counts, entity_index, by_day, options, meta, salt, manifest_weeks
+        )
     finally:
         conn.close()
 
@@ -489,13 +529,20 @@ def _write_week_pages(
     state: Mapping[str, str],
     fresh: dict[str, str],
 ) -> int:
-    """Write the weekly roll-up pages covering the built days."""
+    """Write the weekly roll-up pages covering the built days.
+
+    Returns the number of pages written and the label and date range of every week that has a
+    live page - written now or written earlier and unchanged. The manifest needs the second
+    list, because "what exists" and "what this run rebuilt" are not the same set.
+    """
     written = 0
+    live: list[tuple[str, str, str]] = []
     for week, days in sorted(weeks.items()):
         _, start, end = _iso_week(days[0])
         articles = [a for day in sorted(by_day) if start <= day <= end for a in by_day[day]]
         if not articles:
             continue
+        live.append((week, start, end))
         articles.sort(key=lambda a: (-a.score, a.title_vi))
         volume = [
             (day, float(len(by_day.get(day, [])))) for day in sorted(by_day) if start <= day <= end
@@ -534,7 +581,7 @@ def _write_week_pages(
             },
         )
         key = f"week:{week}"
-        fresh[key] = _digest(data)
+        fresh[key] = _digest(data, with_shell=True)
         target = out_dir / "w" / week
         if state.get(key) == fresh[key] and (target / "data.enc").exists():
             continue
@@ -562,7 +609,7 @@ def _write_week_pages(
         )
         crypto.write_encrypted(target / "data.enc", data, options.password, salt=salt)
         written += 1
-    return written
+    return written, live
 
 
 def _write_entity_pages(
@@ -607,7 +654,7 @@ def _write_entity_pages(
             },
         )
         key = f"entity:{entity.slug}"
-        fresh[key] = _digest(data)
+        fresh[key] = _digest(data, with_shell=True)
         target = out_dir / "e" / entity.slug
         if state.get(key) == fresh[key] and (target / "data.enc").exists():
             continue
@@ -679,6 +726,7 @@ def _write_root_files(
     options: BuildOptions,
     meta: render.SiteMeta,
     salt: bytes,
+    weeks: Sequence[tuple[str, str, str]] = (),
 ) -> None:
     """Manifest, feeds, assets and the static root files."""
     # Anchored to the newest day, not to the clock, for the same reason `_day_anchor` exists:
@@ -695,6 +743,7 @@ def _write_root_files(
         [(day, counts.get(day, 0)) for day in all_days],
         sorted({day[:7] for day in all_days}),
         entity_index.top(MAX_ENTITY_PAGES),
+        weeks=weeks,
         generated_at=generated_at,
         kdf_iterations=crypto.DEFAULT_ITERATIONS,
         site=options.site,

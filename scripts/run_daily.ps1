@@ -180,6 +180,23 @@ if (-not $env:NEWSVAULT_SOURCING_ONLY) {
         exit $buildExit
     }
 
+    # The build only ever writes; it has no code path that removes anything. So when a row
+    # leaves the source database - a video the summariser flags as junk, say - the day drops out
+    # of the build's targets and its already-published page just stays live, still serving the
+    # old payload with the pulled item inside it. Most archived days hold only videos and some
+    # hold exactly one, so a single removed row can leave a whole day stranded. This deletes
+    # what the fresh manifest no longer lists. It runs after the build, before the commit, so
+    # the deletions travel in the same push as the rest of the day's changes.
+    $previousEAP = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    & $python (Join-Path $RepoPath "scripts\prune_orphans.py") "--apply" 2>&1 |
+        ForEach-Object { Write-Log $_ }
+    $pruneExit = $LASTEXITCODE
+    $ErrorActionPreference = $previousEAP
+    # A failed prune is not a reason to withhold a good build: the site stays correct, it just
+    # keeps a stale page a while longer. Log it and carry on.
+    if ($pruneExit -ne 0) { Write-Log "PRUNE FAILED exit=$pruneExit (tiep tuc xuat ban)" }
+
     # Refuse to publish a site that still carries the plaintext password anywhere.
     $password = Get-EnvValue "NEWSVAULT_PASSWORD"
     if ($password) {

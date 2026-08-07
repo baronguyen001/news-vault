@@ -335,6 +335,7 @@ def manifest(
     months: Sequence[str],
     entities: Sequence[Entity],
     *,
+    weeks: Sequence[tuple[str, str, str]] = (),
     generated_at: str,
     kdf_iterations: int,
     site: str,
@@ -343,6 +344,9 @@ def manifest(
     """Build the plain-text manifest. It must never contain article text."""
     day_objs = [_sorted({"d": d, "n": n, "months": d[:7]}) for d, n in days]
     entity_objs = [_sorted({"slug": e.slug, "label": e.label, "n": e.mentions}) for e in entities]
+    # Weeks are listed so the pruner can tell a live week page from an abandoned one; without
+    # them it has to leave docs/w alone entirely rather than risk an unrecoverable delete.
+    week_objs = [_sorted({"w": label, "s": start, "e": end}) for label, start, end in sorted(weeks)]
 
     return _sorted(
         {
@@ -354,6 +358,7 @@ def manifest(
             "months": list(months),
             "kdf_iterations": kdf_iterations,
             "entities": entity_objs,
+            "weeks": week_objs,
         }
     )
 

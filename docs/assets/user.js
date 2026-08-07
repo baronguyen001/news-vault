@@ -133,7 +133,11 @@ window.NV = window.NV || {};
         _read = new Set(arr);
       }
       _persistRead();
-      _emit("change");
+      // Deliberately NOT "change". Listeners treat "change" as "re-render the list", and on a
+      // phone a card is marked read merely by scrolling past it - so emitting "change" here
+      // rebuilt the whole list once per card as the reader scrolled, re-fetching every
+      // thumbnail and closing any open dialog. One card changed; say only that.
+      _emit("read", url);
     },
 
     savedUrls() {

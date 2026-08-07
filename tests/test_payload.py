@@ -4,6 +4,8 @@ import json
 import random
 from typing import Any
 
+import pytest
+
 from newsvault.cluster import Cluster
 from newsvault.entities import Entity
 from newsvault.model import Article
@@ -187,3 +189,92 @@ def test_manifest_contains_no_article_text() -> None:
     dumped = json.dumps(result, ensure_ascii=False)
     for text in titles + urls:
         assert text not in dumped
+
+
+def test_manifest_omits_weeks_with_empty_list() -> None:
+    result = manifest(
+        [],
+        [],
+        [],
+        generated_at="2026-08-01T00:00:00Z",
+        kdf_iterations=100000,
+        site="example",
+        version="1",
+    )
+
+    assert result["weeks"] == []
+
+
+def test_manifest_includes_week_triple() -> None:
+    result = manifest(
+        [],
+        [],
+        [],
+        weeks=[("2026-W31", "2026-07-27", "2026-08-02")],
+        generated_at="2026-08-01T00:00:00Z",
+        kdf_iterations=100000,
+        site="example",
+        version="1",
+    )
+
+    assert result["weeks"] == [{"e": "2026-08-02", "s": "2026-07-27", "w": "2026-W31"}]
+
+
+def test_manifest_sorts_weeks_deterministically() -> None:
+    weeks = [
+        ("2026-W33", "2026-08-10", "2026-08-16"),
+        ("2026-W31", "2026-07-27", "2026-08-02"),
+        ("2026-W32", "2026-08-03", "2026-08-09"),
+    ]
+    kwargs = {
+        "generated_at": "2026-08-01T00:00:00Z",
+        "kdf_iterations": 100000,
+        "site": "example",
+        "version": "1",
+    }
+
+    ordered = manifest([], [], [], weeks=sorted(weeks), **kwargs)
+    shuffled = manifest([], [], [], weeks=weeks, **kwargs)
+
+    assert [week["w"] for week in shuffled["weeks"]] == [
+        "2026-W31",
+        "2026-W32",
+        "2026-W33",
+    ]
+    assert json.dumps(ordered) == json.dumps(shuffled)
+
+
+def test_manifest_week_entries_carry_only_label_and_range() -> None:
+    """The manifest is the one unencrypted file on the site, so pin its week shape exactly.
+
+    Asserting that some string is absent proves nothing when that string was never an input.
+    Whitelisting the keys is what actually catches a future field smuggling article text in.
+    """
+    result = manifest(
+        [],
+        [],
+        [],
+        weeks=[("2026-W31", "2026-07-27", "2026-08-02")],
+        generated_at="2026-08-01T00:00:00Z",
+        kdf_iterations=100000,
+        site="example",
+        version="1",
+    )
+
+    for week in result["weeks"]:
+        assert set(week) == {"w", "s", "e"}
+        assert all(isinstance(value, str) for value in week.values())
+
+
+def test_manifest_weeks_parameter_is_keyword_only() -> None:
+    with pytest.raises(TypeError):
+        manifest(
+            [],
+            [],
+            [],
+            [("2026-W31", "2026-07-27", "2026-08-02")],
+            generated_at="2026-08-01T00:00:00Z",
+            kdf_iterations=100000,
+            site="example",
+            version="1",
+        )

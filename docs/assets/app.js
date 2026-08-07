@@ -11,6 +11,7 @@
     loadFailed: "Không tải được dữ liệu. Thử tải lại trang.",
     unlock: "Mở",
     unlocking: "Đang mở…",
+    forgetDevice: "Quên thiết bị này",
     home: "Trang chủ",
     prev: "← Trước",
     next: "Sau →",
@@ -99,7 +100,10 @@
   /* ---------- State ---------- */
   let config = null;
   let payload = null;
-  let password = null;
+  // Either the typed password or, on a remembered device, the derived key straight from
+  // IndexedDB. Both decrypt; only one of them is ever written to disk.
+  let secret = null;
+  let remembered = false;
   let manifest = null;
   let clusterInfo = {};
   let currentText = "";
@@ -228,8 +232,23 @@
     const form = $("#gate-form");
     const input = $("#gate-pass");
     if (!form) return;
+    // Offering to remember the device is a lie if this browser has no IndexedDB to remember
+    // it in - private mode, or storage switched off. Hide the whole row rather than tick a
+    // box that silently does nothing.
+    const row = $("#gate-remember-row");
+    if (row && !(NV.unlockStore && NV.unlockStore.isSupported())) row.hidden = true;
     form.addEventListener("submit", onGateSubmit);
     if (input) input.focus();
+  }
+
+  /** A way back out of "remember me", for a shared or lost device. Only shown when there is
+   *  something to forget. */
+  function mountForgetButton(nav) {
+    if (!remembered) return;
+    const btn = make("button", "topbar__btn", nav);
+    btn.type = "button";
+    text(btn, T.forgetDevice);
+    btn.addEventListener("click", forgetDevice);
   }
 
   async function onGateSubmit(ev) {
@@ -240,12 +259,13 @@
     if (!input || !btn) return;
     const pw = input.value;
     if (!pw) return;
+    const rememberBox = $("#gate-remember");
     btn.disabled = true;
     btn.classList.add("spinner");
     text(btn, T.unlocking);
     err.hidden = true;
     try {
-      await unlock(pw);
+      await unlock(pw, { remember: !!(rememberBox && rememberBox.checked) });
     } catch (e) {
       btn.disabled = false;
       btn.classList.remove("spinner");
@@ -260,6 +280,54 @@
     }
   }
 
+  /* Remembering a device.
+   *
+   * sessionStorage already carries the password across pages within one tab, but it dies with
+   * the tab, so a reader who comes back tomorrow types it again. When they ask us to remember,
+   * we store the *derived AES key* in IndexedDB, never the password: WebCrypto hands it back
+   * non-extractable, so it can decrypt this site and cannot be read back off the disk as text.
+   * It is still a key sitting on the device - that is what "remember" means - so it is opt-in
+   * and there is a button to forget it.
+   *
+   * The fingerprint pins the key to the salt and iteration count it was derived from. Rebuild
+   * the site with a new salt and every stored key is instantly useless; the mismatch is
+   * detected and the dead key deleted rather than left to fail forever. */
+  function siteFingerprint() {
+    if (!NV.unlockStore || !manifest || !manifest.salt || !manifest.kdf_iterations) return "";
+    return NV.unlockStore.fingerprint(manifest.salt, manifest.kdf_iterations);
+  }
+
+  async function loadRememberedKey() {
+    if (!NV.unlockStore || !NV.unlockStore.isSupported()) return null;
+    try {
+      if (!manifest) await loadManifest();
+    } catch {
+      return null;
+    }
+    const fp = siteFingerprint();
+    if (!fp) return null;
+    return NV.unlockStore.load(fp);
+  }
+
+  async function rememberDevice(pw) {
+    if (!NV.unlockStore || !NV.unlockStore.isSupported()) return false;
+    const fp = siteFingerprint();
+    if (!fp) return false;
+    try {
+      const key = await NV.crypto.keyFor(pw, manifest.salt, manifest.kdf_iterations);
+      return await NV.unlockStore.save(key, fp);
+    } catch {
+      return false;
+    }
+  }
+
+  async function forgetDevice() {
+    if (NV.unlockStore) await NV.unlockStore.clear();
+    NV.crypto.clearPassword();
+    remembered = false;
+    location.reload();
+  }
+
   async function tryAutoUnlock() {
     const pw = NV.crypto.loadPassword();
     if (pw) {
@@ -270,16 +338,36 @@
         NV.crypto.clearPassword();
       }
     }
+    const key = await loadRememberedKey();
+    if (key) {
+      // Set before unlocking, not after: `unlock` renders the page, and the topbar decides
+      // there and then whether to offer "forget this device". Setting it afterwards built the
+      // bar with the button missing, so a remembered reader had no way back out.
+      remembered = true;
+      try {
+        await unlock(key);
+        return;
+      } catch {
+        // A key that no longer opens the site is dead weight; do not keep prompting past it.
+        remembered = false;
+        if (NV.unlockStore) await NV.unlockStore.clear();
+      }
+    }
     showGate();
   }
 
-  /** Unlock the payload and render the page. */
-  async function unlock(pw) {
+  /** Unlock the payload and render the page. `pw` is the typed password or a remembered key. */
+  async function unlock(pw, opts) {
     const data = await NV.crypto.fetchJson(config.dataUrl, pw);
     payload = data;
-    password = pw;
+    secret = pw;
     try { await loadManifest(); } catch {}
-    NV.crypto.savePassword(pw);
+    if (!NV.crypto.isCryptoKey(pw)) {
+      NV.crypto.savePassword(pw);
+      if (opts && opts.remember) {
+        remembered = await rememberDevice(pw);
+      }
+    }
     hideGate();
     render();
     return true;
@@ -429,6 +517,7 @@
       watch.type = "button";
       text(watch, T.watchlist);
       watch.addEventListener("click", openWatchlist);
+      mountForgetButton(nav);
     }
     if (NV.share) {
       const md = make("button", "topbar__btn", nav);
@@ -1188,7 +1277,7 @@
     for (const m of months) {
       if (!archiveCache[m]) {
         const url = (config.indexBase || "") + m + ".enc";
-        const shard = await NV.crypto.fetchJson(url, password);
+        const shard = await NV.crypto.fetchJson(url, secret);
         archiveCache[m] = shard.items || [];
       }
       items = items.concat(archiveCache[m]);
@@ -1442,6 +1531,7 @@
     theme.type = "button";
     text(theme, T.themeToggle);
     theme.addEventListener("click", toggleTheme);
+    mountForgetButton(nav);
     return bar;
   }
 
@@ -1537,6 +1627,22 @@
       updateSavedChip($(".topbar__chip"));
       NV.app.refresh();
     });
+    // Reading one card must never cost a re-render. On a phone a card is marked read just by
+    // being scrolled past, so refreshing here rebuilt the whole list - and every thumbnail
+    // with it - once per card as the reader scrolled. Dim the one card instead. The saved
+    // chip counts saves only, so it has nothing to say about a read.
+    NV.user.on("read", (url) => dimReadCard(url));
+  }
+
+  /** Mark the card for `url` read in place. Cheap enough to run per card; no reflow of the list. */
+  function dimReadCard(url) {
+    for (const card of $$(".cards-wrap .card")) {
+      const link = card.querySelector(".card__link");
+      if (link && link.href === url) {
+        card.classList.add("card--read");
+        return;
+      }
+    }
   }
 
   function exportMarkdown() {
@@ -1792,7 +1898,9 @@
   NV.app = {
     get config() { return config; },
     get data() { return payload; },
-    get password() { return password; },
+    get password() { return secret; },
+    get remembered() { return remembered; },
+    forgetDevice: forgetDevice,
     refresh: refresh,
     setQuery: setQuery,
     unlock: unlock
