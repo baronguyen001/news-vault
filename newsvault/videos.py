@@ -199,9 +199,13 @@ def _iter_videos(conn: sqlite3.Connection) -> Iterator[Video | None]:
         columns.append("upload_date")
     if is_short_present:
         columns.append("is_short")
-    query = (
-        f"SELECT {', '.join(columns)} FROM videos WHERE success = 1 AND summary <> '' ORDER BY id"
-    )
+    where = "success = 1 AND summary <> ''"
+    # Videos the summarizer flagged as junk (no news value, no lesson) never get published.
+    # `junk` is a filter, not a field, so `Video` and `_video_from_row` stay untouched.
+    # Probed rather than assumed so a database without the column still builds.
+    if has_column(conn, "junk"):
+        where += " AND COALESCE(junk, 0) = 0"
+    query = f"SELECT {', '.join(columns)} FROM videos WHERE {where} ORDER BY id"
     cursor = conn.execute(query)
     try:
         for row in cursor:

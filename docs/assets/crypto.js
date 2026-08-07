@@ -65,6 +65,37 @@
     return key;
   }
 
+  function base64ToBytes(value) {
+    const binary = atob(value);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes;
+  }
+
+  /* A "secret" is either the password the reader typed or an already-derived AES key.
+   * A remembered device stores the derived key and never the password: the key comes back
+   * from IndexedDB non-extractable, so it can decrypt this site and yield nothing else. */
+  function isCryptoKey(value) {
+    return !!value &&
+      typeof value === "object" &&
+      typeof value.type === "string" &&
+      typeof value.algorithm === "object";
+  }
+
+  async function resolveKey(secret, salt, iterations) {
+    if (isCryptoKey(secret)) {
+      return secret;
+    }
+    return deriveKey(secret, salt, iterations);
+  }
+
+  /** The key for this site, given the salt and iteration count the manifest publishes. */
+  async function keyFor(password, saltBase64, iterations) {
+    return deriveKey(password, base64ToBytes(saltBase64), iterations);
+  }
+
   async function decryptBuffer(buffer, password) {
     if (!(buffer instanceof ArrayBuffer)) {
       throw new BadFormatError("Dữ liệu đầu vào không hợp lệ.");
@@ -88,7 +119,7 @@
     const iv = new Uint8Array(buffer, 25, 12);
     const ciphertext = new Uint8Array(buffer, 37);
 
-    const key = await deriveKey(password, salt, iterations);
+    const key = await resolveKey(password, salt, iterations);
 
     let plaintext;
     try {
@@ -170,6 +201,8 @@
     MAGIC,
     decryptBuffer,
     fetchJson,
+    keyFor,
+    isCryptoKey,
     savePassword,
     loadPassword,
     clearPassword,

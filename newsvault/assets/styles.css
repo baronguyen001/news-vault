@@ -213,6 +213,26 @@ button {
   color: var(--text);
 }
 
+/* The checkbox and its label share a row and a hit area: on a phone the word is a far
+   easier target than the box, and a 13px box alone is under any sane tap-target floor. */
+.gate__remember {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+  min-block-size: 44px;
+  font-size: 0.9375rem;
+  cursor: pointer;
+}
+
+.gate__remember input {
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+  flex: none;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
 .gate__btn {
   width: 100%;
   padding: var(--space-sm) var(--space-md);

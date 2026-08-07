@@ -4,6 +4,54 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.0] - 2026-08-07
+
+### Added
+- **"Nhớ thiết bị này" — unlock once and stay unlocked.** The password lived in
+  `sessionStorage`, which dies with the tab, so coming back tomorrow meant typing it again.
+  Ticking the box on the gate now keeps the reader in across a full browser restart. What is
+  stored is the **derived AES key, never the password**: `crypto.subtle.deriveKey` returns it
+  non-extractable, and a non-extractable `CryptoKey` is structured-cloneable, so IndexedDB can
+  hold the key itself. It decrypts this site and cannot be read back off the disk as text — so
+  a shared password is not exposed by a device that was lent out. Opt-in, off by default, and a
+  "Quên thiết bị này" button in the topbar undoes it. The offer is hidden entirely when the
+  browser has no IndexedDB to keep it in, rather than ticking a box that silently does nothing.
+  `newsvault/assets/unlock-store.js`, 10 tests; verified end to end in a real browser across
+  three separate browser processes.
+- The stored key is pinned to a fingerprint of the site's PBKDF2 salt and iteration count.
+  Rebuild with a new salt and every stored key is instantly useless, so the mismatch is
+  detected and the dead key deleted rather than left to fail on every visit forever.
+
+### Fixed
+- **Reading an article no longer rebuilds the page.** `markRead` emitted the generic `"change"`
+  event that saving an article emits, and the `"change"` handler re-renders the whole card
+  list. On a phone a card is marked read merely by scrolling past it — so scrolling a day page
+  tore the list down and rebuilt it once per card, re-fetching every thumbnail and closing any
+  open dialog on the way. Measured on a real Pixel-emulated page: scrolling a 94-card day
+  triggered **20 teardowns and 1,880 destroyed DOM nodes**; it is now 0 and 0. `markRead` emits
+  its own `"read"` event and the page dims that one card. `newsvault/assets/user.js`, 13 tests.
+- **A template edit reached the home page and none of the 120 day pages.** The incremental
+  build hashed the payload only, so changing `page.html.j2` changed no hash, every page was
+  judged current and the run reported "0 days built, 120 unchanged" — exit 0, nothing written,
+  site silently stale. The freshness key now includes a digest of the HTML shell, so editing a
+  template invalidates the whole archive. Search shards are excluded: they are encrypted JSON
+  with no page around them, and rebuilding them on a markup tweak would rewrite every byte of
+  `docs/idx`. `newsvault/tests/test_build_state.py` — the first tests `build.py` has ever had.
+- **The nightly job never ran the orphan pruner.** `scripts/prune_orphans.py` shipped in 0.9.0
+  but nothing called it, so the stale pages it exists to remove kept accumulating. `run_daily.ps1`
+  now runs it after the build and before the commit, so deletions travel in the same push. A
+  failed prune logs and continues rather than withholding a good build.
+- **Week pages could never be pruned.** `manifest.json` had no `weeks` key, so the pruner's
+  "if I cannot see them, do not touch them" guard permanently skipped `docs/w` — deleting a
+  week page is not reversible and it will not guess. The manifest now lists every live week.
+  A run that did not sweep the whole archive publishes an **empty** week list rather than a
+  partial one, because a partial list would mark every week outside it an orphan.
+- The "forget this device" button was built into the topbar before `remembered` was set, so a
+  remembered reader had no way back out. Caught by the browser test, not by reading the code.
+
+### Changed
+- Shell cache bumped to `nv-shell-v5`; `unlock-store.js` is a pre-cached shell asset.
+
 ## [0.9.0] - 2026-08-06
 
 ### Changed
