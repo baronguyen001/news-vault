@@ -604,53 +604,63 @@
       "d": "2026-08-07",
       "months": "2026-08",
       "n": 109
+    },
+    {
+      "d": "2026-08-08",
+      "months": "2026-08",
+      "n": 66
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 611,
+      "n": 626,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 191,
+      "n": 197,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 118,
+      "n": 128,
       "slug": "luat"
     },
     {
       "label": "thuế",
-      "n": 112,
+      "n": 120,
       "slug": "thue"
     },
     {
       "label": "doanh nghiệp",
-      "n": 104,
+      "n": 108,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 100,
+      "n": 101,
       "slug": "cong-nghe"
     },
     {
       "label": "chính phủ",
-      "n": 90,
+      "n": 92,
       "slug": "chinh-phu"
     },
     {
       "label": "ngân hàng",
-      "n": 84,
+      "n": 86,
       "slug": "ngan-hang"
     },
     {
       "label": "trung ương",
-      "n": 74,
+      "n": 75,
       "slug": "trung-uong"
+    },
+    {
+      "label": "lãi suất",
+      "n": 74,
+      "slug": "lai-suat"
     },
     {
       "label": "chính sách",
@@ -658,9 +668,9 @@
       "slug": "chinh-sach"
     },
     {
-      "label": "lãi suất",
-      "n": 73,
-      "slug": "lai-suat"
+      "label": "chip",
+      "n": 68,
+      "slug": "chip"
     },
     {
       "label": "lạm phát",
@@ -669,22 +679,17 @@
     },
     {
       "label": "dữ liệu",
-      "n": 63,
+      "n": 65,
       "slug": "du-lieu"
     },
     {
-      "label": "chip",
-      "n": 62,
-      "slug": "chip"
-    },
-    {
       "label": "chứng khoán",
-      "n": 58,
+      "n": 60,
       "slug": "chung-khoan"
     },
     {
       "label": "đảng",
-      "n": 55,
+      "n": 57,
       "slug": "dang"
     },
     {
@@ -694,32 +699,32 @@
     },
     {
       "label": "nghị quyết",
-      "n": 46,
+      "n": 48,
       "slug": "nghi-quyet"
     },
     {
-      "label": "quốc hội",
-      "n": 44,
-      "slug": "quoc-hoi"
-    },
-    {
       "label": "xuất khẩu",
-      "n": 43,
+      "n": 48,
       "slug": "xuat-khau"
     },
     {
+      "label": "quốc hội",
+      "n": 46,
+      "slug": "quoc-hoi"
+    },
+    {
       "label": "chiến tranh",
-      "n": 36,
+      "n": 38,
       "slug": "chien-tranh"
     },
     {
       "label": "năng lượng",
-      "n": 36,
+      "n": 37,
       "slug": "nang-luong"
     },
     {
       "label": "nhập khẩu",
-      "n": 30,
+      "n": 31,
       "slug": "nhap-khau"
     },
     {
@@ -728,18 +733,18 @@
       "slug": "phap-ly"
     },
     {
+      "label": "nghị định",
+      "n": 28,
+      "slug": "nghi-dinh"
+    },
+    {
       "label": "startup",
       "n": 28,
       "slug": "startup"
     },
     {
-      "label": "nghị định",
-      "n": 26,
-      "slug": "nghi-dinh"
-    },
-    {
       "label": "thuế quan",
-      "n": 26,
+      "n": 28,
       "slug": "thue-quan"
     },
     {
@@ -753,14 +758,19 @@
       "slug": "tri-tue-nhan-tao"
     },
     {
+      "label": "bán dẫn",
+      "n": 18,
+      "slug": "ban-dan"
+    },
+    {
       "label": "bảo hiểm",
       "n": 18,
       "slug": "bao-hiem"
     },
     {
-      "label": "bán dẫn",
-      "n": 17,
-      "slug": "ban-dan"
+      "label": "bất động sản",
+      "n": 16,
+      "slug": "bat-dong-san"
     },
     {
       "label": "bộ chính trị",
@@ -773,19 +783,14 @@
       "slug": "cai-cach"
     },
     {
-      "label": "bất động sản",
+      "label": "trừng phạt",
       "n": 15,
-      "slug": "bat-dong-san"
+      "slug": "trung-phat"
     },
     {
       "label": "FDI",
       "n": 14,
       "slug": "fdi"
-    },
-    {
-      "label": "trừng phạt",
-      "n": 13,
-      "slug": "trung-phat"
     },
     {
       "label": "chuyển đổi số",
@@ -878,6 +883,11 @@
       "slug": "chinh-tri"
     },
     {
+      "label": "điện toán đám mây",
+      "n": 4,
+      "slug": "dien-toan-dam-may"
+    },
+    {
       "label": "Nhật Bản",
       "n": 4,
       "slug": "nhat-ban"
@@ -916,11 +926,6 @@
       "label": "biến đổi khí hậu",
       "n": 3,
       "slug": "bien-doi-khi-hau"
-    },
-    {
-      "label": "điện toán đám mây",
-      "n": 3,
-      "slug": "dien-toan-dam-may"
     },
     {
       "label": "Đổi mới sáng tạo",
@@ -1033,7 +1038,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-08-07T23:59:59+07:00",
+  "generated_at": "2026-08-08T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
