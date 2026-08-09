@@ -20,10 +20,12 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from newsvault import __version__, charts, crypto, db, feeds, payload, render
+from newsvault import curated as curated_db
 from newsvault import videos as videos_db
 from newsvault.blindspot import blindspots
 from newsvault.brief import BriefResult, fallback_brief, generate_brief
 from newsvault.cluster import cluster_articles
+from newsvault.curated import CuratedItem
 from newsvault.entities import Entity, EntityIndex, build_entity_index
 from newsvault.exports import day_markdown, write_markdown
 from newsvault.model import Article
@@ -76,6 +78,7 @@ class BuildReport:
     week_pages: int = 0
     index_shards: int = 0
     videos_included: int = 0
+    curated_pages: int = 0
     brief_source: dict[str, str] = field(default_factory=dict)
     bytes_written: int = 0
 
@@ -84,7 +87,8 @@ class BuildReport:
         line = (
             f"{len(self.days_built)} ngày dựng, {len(self.days_skipped)} bỏ qua (không đổi), "
             f"{self.entity_pages} trang thực thể, {self.week_pages} trang tuần, "
-            f"{self.index_shards} shard tìm kiếm, {self.videos_included} video"
+            f"{self.index_shards} shard tìm kiếm, {self.videos_included} video, "
+            f"{self.curated_pages} bài phân tích sâu"
         )
         # Brief tụt xuống bản fallback (xếp theo điểm, không qua LLM) là một sự cố CHẤT
         # LƯỢNG chứ không phải lỗi build — trước đây `brief_source` được ghi lại nhưng
@@ -343,6 +347,30 @@ def _load_videos(options: BuildOptions) -> dict[str, list[Video]]:
         conn.close()
 
 
+def _load_curated(options: BuildOptions) -> list[CuratedItem]:
+    """Every published deep-dive analysis, newest first, or nothing at all on any problem.
+
+    Same contract as `_load_videos`: the curated table lives in a database another tool
+    keeps writing to, and it did not exist at all before the curated pipeline shipped. A
+    missing file, a missing table or a lock must degrade to a site without the section,
+    never to a failed nightly build.
+    """
+    if not options.video_db_path:
+        return []
+    try:
+        conn = videos_db.connect(options.video_db_path)
+    except (FileNotFoundError, sqlite3.Error) as err:
+        logger.warning("curated database unavailable (%s); building without deep dives", err)
+        return []
+    try:
+        return curated_db.load_all(conn)
+    except sqlite3.Error as err:
+        logger.warning("curated table unreadable (%s); building without deep dives", err)
+        return []
+    finally:
+        conn.close()
+
+
 def select_days(conn, options: BuildOptions, *, extra_days: Iterable[str] = ()) -> list[str]:
     """Resolve which day keys this invocation should build."""
     available = sorted(set(db.available_days(conn)) | set(extra_days))
@@ -375,20 +403,27 @@ def build_site(options: BuildOptions) -> BuildReport:
     )
 
     videos_by_day = _load_videos(options)
+    curated_items = _load_curated(options)
+    curated_by_day = curated_db.group_by_day(curated_items)
 
     conn = db.connect(options.db_path)
     try:
-        target_days = select_days(conn, options, extra_days=videos_by_day.keys())
+        target_days = select_days(
+            conn, options, extra_days=set(videos_by_day) | set(curated_by_day)
+        )
         if not target_days:
             logger.warning("nothing to build")
             return report
 
-        # A day exists when it has articles OR videos: the YouTube archive reaches back
-        # months further than the news database, and those summaries are worth reading.
-        all_days = sorted(set(db.available_days(conn)) | set(videos_by_day))
+        # A day exists when it has articles OR videos OR a deep dive: the YouTube archive
+        # reaches back months further than the news database, and a curated analysis made
+        # on a quiet news day would otherwise have no day page to be linked from.
+        all_days = sorted(set(db.available_days(conn)) | set(videos_by_day) | set(curated_by_day))
         counts = db.counts_by_day(conn)
         for day, day_videos in videos_by_day.items():
             counts[day] = counts.get(day, 0) + len(day_videos)
+        for day, day_curated in curated_by_day.items():
+            counts[day] = counts.get(day, 0) + len(day_curated)
 
         # One wide load covers the built days plus the baseline window behind them.
         history_start = _shift(min(target_days), -HISTORY_DAYS)
@@ -410,7 +445,8 @@ def build_site(options: BuildOptions) -> BuildReport:
         for day in target_days:
             articles = by_day.get(day, [])
             day_videos = videos_by_day.get(day, [])
-            if not articles and not day_videos:
+            day_curated = curated_by_day.get(day, [])
+            if not articles and not day_videos and not day_curated:
                 continue
 
             brief = _brief_for(day, articles, options)
@@ -429,6 +465,7 @@ def build_site(options: BuildOptions) -> BuildReport:
                 charts=_day_charts(articles),
                 generated_at=_day_anchor(day),
                 videos=day_videos,
+                curated=day_curated,
             )
 
             key = f"day:{day}"
@@ -437,6 +474,7 @@ def build_site(options: BuildOptions) -> BuildReport:
             month_items = index_by_month.setdefault(day[:7], [])
             month_items.extend(payload.index_items(day, articles))
             month_items.extend(payload.video_index_items(day_videos))
+            month_items.extend(payload.curated_index_items(day_curated))
             weeks.setdefault(_iso_week(day)[0], []).append(day)
 
             if state.get(key) == fresh[key] and (out_dir / "d" / day / "data.enc").exists():
@@ -491,9 +529,25 @@ def build_site(options: BuildOptions) -> BuildReport:
         report.entity_pages = _write_entity_pages(
             out_dir, entity_index, loaded, options, meta, salt, state, fresh
         )
-        _write_home(out_dir, all_days, counts, options, meta)
+        report.curated_pages = _write_curated_pages(
+            out_dir, curated_items, options, meta, salt, state, fresh
+        )
+        _write_home(out_dir, all_days, counts, options, meta, curated_total=len(curated_items))
         _write_root_files(
-            out_dir, all_days, counts, entity_index, by_day, options, meta, salt, manifest_weeks
+            out_dir,
+            all_days,
+            counts,
+            entity_index,
+            by_day,
+            options,
+            meta,
+            salt,
+            manifest_weeks,
+            # Always the full list, unlike `weeks`: `_load_curated` reads every row and
+            # `_write_curated_pages` writes every page on every run regardless of which
+            # days were targeted, so this can never be the partial list that would make
+            # the pruner delete live analyses.
+            curated_ids=[item.id for item in curated_items],
         )
     finally:
         conn.close()
@@ -695,12 +749,104 @@ def _write_entity_pages(
     return written
 
 
+def _write_curated_pages(
+    out_dir: Path,
+    items: Sequence[CuratedItem],
+    options: BuildOptions,
+    meta: render.SiteMeta,
+    salt: bytes,
+    state: Mapping[str, str],
+    fresh: dict[str, str],
+) -> int:
+    """Write the deep-dive listing plus one reading page per analysis.
+
+    A page per item, rather than one long scroll: these run 800-1200 words with a table of
+    contents, so each needs its own URL to be shareable and its own scroll position to be
+    resumable.
+    """
+    written = 0
+
+    for item in items:
+        data = payload.curated_payload(item)
+        key = f"curated:{item.id}"
+        fresh[key] = _digest(data, with_shell=True)
+        target = out_dir / "c" / item.id
+        if state.get(key) == fresh[key] and (target / "data.enc").exists():
+            continue
+        config = {
+            "kind": "curated",
+            "base": "../../",
+            "version": __version__,
+            "kdfIterations": crypto.DEFAULT_ITERATIONS,
+            "site": options.site,
+            "siteUrl": options.site_url,
+            "curatedId": item.id,
+            "day": item.day,
+            "dataUrl": "data.enc",
+            "manifestUrl": "../../manifest.json",
+            "indexBase": "../../idx/",
+        }
+        render.write_page(
+            target / "index.html",
+            render.render_page(
+                kind="curated",
+                base="../../",
+                # Generic title on purpose: the analysis title is private archive text and
+                # must not leak to a crawler through <title>, same rule as entity pages.
+                title=f"Phân tích sâu — {options.site}",
+                config=config,
+                meta=meta,
+            ),
+        )
+        crypto.write_encrypted(target / "data.enc", data, options.password, salt=salt)
+        written += 1
+
+    # The listing is written even with zero items so the menu link never lands on a 404.
+    index_data = payload.curated_index_payload(
+        items, generated_at=_day_anchor(items[0].day) if items else _day_anchor(_today())
+    )
+    index_key = "curated:index"
+    fresh[index_key] = _digest(index_data, with_shell=True)
+    index_target = out_dir / "c"
+    if not (state.get(index_key) == fresh[index_key] and (index_target / "data.enc").exists()):
+        config = {
+            "kind": "curatedIndex",
+            "base": "../",
+            "version": __version__,
+            "kdfIterations": crypto.DEFAULT_ITERATIONS,
+            "site": options.site,
+            "siteUrl": options.site_url,
+            "dataUrl": "data.enc",
+            "manifestUrl": "../manifest.json",
+            "indexBase": "../idx/",
+        }
+        render.write_page(
+            index_target / "index.html",
+            render.render_page(
+                kind="curatedIndex",
+                base="../",
+                title=f"Phân tích sâu — {options.site}",
+                config=config,
+                meta=meta,
+            ),
+        )
+        crypto.write_encrypted(index_target / "data.enc", index_data, options.password, salt=salt)
+        written += 1
+
+    return written
+
+
+def _today() -> str:
+    return dt.datetime.now(dt.UTC).date().isoformat()
+
+
 def _write_home(
     out_dir: Path,
     all_days: Sequence[str],
     counts: Mapping[str, int],
     options: BuildOptions,
     meta: render.SiteMeta,
+    curated_total: int = 0,
 ) -> None:
     """Write the landing page. Its calendar reads from the plain manifest."""
     latest = all_days[-1] if all_days else ""
@@ -717,6 +863,7 @@ def _write_home(
         "indexBase": "idx/",
         "days": len(all_days),
         "articles": sum(counts.values()),
+        "curatedTotal": curated_total,
     }
     render.write_page(
         out_dir / "index.html",
@@ -734,6 +881,7 @@ def _write_root_files(
     meta: render.SiteMeta,
     salt: bytes,
     weeks: Sequence[tuple[str, str, str]] = (),
+    curated_ids: Sequence[str] | None = None,
 ) -> None:
     """Manifest, feeds, assets and the static root files."""
     # Anchored to the newest day, not to the clock, for the same reason `_day_anchor` exists:
@@ -751,6 +899,7 @@ def _write_root_files(
         sorted({day[:7] for day in all_days}),
         entity_index.top(MAX_ENTITY_PAGES),
         weeks=weeks,
+        curated=curated_ids,
         generated_at=generated_at,
         kdf_iterations=crypto.DEFAULT_ITERATIONS,
         site=options.site,

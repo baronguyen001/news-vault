@@ -18,6 +18,7 @@
     briefTitle: "Tóm tắt ngày",
     analysisPanels: "Chuyên mục · Biểu đồ · Xu hướng",
     videosTitle: "Video YouTube",
+    deepTitle: "Phân tích sâu",
     hideShorts: (n) => `Ẩn ${n} Short`,
     showShorts: (n) => `Hiện ${n} Short`,
     categoriesTitle: "Chuyên mục",
@@ -392,6 +393,8 @@
     else if (config.kind === "home") renderHomeAfterUnlock();
     else if (config.kind === "entity") renderEntity();
     else if (config.kind === "week") renderWeek();
+    else if (config.kind === "curatedIndex") renderCuratedIndex();
+    else if (config.kind === "curated") renderCuratedArticle();
     wireUser();
     applyHash();
     scrollToAnchor();
@@ -469,6 +472,7 @@
     renderTrending(analysis);
     renderBlindspots(analysis);
     renderSearchbar(app);
+    renderCurated(app);
     renderVideos(app);
     const wrap = make("div", "cards-wrap", app);
     const countEl = make("div", "result-count sr-only", wrap);
@@ -502,6 +506,7 @@
     const home = make("a", "topbar__link topbar__link--home", nav);
     home.href = config.base || "./";
     text(home, T.home);
+    mountDeepLink(nav);
     // Column choice is a desktop affordance; the stylesheet hides it below 1024px.
     if (NV.layout) NV.layout.mount(nav);
     const theme = make("button", "topbar__btn", nav);
@@ -552,6 +557,53 @@
       const li = make("li", "brief__item", ul);
       li.appendChild(document.createTextNode(b));
     }
+  }
+
+  /**
+   * "Phân tích sâu" entry in a topbar.
+   *
+   * Skipped on the listing page itself: a menu item that reloads the page you are already
+   * on is a dead control, and the row is tight on a phone.
+   */
+  function mountDeepLink(nav) {
+    if (!nav || config.kind === "curatedIndex") return;
+    const link = make("a", "topbar__link topbar__link--deep", nav);
+    link.href = `${config.base || ""}c/`;
+    text(link, T.deepTitle);
+    return link;
+  }
+
+  /**
+   * The day's deep-dive analyses, as link cards.
+   *
+   * Not folded like the video panel and not part of the article list: each of these is an
+   * 800-1200 word piece living on its own page, so what belongs here is a signpost, not
+   * the text. Placed above the videos because it is the hand-picked reading of the day.
+   */
+  function renderCurated(parent) {
+    if (!NV.curated) return;
+    const list = payload.curated || [];
+    if (!list.length) return;
+    const section = NV.curated.daySection(list, config.base || "../../");
+    if (section) parent.appendChild(section);
+  }
+
+  /** Listing page for every deep dive in the archive. */
+  function renderCuratedIndex() {
+    const app = $("#app");
+    text(app, "");
+    app.className = "app app--deeplist";
+    renderSimpleTopbar(app);
+    if (NV.curated) NV.curated.renderIndex(app, payload, config);
+  }
+
+  /** One deep dive, laid out for long-form reading. */
+  function renderCuratedArticle() {
+    const app = $("#app");
+    text(app, "");
+    app.className = "app app--deep";
+    renderSimpleTopbar(app);
+    if (NV.curated) NV.curated.renderArticle(app, payload, config);
   }
 
   /**
@@ -1389,6 +1441,7 @@
       await loadManifest();
       const app = $("#app");
       app.hidden = false;
+      renderHomeNav(app);
       renderCalendar(app);
     } catch {
       const app = $("#app");
@@ -1397,6 +1450,27 @@
         text(app, T.loadFailed);
       }
     }
+  }
+
+  /**
+   * Menu row on the landing page.
+   *
+   * The landing page has no topbar — it opens straight onto the calendar — so this is the
+   * only place a section link can live there. Built before unlock, like the calendar
+   * itself, because a menu that only appears after typing the password is not a menu.
+   */
+  function renderHomeNav(parent) {
+    const nav = make("nav", "homenav", parent);
+    nav.setAttribute("aria-label", T.deepTitle);
+    const link = make("a", "homenav__link", nav);
+    link.href = `${config.base || ""}c/`;
+    text(link, T.deepTitle);
+    const total = Number(config.curatedTotal);
+    if (total > 0) {
+      const count = make("span", "homenav__count", link);
+      text(count, ` (${total})`);
+    }
+    return nav;
   }
 
   function renderCalendar(parent) {
@@ -1526,6 +1600,7 @@
       day.href = `${config.base || ""}d/${latest}/`;
       text(day, T.latestTitle);
     }
+    mountDeepLink(nav);
     if (NV.layout) NV.layout.mount(nav);
     const theme = make("button", "topbar__btn", nav);
     theme.type = "button";

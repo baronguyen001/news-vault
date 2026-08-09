@@ -39,6 +39,8 @@ def expected_paths(manifest: dict, docs: Path) -> set[Path]:
     for week in manifest.get("weeks", []):
         label = week["w"] if isinstance(week, dict) else week
         expected.add(docs / "w" / str(label))
+    for curated_id in manifest.get("curated", []):
+        expected.add(docs / "c" / str(curated_id))
     return expected
 
 
@@ -47,13 +49,19 @@ def find_orphans(manifest: dict, docs: Path) -> list[Path]:
     expected = expected_paths(manifest, docs)
     orphans: list[Path] = []
 
-    for name in ("d", "e", "w"):
+    for name in ("d", "e", "w", "c"):
         parent = docs / name
         if not parent.is_dir():
             continue
         # `weeks` is absent from the manifest in some versions; leaving those directories
         # alone is the safe failure mode, since deleting them is not reversible.
         if name == "w" and not manifest.get("weeks"):
+            continue
+        # Same rule for deep dives, with one extra wrinkle: `docs/c` also holds the
+        # listing page itself at `docs/c/index.html`, which is a FILE beside the per-item
+        # directories and so is never a candidate here (only directories are scanned).
+        # An absent `curated` key means the build did not survey them -> hands off.
+        if name == "c" and "curated" not in manifest:
             continue
         orphans.extend(
             child for child in sorted(parent.iterdir()) if child.is_dir() and child not in expected

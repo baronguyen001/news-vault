@@ -2805,3 +2805,528 @@ body.modal-open {
 .card--video.topic-khac {
   border-inline-start-color: var(--danger);
 }
+
+/* ============================================================================
+   Phan tich sau (deep dives)
+   ----------------------------------------------------------------------------
+   A separate class family from .card/.cards on purpose. Sharing a presentational
+   class with the article/video list is what once let a global `#app .cards`
+   selector match the wrong list and blank out a day page.
+   ========================================================================== */
+
+.badge--deep {
+  background: color-mix(in srgb, var(--accent) 18%, var(--surface-2));
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+/* ---------- teaser cards (day page + listing) ---------- */
+
+.dcards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-md);
+}
+
+.dcards-wrap {
+  margin-block-start: var(--space-lg);
+}
+
+.dcard {
+  border: 1px solid var(--border);
+  border-inline-start: 3px solid var(--accent);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.dcard__link {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  color: inherit;
+  text-decoration: none;
+}
+
+/* The whole card is one anchor, so the global `a:hover { text-decoration: underline }`
+   underlines everything inside it — title, byline and teaser all at once — and a child
+   cannot opt out, because text-decoration paints through descendants regardless of their
+   own value. Cancel it here and put the affordance back on the title alone. */
+.dcard__link:hover,
+.dcard__link:focus-visible {
+  background: var(--surface-2);
+  text-decoration: none;
+}
+
+.dcard__link:hover .dcard__title,
+.dcard__link:focus-visible .dcard__title {
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+/* Fixed track, never a negotiated `flex: 1 1 auto`: a thumbnail that sizes itself
+   against its siblings is how the video cards ended up six different widths on
+   one page. */
+.dcard__thumb {
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--surface-2);
+  aspect-ratio: 16 / 9;
+}
+
+.dcard__thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 32%;
+}
+
+.dcard__body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.dcard__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.dcard__title {
+  margin: 0;
+  font-size: 1.0625rem;
+  line-height: 1.35;
+}
+
+.dcard__meta {
+  color: var(--text-dim);
+  font-size: 0.8125rem;
+}
+
+/* Three lines is enough to judge whether the piece is worth opening; more and the
+   card stops being a signpost and starts being the article. */
+.dcard__lead {
+  margin: var(--space-xs) 0 0;
+  color: var(--text-dim);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.dcard__cta {
+  margin-block-start: var(--space-xs);
+  color: var(--accent);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.dcard__cta::after {
+  content: " \2192";
+}
+
+@media (min-width: 720px) {
+  .dcard__link {
+    grid-template-columns: 15rem minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+/* ---------- day-page section ---------- */
+
+.deepteaser {
+  margin-block: var(--space-lg);
+}
+
+.deepteaser__title {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+  margin: 0 0 var(--space-md);
+  font-size: 1.125rem;
+}
+
+.deepteaser__count {
+  color: var(--text-dim);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+/* On the day page this list sits above the article grid and must not compete with
+   it: one column on a phone, two once there is room, never the three the standalone
+   listing page uses. */
+.deepteaser__list {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 1024px) {
+  .deepteaser__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .deepteaser__list .dcard__link {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---------- listing page ---------- */
+
+.app--deeplist {
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: var(--space-md);
+}
+
+.deeplist__head {
+  margin-block: var(--space-lg) var(--space-md);
+}
+
+.deeplist__title {
+  margin: 0;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.deeplist__count {
+  margin: var(--space-xs) 0 0;
+  color: var(--text-dim);
+}
+
+.deeplist__empty {
+  color: var(--text-dim);
+  padding-block: var(--space-xl);
+}
+
+@media (min-width: 1024px) {
+  .deeplist__items {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1440px) {
+  .deeplist__items {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  /* Three across leaves no room for a side-by-side thumbnail. */
+  .deeplist__items .dcard__link {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---------- article page ---------- */
+
+.app--deep {
+  padding-inline: var(--space-md);
+}
+
+.deep {
+  position: relative;
+  max-width: 78rem;
+  margin-inline: auto;
+  padding-block-end: var(--space-xl);
+}
+
+/* Fixed to the viewport, not in flow: it has to stay visible while the article
+   scrolls under it. */
+.deep__progress {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  height: 3px;
+  background: var(--surface-2);
+  z-index: 40;
+  pointer-events: none;
+}
+
+.deep__progress-bar {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .deep__progress-bar {
+    transition: width 120ms linear;
+  }
+}
+
+.deep__header {
+  margin-block: var(--space-lg) var(--space-xl);
+  max-width: 46rem;
+}
+
+.deep__badges {
+  display: flex;
+  gap: var(--space-xs);
+  margin-block-end: var(--space-sm);
+}
+
+.deep__title {
+  margin: 0;
+  font-size: clamp(1.5rem, 4.5vw, 2.25rem);
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.deep__meta {
+  margin: var(--space-sm) 0 0;
+  color: var(--text-dim);
+  font-size: 0.9375rem;
+}
+
+.deep__media {
+  margin-block-start: var(--space-md);
+}
+
+.deep__thumb {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--surface-2);
+  aspect-ratio: 16 / 9;
+  max-width: 34rem;
+}
+
+.deep__thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 32%;
+}
+
+.deep__watch {
+  display: inline-flex;
+  align-items: center;
+  /* 44px is the touch-target floor; the text alone measured 24px tall. */
+  min-height: 44px;
+  margin-block-start: var(--space-sm);
+  color: var(--accent);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.deep__watch::before {
+  content: "\25B6\00A0";
+}
+
+.deep__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-xl);
+  align-items: start;
+}
+
+/* The measured column. Around 68 characters is the readable range for Vietnamese
+   body text, and the whole reason this section exists is a piece too long to sit
+   in a card. */
+.deep__body {
+  max-width: 42rem;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+
+.deep__p {
+  margin: 0 0 var(--space-md);
+}
+
+/* scroll-margin clears the fixed progress bar and the sticky topbar, so jumping
+   to an anchor does not land with the heading tucked underneath them. */
+.deep__h {
+  scroll-margin-block-start: 5rem;
+  margin: var(--space-xl) 0 var(--space-sm);
+  font-size: 1.25rem;
+  line-height: 1.35;
+  padding-block-end: var(--space-xs);
+  border-block-end: 1px solid var(--border);
+}
+
+.deep__h:first-child {
+  margin-block-start: 0;
+}
+
+.deep__list {
+  margin: 0 0 var(--space-md);
+  padding-inline-start: 1.25rem;
+}
+
+.deep__li {
+  margin-block-end: var(--space-xs);
+}
+
+.deep__toc {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  padding: var(--space-md);
+}
+
+.deep__toc-title {
+  margin: 0 0 var(--space-sm);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+
+.deep__toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.deep__toc-item {
+  margin: 0;
+}
+
+.deep__toc-link {
+  display: block;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  border-inline-start: 2px solid transparent;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.deep__toc-link:hover,
+.deep__toc-link:focus-visible {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.deep__toc-link--active {
+  color: var(--text);
+  border-inline-start-color: var(--accent);
+  background: var(--surface-2);
+  font-weight: 600;
+}
+
+.deep__foot {
+  margin-block-start: var(--space-xl);
+  padding-block-start: var(--space-md);
+  border-block-start: 1px solid var(--border);
+  max-width: 42rem;
+}
+
+.deep__back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.deep__back::before {
+  content: "\2190\00A0";
+}
+
+/* On a phone the contents list is a lid sitting on the article, so it collapses
+   into a compact scrollable strip instead of a full-height column. */
+@media (max-width: 1023px) {
+  .deep__toc-list {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: var(--space-sm);
+    padding-block-end: var(--space-xs);
+  }
+
+  /* Horizontal strip on a phone, so each entry must clear the 44px touch floor on
+     its own: stacked vertically the row height came out at 30px. */
+  .deep__toc-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    white-space: nowrap;
+    border-inline-start: 0;
+    border-block-end: 2px solid transparent;
+  }
+
+  .deep__toc-link--active {
+    border-inline-start: 0;
+    border-block-end-color: var(--accent);
+  }
+}
+
+@media (min-width: 1024px) {
+  /* Contents first visually, article first in the DOM: `order` does the swap so a
+     screen reader still meets the article before its navigation aid. */
+  .deep__layout {
+    grid-template-columns: 16rem minmax(0, 1fr);
+  }
+
+  .deep__toc {
+    position: sticky;
+    inset-block-start: var(--space-lg);
+    order: -1;
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+  }
+
+  .deep__body {
+    font-size: 1.125rem;
+  }
+}
+
+/* ---------- menu entries ---------- */
+
+.homenav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-block: var(--space-md);
+}
+
+.homenav__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.homenav__link:hover,
+.homenav__link:focus-visible {
+  border-color: var(--accent);
+  background: var(--surface-2);
+}
+
+.homenav__count {
+  color: var(--text-dim);
+  font-weight: 400;
+}
+
+.topbar__link--deep {
+  color: var(--accent);
+}
+
+@media print {
+  .deep__progress,
+  .deep__toc,
+  .deep__foot {
+    display: none;
+  }
+
+  .deep__body {
+    max-width: none;
+  }
+}

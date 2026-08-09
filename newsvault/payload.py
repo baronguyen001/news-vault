@@ -4,6 +4,7 @@ from collections.abc import Iterable, Mapping, Sequence
 
 from newsvault.blindspot import Blindspot
 from newsvault.cluster import Cluster
+from newsvault.curated import CuratedItem
 from newsvault.entities import Entity
 from newsvault.model import Article
 from newsvault.text import excerpt, fold
@@ -148,6 +149,99 @@ def video_index_items(videos: Sequence[Video]) -> list[dict[str, object]]:
     return items
 
 
+def curated_teaser(item: CuratedItem) -> dict[str, object]:
+    """Compact shape for a curated analysis: enough for a card, not the article itself.
+
+    The body is deliberately absent. A day page carrying three 1200-word analyses in full
+    would triple its payload for text the reader has to open a dedicated page to read
+    anyway, so the card links out and only the reading page ships the blocks.
+    """
+    return _sorted(
+        {
+            "id": item.id,
+            "t": item.title,
+            "c": item.channel,
+            "u": item.url,
+            "th": item.thumbnail,
+            "d": item.day,
+            "p": item.processed_at,
+            "lead": item.lead,
+            "w": item.words,
+            "m": item.minutes,
+            "ns": len(item.sections),
+        }
+    )
+
+
+def curated_payload(item: CuratedItem) -> dict[str, object]:
+    """Full analysis for its own reading page.
+
+    Like a video summary, the body travels as pre-parsed blocks and never as markup, so no
+    text a language model produced can reach the browser as HTML.
+    """
+    return _sorted(
+        {
+            "v": 1,
+            "kind": "curated",
+            "id": item.id,
+            "t": item.title,
+            "c": item.channel,
+            "u": item.url,
+            "th": item.thumbnail,
+            "d": item.day,
+            "p": item.processed_at,
+            "pub": item.published_iso,
+            "w": item.words,
+            "m": item.minutes,
+            "toc": [{"a": s.anchor, "l": s.label} for s in item.sections],
+            "bl": [{"k": b.kind, "r": [[run, bold] for run, bold in b.runs]} for b in item.blocks],
+        }
+    )
+
+
+def curated_index_payload(items: Sequence[CuratedItem], *, generated_at: str) -> dict[str, object]:
+    """Payload for the "Phân tích sâu" listing page."""
+    return _sorted(
+        {
+            "v": 1,
+            "kind": "curatedIndex",
+            "generated_at": generated_at,
+            "total": len(items),
+            "items": [curated_teaser(item) for item in items],
+        }
+    )
+
+
+def curated_index_items(items: Sequence[CuratedItem]) -> list[dict[str, object]]:
+    """Search-index entries so whole-archive search reaches the analyses too."""
+    out: list[dict[str, object]] = []
+    for item in items:
+        body = " ".join(run for block in item.blocks for run, _ in block.runs)
+        searchable = fold(f"{item.title} {item.channel} {body}".strip())
+        out.append(
+            _sorted(
+                {
+                    "d": item.day,
+                    # The id, not a positional index: a curated entry is addressed by its
+                    # own page, so the front end needs the id to build the link.
+                    "i": item.id,
+                    "k": "c",
+                    "t": item.title,
+                    "f": searchable,
+                    "s": item.channel,
+                    "sk": "youtube",
+                    "tr": "free",
+                    "tp": "Phân tích sâu",
+                    "im": "",
+                    "sc": 0,
+                    "r": "",
+                    "tg": [],
+                }
+            )
+        )
+    return out
+
+
 def day_payload(
     day: str,
     articles: Sequence[Article],
@@ -161,6 +255,7 @@ def day_payload(
     charts: Mapping[str, str],
     generated_at: str,
     videos: Sequence[Video] = (),
+    curated: Sequence[CuratedItem] = (),
 ) -> dict[str, object]:
     """Build the encrypted JSON payload for a single day page."""
     compact = [compact_article(a, i, entities=entity_map) for i, a in enumerate(articles)]
@@ -199,6 +294,7 @@ def day_payload(
             "clusters": cluster_objs,
             "articles": compact,
             "videos": [compact_video(v) for v in videos],
+            "curated": [curated_teaser(c) for c in curated],
         }
     )
 
@@ -336,6 +432,7 @@ def manifest(
     entities: Sequence[Entity],
     *,
     weeks: Sequence[tuple[str, str, str]] = (),
+    curated: Sequence[str] | None = None,
     generated_at: str,
     kdf_iterations: int,
     site: str,
@@ -348,19 +445,25 @@ def manifest(
     # them it has to leave docs/w alone entirely rather than risk an unrecoverable delete.
     week_objs = [_sorted({"w": label, "s": start, "e": end}) for label, start, end in sorted(weeks)]
 
-    return _sorted(
-        {
-            "v": 1,
-            "site": site,
-            "version": version,
-            "generated_at": generated_at,
-            "days": day_objs,
-            "months": list(months),
-            "kdf_iterations": kdf_iterations,
-            "entities": entity_objs,
-            "weeks": week_objs,
-        }
-    )
+    data: dict[str, object] = {
+        "v": 1,
+        "site": site,
+        "version": version,
+        "generated_at": generated_at,
+        "days": day_objs,
+        "months": list(months),
+        "kdf_iterations": kdf_iterations,
+        "entities": entity_objs,
+        "weeks": week_objs,
+    }
+    # Curated ids are YouTube video ids, which are already public identifiers and carry no
+    # archive text. `None` means "this run did not survey them" and is written as an absent
+    # key, which the pruner reads as "leave docs/c alone" — the same non-destructive
+    # failure mode `weeks` uses. An empty list means "surveyed, and there are none".
+    if curated is not None:
+        data["curated"] = list(curated)
+
+    return _sorted(data)
 
 
 def stats_for(articles: Sequence[Article]) -> dict[str, object]:
