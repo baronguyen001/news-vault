@@ -36,6 +36,24 @@ class BriefResult:
     error: str  # '' on success
 
 
+def _error_detail(response: requests.Response, limit: int = 200) -> str:
+    """Lý do thật của một phản hồi lỗi: `error.message` nếu là JSON, không thì thân thô.
+
+    Không được ném lỗi trong bất kỳ trường hợp nào — đây là code chạy TRÊN đường lỗi, làm
+    hỏng nó thì che mất chính cái lỗi đang cần đọc.
+    """
+    try:
+        payload = response.json()
+        if isinstance(payload, dict):
+            error = payload.get("error")
+            message = error.get("message") if isinstance(error, dict) else None
+            if message:
+                return str(message)[:limit]
+    except Exception:
+        pass
+    return str(getattr(response, "text", ""))[:limit]
+
+
 def _first_sentence(text: str) -> str:
     """Return the first sentence or paragraph of a Vietnamese summary."""
     if not text:
@@ -120,10 +138,11 @@ def generate_brief(
 
         if response.status_code in (429, 500, 503):
             logger.warning(
-                "Brief API status %s for %s (attempt %d)",
+                "Brief API status %s for %s (attempt %d): %s",
                 response.status_code,
                 day,
                 attempt + 1,
+                _error_detail(response),
             )
             if attempt == 0:
                 time.sleep(3)
@@ -132,7 +151,12 @@ def generate_brief(
             return BriefResult(fb.bullets, "fallback", f"status {response.status_code}")
 
         if response.status_code != 200:
-            logger.warning("Brief API error %s for %s", response.status_code, day)
+            # Thân phản hồi PHẢI vào log. Suốt 07-08/08/2026 log chỉ có "Brief API error 400"
+            # nên không ai biết lý do thật là `API key not valid` — brief mỗi ngày lặng lẽ
+            # tụt xuống bản fallback xếp-theo-điểm mà trang vẫn dựng bình thường.
+            logger.warning(
+                "Brief API error %s for %s: %s", response.status_code, day, _error_detail(response)
+            )
             fb = fallback_brief(articles, limit=5)
             return BriefResult(fb.bullets, "fallback", f"status {response.status_code}")
 

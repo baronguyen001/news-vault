@@ -120,3 +120,40 @@ def test_generate_brief_key_not_in_logs(caplog: pytest.LogCaptureFixture) -> Non
         assert secret not in record.message
         formatted = record.getMessage()
         assert secret not in formatted
+
+
+def _error_response(status: int, message: str) -> object:
+    """Phản hồi lỗi kiểu Google: {"error": {"code": ..., "message": ...}}."""
+    body = {"error": {"code": status, "message": message, "status": "INVALID_ARGUMENT"}}
+    return type("Resp", (), {"status_code": status, "json": staticmethod(lambda: body)})()
+
+
+def test_generate_brief_400_logs_the_real_reason(caplog: pytest.LogCaptureFixture) -> None:
+    """Ca thật 07-08/08/2026: log chỉ có 'Brief API error 400' nên nhiều ngày không ai
+    biết lý do là key Gemini đã bị vô hiệu, brief lặng lẽ tụt xuống bản fallback."""
+    response = _error_response(400, "API key not valid. Please pass a valid API key.")
+    with (
+        caplog.at_level("WARNING"),
+        patch("newsvault.brief.requests.post", return_value=response),
+    ):
+        result = generate_brief("2026-08-08", [_article()], api_key="secret")
+    assert result.source == "fallback"
+    assert any("API key not valid" in record.getMessage() for record in caplog.records)
+
+
+def test_error_detail_never_raises_on_odd_responses() -> None:
+    """`_error_detail` chạy TRÊN đường lỗi — nó mà nổ thì che mất chính lỗi cần đọc."""
+    from newsvault.brief import _error_detail
+
+    exploding = type("Resp", (), {"status_code": 500,
+                                  "json": staticmethod(lambda: (_ for _ in ()).throw(ValueError())),
+                                  "text": "raw body"})()
+    assert _error_detail(exploding) == "raw body"
+
+    no_text = type("Resp", (), {"status_code": 500, "json": staticmethod(dict)})()
+    assert _error_detail(no_text) == ""
+
+    weird = type("Resp", (), {"status_code": 500,
+                              "json": staticmethod(lambda: {"error": "not a dict"}),
+                              "text": "fallback text"})()
+    assert _error_detail(weird) == "fallback text"

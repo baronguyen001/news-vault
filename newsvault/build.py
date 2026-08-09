@@ -81,11 +81,18 @@ class BuildReport:
 
     def summary(self) -> str:
         """One-line human summary."""
-        return (
+        line = (
             f"{len(self.days_built)} ngày dựng, {len(self.days_skipped)} bỏ qua (không đổi), "
             f"{self.entity_pages} trang thực thể, {self.week_pages} trang tuần, "
             f"{self.index_shards} shard tìm kiếm, {self.videos_included} video"
         )
+        # Brief tụt xuống bản fallback (xếp theo điểm, không qua LLM) là một sự cố CHẤT
+        # LƯỢNG chứ không phải lỗi build — trước đây `brief_source` được ghi lại nhưng
+        # không in ra đâu cả, nên suốt 07-08/08/2026 brief hỏng mà dòng tổng kết vẫn đẹp.
+        degraded = sorted(day for day, src in self.brief_source.items() if src != "gemini")
+        if degraded:
+            line += f" | ⚠️ brief fallback {len(degraded)} ngày: {', '.join(degraded[:5])}"
+        return line
 
 
 # --------------------------------------------------------------------------------------

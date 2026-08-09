@@ -138,3 +138,23 @@ def test_second_build_skips_everything_then_a_template_edit_rebuilds_it(
     assert sorted(third.days_built) == sorted(second.days_skipped), (
         "every day page must be rewritten when the HTML shell changes"
     )
+
+
+def test_summary_flags_days_whose_brief_fell_back() -> None:
+    """Brief tụt xuống fallback là sự cố CHẤT LƯỢNG, không phải lỗi build — trước đây
+    `brief_source` được ghi lại nhưng không in ra đâu nên dòng tổng kết vẫn đẹp."""
+    from newsvault.build import BuildReport
+
+    report = BuildReport()
+    report.brief_source = {"2026-08-07": "fallback", "2026-08-08": "fallback"}
+    line = report.summary()
+    assert "brief fallback 2 ngày" in line
+    assert "2026-08-07, 2026-08-08" in line
+
+
+def test_summary_stays_quiet_when_every_brief_came_from_gemini() -> None:
+    from newsvault.build import BuildReport
+
+    report = BuildReport()
+    report.brief_source = {"2026-08-08": "gemini"}
+    assert "fallback" not in report.summary()
