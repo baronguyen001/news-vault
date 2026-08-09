@@ -3138,10 +3138,13 @@ body.modal-open {
   margin: 0 0 var(--space-md);
 }
 
-/* scroll-margin clears the fixed progress bar and the sticky topbar, so jumping
-   to an anchor does not land with the heading tucked underneath them. */
+/* scroll-margin clears the sticky topbar so jumping to an anchor does not land the
+   heading underneath it. The bar's height is NOT a constant: its nav wraps onto extra
+   rows as the viewport narrows, measuring about 60px on a desktop and 115px on a phone.
+   `--nv-topbar-h` is written by curated.js from the real element and re-measured on
+   resize; the 5rem here is only the value used before that runs. */
 .deep__h {
-  scroll-margin-block-start: 5rem;
+  scroll-margin-block-start: calc(var(--nv-topbar-h, 5rem) + var(--space-md));
   margin: var(--space-xl) 0 var(--space-sm);
   font-size: 1.25rem;
   line-height: 1.35;
