@@ -296,6 +296,33 @@
     for (let i = 0; i < headings.length; i++) observer.observe(headings[i]);
   }
 
+  /* Publish the sticky topbar's real height so an anchor jump can clear it.
+   *
+   * A fixed `scroll-margin` cannot work here: the bar wraps its nav onto extra rows as the
+   * viewport narrows, so it is about 60px on a desktop and 115px on a phone. With the
+   * margin hard-coded at 5rem/80px, tapping a table-of-contents entry on a phone landed
+   * the heading at 80px — underneath a bar whose bottom edge is at 115px — so the section
+   * you asked for was the one thing you could not see. Measured here and consumed by CSS
+   * through `--nv-topbar-h`. */
+  function trackTopbarHeight() {
+    const root = document.documentElement;
+
+    function update() {
+      const bar = document.querySelector(".topbar");
+      const height = bar ? Math.round(bar.getBoundingClientRect().height) : 0;
+      if (height > 0) root.style.setProperty("--nv-topbar-h", height + "px");
+    }
+
+    update();
+    window.addEventListener("resize", update, { passive: true });
+    // The bar's height changes when its own content does — the saved-count chip and the
+    // "forget this device" button appear after the unlock, one render later.
+    if (typeof window.ResizeObserver === "function") {
+      const bar = document.querySelector(".topbar");
+      if (bar) new window.ResizeObserver(update).observe(bar);
+    }
+  }
+
   /* Reading progress across the article body only: measuring the whole document would
    * count the header and footer, so the bar would never reach either end. */
   function mountProgress(parent, article) {
@@ -379,6 +406,7 @@
     back.href = base + "c/";
     text(back, T.back);
 
+    trackTopbarHeight();
     mountProgress(article, article);
   }
 

@@ -23,7 +23,7 @@ from newsvault import __version__, charts, crypto, db, feeds, payload, render
 from newsvault import curated as curated_db
 from newsvault import videos as videos_db
 from newsvault.blindspot import blindspots
-from newsvault.brief import BriefResult, fallback_brief, generate_brief
+from newsvault.brief import LLM_SOURCES, BriefResult, fallback_brief, generate_brief
 from newsvault.cluster import cluster_articles
 from newsvault.curated import CuratedItem
 from newsvault.entities import Entity, EntityIndex, build_entity_index
@@ -93,7 +93,9 @@ class BuildReport:
         # Brief tụt xuống bản fallback (xếp theo điểm, không qua LLM) là một sự cố CHẤT
         # LƯỢNG chứ không phải lỗi build — trước đây `brief_source` được ghi lại nhưng
         # không in ra đâu cả, nên suốt 07-08/08/2026 brief hỏng mà dòng tổng kết vẫn đẹp.
-        degraded = sorted(day for day, src in self.brief_source.items() if src != "gemini")
+        degraded = sorted(
+            day for day, src in self.brief_source.items() if src not in LLM_SOURCES
+        )
         if degraded:
             line += f" | ⚠️ brief fallback {len(degraded)} ngày: {', '.join(degraded[:5])}"
         return line
@@ -305,7 +307,9 @@ def _brief_for(day: str, articles: Sequence[Article], options: BuildOptions) -> 
         if not options.use_brief
         else generate_brief(day, articles, api_key=options.api_key)
     )
-    if result.source == "gemini" and result.bullets:
+    # Cache anything a language model actually wrote, whichever engine wrote it. Pinning
+    # this to "gemini" meant a hub-written brief was regenerated on every single build.
+    if result.source in LLM_SOURCES and result.bullets:
         cache.parent.mkdir(parents=True, exist_ok=True)
         cache.write_text(
             json.dumps(

@@ -9,11 +9,16 @@ from typing import Any
 
 import requests
 
+from newsvault import ai_hub
 from newsvault.model import Article
 from newsvault.prompts import brief_prompt
 
 DEFAULT_MODEL: str = "gemini-2.5-flash"
 API_BASE: str = "https://generativelanguage.googleapis.com/v1beta/models"
+
+# How many top-scoring articles the model gets to read, and how many bullets it returns.
+BRIEF_ITEMS: int = 12
+BRIEF_BULLETS: int = 5
 
 BRIEF_SCHEMA: dict[str, Any] = {
     "type": "object",
@@ -32,8 +37,13 @@ logger = logging.getLogger(__name__)
 @dataclass(frozen=True, slots=True)
 class BriefResult:
     bullets: tuple[str, ...]
-    source: str  # 'gemini' | 'fallback'
+    source: str  # 'aihub' | 'gemini' | 'fallback'
     error: str  # '' on success
+
+
+# Sources that mean "a language model actually wrote this". Anything else is the
+# score-ordered fallback, which is a quality incident worth reporting, not a real brief.
+LLM_SOURCES: frozenset[str] = frozenset({"aihub", "gemini"})
 
 
 def _error_detail(response: requests.Response, limit: int = 200) -> str:
@@ -81,23 +91,10 @@ def fallback_brief(articles: Sequence[Article], *, limit: int = 5) -> BriefResul
     return BriefResult(tuple(bullets), "fallback", "")
 
 
-def generate_brief(
-    day: str,
-    articles: Sequence[Article],
-    *,
-    api_key: str | None,
-    model: str = DEFAULT_MODEL,
-    timeout: int = 60,
-    limit: int = 12,
-) -> BriefResult:
-    """Ask Gemini for five Vietnamese bullets about the day; falls back on any failure."""
-    if not api_key:
-        logger.warning("No Gemini API key for %s brief; using fallback", day)
-        fb = fallback_brief(articles, limit=5)
-        return BriefResult(fb.bullets, "fallback", "no api key")
-
+def _brief_items(articles: Sequence[Article], limit: int) -> list[dict[str, object]]:
+    """The top-scoring articles, trimmed to what the prompt needs."""
     selected = sorted(articles, key=lambda article: article.score, reverse=True)[:limit]
-    items = [
+    return [
         {
             "title": article.title_vi,
             "source": article.source,
@@ -107,6 +104,80 @@ def generate_brief(
         }
         for article in selected
     ]
+
+
+def generate_brief(
+    day: str,
+    articles: Sequence[Article],
+    *,
+    api_key: str | None,
+    model: str = DEFAULT_MODEL,
+    timeout: int = 60,
+    limit: int = BRIEF_ITEMS,
+) -> BriefResult:
+    """Five Vietnamese bullets about the day: AI Hub first, Gemini second, fallback last.
+
+    The hub leads because it is an internal service on a flat cost while Gemini is metered
+    and needs a key that can expire — and when it did expire, every build for three days
+    quietly shipped the score-ordered fallback instead of a brief. Gemini is kept as a real
+    safety net rather than deleted: two independent engines is the whole point of having a
+    fallback at all.
+    """
+    if ai_hub.is_available():
+        result = _brief_via_hub(day, articles, limit=limit)
+        if result is not None:
+            return result
+
+    return _brief_via_gemini(day, articles, api_key=api_key, model=model, timeout=timeout,
+                             limit=limit)
+
+
+def _brief_via_hub(day: str, articles: Sequence[Article], *, limit: int) -> BriefResult | None:
+    """Try the hub. Returns None (not a fallback result) so the caller can try Gemini."""
+    prompt = brief_prompt(day, _brief_items(articles, limit))
+    try:
+        # 8192 is deliberately roomy: the model burns budget on a hidden reasoning phase
+        # before writing a single character, and a tight ceiling yields empty content that
+        # looks like a model failure but is really a budget one.
+        parsed = ai_hub.chat_json(prompt, max_tokens=8192, temperature=0.3)
+    except Exception as exc:  # noqa: BLE001 — any hub failure must yield to Gemini
+        logger.warning("Brief via AI Hub failed for %s: %s", day, str(exc)[:200])
+        return None
+
+    cleaned = _clean_bullets(parsed.get("bullets"))
+    if not cleaned:
+        logger.warning("Brief via AI Hub returned no usable bullets for %s", day)
+        return None
+    return BriefResult(tuple(cleaned), "aihub", "")
+
+
+def _clean_bullets(raw: object) -> list[str]:
+    """Keep the non-empty strings, trimmed, capped at the bullet count."""
+    if not isinstance(raw, list):
+        return []
+    cleaned: list[str] = []
+    for item in raw:
+        if isinstance(item, str) and item.strip():
+            cleaned.append(item.strip())
+    return cleaned[:BRIEF_BULLETS]
+
+
+def _brief_via_gemini(
+    day: str,
+    articles: Sequence[Article],
+    *,
+    api_key: str | None,
+    model: str,
+    timeout: int,
+    limit: int,
+) -> BriefResult:
+    """Ask Gemini for five Vietnamese bullets about the day; falls back on any failure."""
+    if not api_key:
+        logger.warning("No AI Hub and no Gemini API key for %s brief; using fallback", day)
+        fb = fallback_brief(articles, limit=BRIEF_BULLETS)
+        return BriefResult(fb.bullets, "fallback", "no api key")
+
+    items = _brief_items(articles, limit)
     prompt = brief_prompt(day, items)
     url = f"{API_BASE}/{model}:generateContent"
     params = {"key": api_key}
