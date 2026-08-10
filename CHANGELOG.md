@@ -4,6 +4,42 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.11.2] - 2026-08-10
+
+### Fixed
+- **A model refusal is no longer accepted as a brief — and no longer cached forever.** The
+  page for 2026-08-09 opened with the same sentence five times: *"Không có mục tin nào được
+  cung cấp để tóm tắt."* The input was fine, and that is the whole point: the day had **92
+  articles**, `_brief_items` cut exactly **12 items**, and `brief_prompt` produced a
+  **5,220-character** prompt containing all of them. The model got the data and refused
+  anyway — a transient failure, since 08-08 and 08-10 both went through the same hub and came
+  back with real bullets.
+
+  What turned a one-off model hiccup into a permanent defect was everything downstream.
+  `_clean_bullets` only asked "is it a non-empty string?", so a refusal sentence passed as a
+  real brief. `_brief_for` then cached it with `"source": "aihub"`, and because a cache entry
+  existed, every later build read the garbage back instead of regenerating it. The build's own
+  health line stayed clean too: it warns when `source not in LLM_SOURCES`, and this garbage was
+  labelled `aihub`.
+
+  New `brief.looks_like_refusal()` — pure, offline-testable — rejects two shapes: every bullet
+  identical (a real brief never repeats one sentence five times), and refusal phrases covering
+  **half or more** of the bullets. Half rather than any: the model sometimes writes four good
+  bullets then adds one stray line, and throwing the brief away over a single line costs more
+  than it saves.
+
+  The gate sits on both LLM paths. The hub path returns `None` rather than a `BriefResult`, so
+  a refusal still falls through to Gemini instead of eating the safety net. The Gemini path
+  degrades to the deterministic fallback with `error="refusal"`, distinguishable from a network
+  or status failure.
+
+  `_brief_for` checks on **read** as well as on write. Checking only the write path would have
+  left the poisoned 2026-08-09 entry on disk to be served forever unless somebody deleted the
+  file by hand; checking the read path means the next build regenerates it by itself. Verified
+  against the real cache: the bad entry was detected, regenerated through the hub into five
+  genuine bullets about that day, and rewritten — with all 125 cached days re-audited and none
+  left bad.
+
 ## [0.10.0] - 2026-08-07
 
 ### Added

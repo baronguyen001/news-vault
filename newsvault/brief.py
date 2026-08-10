@@ -64,6 +64,51 @@ def _error_detail(response: requests.Response, limit: int = 200) -> str:
     return str(getattr(response, "text", ""))[:limit]
 
 
+_REFUSAL_MARKERS: tuple[str, ...] = (
+    "không có mục tin",
+    "không có tin nào",
+    "không có bài viết",
+    "không có nội dung",
+    "không có dữ liệu",
+    "không được cung cấp",
+    "chưa được cung cấp",
+    "không có thông tin nào được cung cấp",
+    "no items",
+    "no articles",
+    "no content",
+    "not provided",
+    "no data",
+)
+
+
+def looks_like_refusal(bullets: Sequence[str]) -> bool:
+    """Return whether bullets look like a model refusal rather than a real brief.
+
+    Sự cố thật 09/08/2026: ngày đó có 92 bài, `_brief_items` cắt ra đủ 12 mục và prompt dài
+    5.220 ký tự — model NHẬN ĐỦ dữ liệu mà vẫn trả về 5 lần "Không có mục tin nào được cung
+    cấp để tóm tắt.". `_clean_bullets` chỉ kiểm "chuỗi không rỗng" nên câu từ chối lọt qua
+    như một brief thật, rồi bị cache kèm nhãn `aihub` ⇒ mọi lần dựng sau đọc lại rác, không
+    bao giờ tự lành.
+
+    Hai luật, cố ý tách riêng:
+    - lặp y hệt từ 2 dòng trở lên: một bản tóm tắt thật không bao giờ lặp nguyên một câu;
+    - câu từ chối chiếm từ MỘT NỬA trở lên. "Một nửa" chứ không phải "bất kỳ": model đôi khi
+      viết 4 gạch tốt rồi thòng một câu thừa, vứt cả brief vì một dòng là quá tay.
+    """
+    if not bullets:
+        return False
+
+    normalized = [bullet.strip().casefold() for bullet in bullets]
+    if len(normalized) >= 2 and len(set(normalized)) == 1:
+        return True
+
+    refusal_count = sum(
+        any(marker in bullet for marker in _REFUSAL_MARKERS)
+        for bullet in normalized
+    )
+    return refusal_count * 2 >= len(normalized)
+
+
 def _first_sentence(text: str) -> str:
     """Return the first sentence or paragraph of a Vietnamese summary."""
     if not text:
@@ -147,6 +192,11 @@ def _brief_via_hub(day: str, articles: Sequence[Article], *, limit: int) -> Brie
     cleaned = _clean_bullets(parsed.get("bullets"))
     if not cleaned:
         logger.warning("Brief via AI Hub returned no usable bullets for %s", day)
+        return None
+    if looks_like_refusal(cleaned):
+        # Trả None chứ KHÔNG trả BriefResult: trả kết quả ở đây sẽ chặn mất đường Gemini,
+        # tức là mất luôn lưới đỡ đúng lúc cần nó nhất.
+        logger.warning("Brief via AI Hub từ chối trả lời cho %s: %s", day, cleaned[0][:120])
         return None
     return BriefResult(tuple(cleaned), "aihub", "")
 
@@ -262,6 +312,11 @@ def _brief_via_gemini(
         if not cleaned:
             fb = fallback_brief(articles, limit=5)
             return BriefResult(fb.bullets, "fallback", "empty bullets")
+
+        if looks_like_refusal(cleaned):
+            logger.warning("Brief via Gemini từ chối trả lời cho %s: %s", day, cleaned[0][:120])
+            fb = fallback_brief(articles, limit=BRIEF_BULLETS)
+            return BriefResult(fb.bullets, "fallback", "refusal")
 
         return BriefResult(tuple(cleaned), "gemini", "")
 

@@ -23,7 +23,13 @@ from newsvault import __version__, charts, crypto, db, feeds, payload, render
 from newsvault import curated as curated_db
 from newsvault import videos as videos_db
 from newsvault.blindspot import blindspots
-from newsvault.brief import LLM_SOURCES, BriefResult, fallback_brief, generate_brief
+from newsvault.brief import (
+    LLM_SOURCES,
+    BriefResult,
+    fallback_brief,
+    generate_brief,
+    looks_like_refusal,
+)
 from newsvault.cluster import cluster_articles
 from newsvault.curated import CuratedItem
 from newsvault.entities import Entity, EntityIndex, build_entity_index
@@ -295,7 +301,13 @@ def _brief_for(day: str, articles: Sequence[Article], options: BuildOptions) -> 
         try:
             stored = json.loads(cache.read_text(encoding="utf-8"))
             bullets = tuple(str(b) for b in stored.get("bullets", ()) if str(b).strip())
-            if bullets:
+            if bullets and looks_like_refusal(bullets):
+                # ĐÂY là chỗ làm hệ thống tự lành. Ngày 09/08/2026 có một câu từ chối được
+                # cache kèm nhãn "aihub"; nếu chỉ chặn ở lúc GHI thì file rác đã nằm trên đĩa
+                # vẫn được đọc lại mãi mãi và phải xoá tay. Bỏ qua cache ⇒ lần dựng kế tiếp
+                # sinh lại brief thật rồi ghi đè.
+                logger.warning("brief cache của %s là câu từ chối, sinh lại", day)
+            elif bullets:
                 return BriefResult(
                     bullets=bullets, source=str(stored.get("source", "cache")), error=""
                 )
@@ -309,7 +321,9 @@ def _brief_for(day: str, articles: Sequence[Article], options: BuildOptions) -> 
     )
     # Cache anything a language model actually wrote, whichever engine wrote it. Pinning
     # this to "gemini" meant a hub-written brief was regenerated on every single build.
-    if result.source in LLM_SOURCES and result.bullets:
+    # Thắt lưng lẫn dây đeo: `generate_brief` lẽ ra đã chặn câu từ chối rồi, nhưng cache là
+    # thứ sống lâu nhất trong hệ thống — một dòng rác lọt vào đây là hỏng vĩnh viễn.
+    if result.source in LLM_SOURCES and result.bullets and not looks_like_refusal(result.bullets):
         cache.parent.mkdir(parents=True, exist_ok=True)
         cache.write_text(
             json.dumps(
