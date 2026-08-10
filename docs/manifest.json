@@ -622,18 +622,18 @@
     {
       "d": "2026-08-10",
       "months": "2026-08",
-      "n": 79
+      "n": 89
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 694,
+      "n": 698,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 208,
+      "n": 209,
       "slug": "dau-tu"
     },
     {
@@ -663,13 +663,23 @@
     },
     {
       "label": "ngân hàng",
-      "n": 89,
+      "n": 91,
       "slug": "ngan-hang"
     },
     {
       "label": "lãi suất",
-      "n": 77,
+      "n": 78,
       "slug": "lai-suat"
+    },
+    {
+      "label": "chip",
+      "n": 77,
+      "slug": "chip"
+    },
+    {
+      "label": "trung ương",
+      "n": 77,
+      "slug": "trung-uong"
     },
     {
       "label": "chính sách",
@@ -677,24 +687,14 @@
       "slug": "chinh-sach"
     },
     {
-      "label": "trung ương",
-      "n": 76,
-      "slug": "trung-uong"
-    },
-    {
-      "label": "chip",
-      "n": 74,
-      "slug": "chip"
+      "label": "lạm phát",
+      "n": 73,
+      "slug": "lam-phat"
     },
     {
       "label": "dữ liệu",
-      "n": 71,
+      "n": 72,
       "slug": "du-lieu"
-    },
-    {
-      "label": "lạm phát",
-      "n": 71,
-      "slug": "lam-phat"
     },
     {
       "label": "đảng",
@@ -762,14 +762,14 @@
       "slug": "startup"
     },
     {
+      "label": "trừng phạt",
+      "n": 22,
+      "slug": "trung-phat"
+    },
+    {
       "label": "hành chính",
       "n": 21,
       "slug": "hanh-chinh"
-    },
-    {
-      "label": "trừng phạt",
-      "n": 21,
-      "slug": "trung-phat"
     },
     {
       "label": "trí tuệ nhân tạo",
