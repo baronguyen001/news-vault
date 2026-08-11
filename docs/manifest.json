@@ -623,57 +623,67 @@
       "d": "2026-08-10",
       "months": "2026-08",
       "n": 108
+    },
+    {
+      "d": "2026-08-11",
+      "months": "2026-08",
+      "n": 52
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 700,
+      "n": 719,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 210,
+      "n": 214,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 154,
+      "n": 163,
       "slug": "luat"
     },
     {
       "label": "thuế",
-      "n": 134,
+      "n": 138,
       "slug": "thue"
     },
     {
       "label": "doanh nghiệp",
-      "n": 116,
+      "n": 119,
       "slug": "doanh-nghiep"
     },
     {
-      "label": "công nghệ",
-      "n": 104,
-      "slug": "cong-nghe"
-    },
-    {
       "label": "chính phủ",
-      "n": 101,
+      "n": 106,
       "slug": "chinh-phu"
     },
     {
+      "label": "công nghệ",
+      "n": 105,
+      "slug": "cong-nghe"
+    },
+    {
       "label": "ngân hàng",
-      "n": 91,
+      "n": 96,
       "slug": "ngan-hang"
     },
     {
       "label": "lãi suất",
-      "n": 78,
+      "n": 80,
       "slug": "lai-suat"
     },
     {
+      "label": "chính sách",
+      "n": 79,
+      "slug": "chinh-sach"
+    },
+    {
       "label": "chip",
-      "n": 77,
+      "n": 79,
       "slug": "chip"
     },
     {
@@ -682,23 +692,18 @@
       "slug": "trung-uong"
     },
     {
-      "label": "chính sách",
-      "n": 76,
-      "slug": "chinh-sach"
-    },
-    {
       "label": "lạm phát",
-      "n": 73,
+      "n": 74,
       "slug": "lam-phat"
     },
     {
       "label": "dữ liệu",
-      "n": 71,
+      "n": 72,
       "slug": "du-lieu"
     },
     {
       "label": "đảng",
-      "n": 61,
+      "n": 63,
       "slug": "dang"
     },
     {
@@ -708,23 +713,23 @@
     },
     {
       "label": "quốc hội",
-      "n": 52,
+      "n": 57,
       "slug": "quoc-hoi"
     },
     {
       "label": "xung đột",
-      "n": 52,
+      "n": 53,
       "slug": "xung-dot"
+    },
+    {
+      "label": "nghị quyết",
+      "n": 52,
+      "slug": "nghi-quyet"
     },
     {
       "label": "xuất khẩu",
       "n": 51,
       "slug": "xuat-khau"
-    },
-    {
-      "label": "nghị quyết",
-      "n": 50,
-      "slug": "nghi-quyet"
     },
     {
       "label": "chiến tranh",
@@ -738,18 +743,23 @@
     },
     {
       "label": "nhập khẩu",
-      "n": 35,
+      "n": 37,
       "slug": "nhap-khau"
     },
     {
       "label": "nghị định",
-      "n": 31,
+      "n": 34,
       "slug": "nghi-dinh"
     },
     {
       "label": "pháp lý",
-      "n": 31,
+      "n": 33,
       "slug": "phap-ly"
+    },
+    {
+      "label": "thuế quan",
+      "n": 30,
+      "slug": "thue-quan"
     },
     {
       "label": "startup",
@@ -757,9 +767,9 @@
       "slug": "startup"
     },
     {
-      "label": "thuế quan",
-      "n": 29,
-      "slug": "thue-quan"
+      "label": "trừng phạt",
+      "n": 22,
+      "slug": "trung-phat"
     },
     {
       "label": "hành chính",
@@ -767,19 +777,14 @@
       "slug": "hanh-chinh"
     },
     {
-      "label": "trừng phạt",
-      "n": 21,
-      "slug": "trung-phat"
+      "label": "bán dẫn",
+      "n": 20,
+      "slug": "ban-dan"
     },
     {
       "label": "trí tuệ nhân tạo",
       "n": 20,
       "slug": "tri-tue-nhan-tao"
-    },
-    {
-      "label": "bán dẫn",
-      "n": 19,
-      "slug": "ban-dan"
     },
     {
       "label": "bảo hiểm",
@@ -788,7 +793,7 @@
     },
     {
       "label": "bất động sản",
-      "n": 16,
+      "n": 17,
       "slug": "bat-dong-san"
     },
     {
@@ -803,12 +808,12 @@
     },
     {
       "label": "FDI",
-      "n": 15,
+      "n": 16,
       "slug": "fdi"
     },
     {
       "label": "thông tư",
-      "n": 9,
+      "n": 11,
       "slug": "thong-tu"
     },
     {
@@ -1052,7 +1057,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-08-10T23:59:59+07:00",
+  "generated_at": "2026-08-11T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
@@ -1066,7 +1071,7 @@
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
   "v": 1,
-  "version": "0.11.2",
+  "version": "0.11.3",
   "weeks": [
     {
       "e": "2026-07-19",
