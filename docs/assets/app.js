@@ -18,6 +18,7 @@
     briefTitle: "Tóm tắt ngày",
     analysisPanels: "Chuyên mục · Biểu đồ · Xu hướng",
     videosTitle: "Video YouTube",
+    videoLibrary: "Thư viện video",
     deepTitle: "Phân tích sâu",
     hideShorts: (n) => `Ẩn ${n} Short`,
     showShorts: (n) => `Hiện ${n} Short`,
@@ -395,6 +396,7 @@
     else if (config.kind === "week") renderWeek();
     else if (config.kind === "curatedIndex") renderCuratedIndex();
     else if (config.kind === "curated") renderCuratedArticle();
+    else if (config.kind === "videoIndex") renderVideoIndex();
     wireUser();
     applyHash();
     scrollToAnchor();
@@ -507,6 +509,7 @@
     home.href = config.base || "./";
     text(home, T.home);
     mountDeepLink(nav);
+    mountVideoLibraryLink(nav);
     // Column choice is a desktop affordance; the stylesheet hides it below 1024px.
     if (NV.layout) NV.layout.mount(nav);
     const theme = make("button", "topbar__btn", nav);
@@ -573,6 +576,14 @@
     return link;
   }
 
+  function mountVideoLibraryLink(nav) {
+    if (!nav || config.kind === "videoIndex") return;
+    const link = make("a", "topbar__link topbar__link--videos", nav);
+    link.href = `${config.base || ""}videos/`;
+    text(link, T.videoLibrary);
+    return link;
+  }
+
   /**
    * The day's deep-dive analyses, as link cards.
    *
@@ -595,6 +606,14 @@
     app.className = "app app--deeplist";
     renderSimpleTopbar(app);
     if (NV.curated) NV.curated.renderIndex(app, payload, config);
+  }
+
+  function renderVideoIndex() {
+    const app = $("#app");
+    text(app, "");
+    app.className = "app app--video-library";
+    renderSimpleTopbar(app);
+    if (NV.videoLibrary) NV.videoLibrary.render(app, payload);
   }
 
   /** One deep dive, laid out for long-form reading. */
@@ -1470,6 +1489,9 @@
       const count = make("span", "homenav__count", link);
       text(count, ` (${total})`);
     }
+    const videos = make("a", "homenav__link", nav);
+    videos.href = `${config.base || ""}videos/`;
+    text(videos, T.videoLibrary);
     return nav;
   }
 
@@ -1601,6 +1623,7 @@
       text(day, T.latestTitle);
     }
     mountDeepLink(nav);
+    mountVideoLibraryLink(nav);
     if (NV.layout) NV.layout.mount(nav);
     const theme = make("button", "topbar__btn", nav);
     theme.type = "button";
