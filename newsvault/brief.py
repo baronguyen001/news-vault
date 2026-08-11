@@ -34,6 +34,9 @@ BRIEF_SCHEMA: dict[str, Any] = {
 logger = logging.getLogger(__name__)
 
 
+_gemini_key_rejection: str | None = None
+
+
 @dataclass(frozen=True, slots=True)
 class BriefResult:
     bullets: tuple[str, ...]
@@ -62,6 +65,35 @@ def _error_detail(response: requests.Response, limit: int = 200) -> str:
     except Exception:
         pass
     return str(getattr(response, "text", ""))[:limit]
+
+
+def _response_body(response: requests.Response) -> str:
+    """Return an error response body without allowing error handling to fail."""
+    try:
+        return json.dumps(response.json(), ensure_ascii=False)
+    except Exception:
+        return str(getattr(response, "text", ""))
+
+
+def is_permanently_rejected_gemini_key(status_code: int, body: str) -> bool:
+    """Return whether Gemini explicitly says that the configured key cannot be used."""
+    normalized = body.casefold()
+    return status_code != 200 and (
+        "api_key_invalid" in normalized
+        or "api key not valid" in normalized
+        or (status_code == 403 and "permission_denied" in normalized)
+    )
+
+
+def reset_provider_state() -> None:
+    """Clear process-local provider failures so tests and later runs start independently."""
+    global _gemini_key_rejection
+    _gemini_key_rejection = None
+
+
+def gemini_provider_issue() -> str | None:
+    """Return the Gemini condition that should be shown in the build summary, if any."""
+    return _gemini_key_rejection
 
 
 _REFUSAL_MARKERS: tuple[str, ...] = (
@@ -222,6 +254,12 @@ def _brief_via_gemini(
     limit: int,
 ) -> BriefResult:
     """Ask Gemini for five Vietnamese bullets about the day; falls back on any failure."""
+    global _gemini_key_rejection
+
+    if _gemini_key_rejection is not None:
+        fb = fallback_brief(articles, limit=BRIEF_BULLETS)
+        return BriefResult(fb.bullets, "fallback", "gemini key rejected")
+
     if not api_key:
         logger.warning("No AI Hub and no Gemini API key for %s brief; using fallback", day)
         fb = fallback_brief(articles, limit=BRIEF_BULLETS)
@@ -257,6 +295,14 @@ def _brief_via_gemini(
             fb = fallback_brief(articles, limit=5)
             return BriefResult(fb.bullets, "fallback", "network error")
 
+        if response.status_code != 200:
+            message = _error_detail(response)
+            if is_permanently_rejected_gemini_key(response.status_code, _response_body(response)):
+                _gemini_key_rejection = "Gemini: key bị từ chối (API_KEY_INVALID) — mất lưới đỡ"
+                logger.error("Gemini API key rejected permanently: %s", message)
+                fb = fallback_brief(articles, limit=5)
+                return BriefResult(fb.bullets, "fallback", "gemini key rejected")
+
         if response.status_code in (429, 500, 503):
             logger.warning(
                 "Brief API status %s for %s (attempt %d): %s",
@@ -276,7 +322,7 @@ def _brief_via_gemini(
             # nên không ai biết lý do thật là `API key not valid` — brief mỗi ngày lặng lẽ
             # tụt xuống bản fallback xếp-theo-điểm mà trang vẫn dựng bình thường.
             logger.warning(
-                "Brief API error %s for %s: %s", response.status_code, day, _error_detail(response)
+                "Brief API error %s for %s: %s", response.status_code, day, message
             )
             fb = fallback_brief(articles, limit=5)
             return BriefResult(fb.bullets, "fallback", f"status {response.status_code}")

@@ -158,3 +158,22 @@ def test_summary_stays_quiet_when_every_brief_came_from_gemini() -> None:
     report = BuildReport()
     report.brief_source = {"2026-08-08": "gemini"}
     assert "fallback" not in report.summary()
+
+
+def test_summary_reports_a_gemini_provider_issue() -> None:
+    from newsvault.build import BuildReport
+
+    report = BuildReport(provider_issues=["Gemini: key bị từ chối (API_KEY_INVALID) — mất lưới đỡ"])
+    line = report.summary()
+
+    assert line.startswith("0 ngày dựng, 0 bỏ qua (không đổi)")
+    assert "⚠️ Gemini: key bị từ chối (API_KEY_INVALID) — mất lưới đỡ" in line
+
+
+def test_summary_without_issues_keeps_its_exact_previous_text() -> None:
+    from newsvault.build import BuildReport
+
+    assert BuildReport().summary() == (
+        "0 ngày dựng, 0 bỏ qua (không đổi), 0 trang thực thể, 0 trang tuần, "
+        "0 shard tìm kiếm, 0 video, 0 bài phân tích sâu"
+    )
