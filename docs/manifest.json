@@ -627,13 +627,13 @@
     {
       "d": "2026-08-11",
       "months": "2026-08",
-      "n": 55
+      "n": 58
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 720,
+      "n": 721,
       "slug": "ai"
     },
     {
@@ -653,7 +653,7 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 119,
+      "n": 120,
       "slug": "doanh-nghiep"
     },
     {
@@ -668,7 +668,7 @@
     },
     {
       "label": "ngân hàng",
-      "n": 97,
+      "n": 98,
       "slug": "ngan-hang"
     },
     {
