@@ -627,7 +627,7 @@
     {
       "d": "2026-08-11",
       "months": "2026-08",
-      "n": 58
+      "n": 61
     }
   ],
   "entities": [
@@ -638,12 +638,12 @@
     },
     {
       "label": "đầu tư",
-      "n": 214,
+      "n": 215,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 163,
+      "n": 162,
       "slug": "luat"
     },
     {
@@ -677,14 +677,14 @@
       "slug": "lai-suat"
     },
     {
-      "label": "chính sách",
-      "n": 79,
-      "slug": "chinh-sach"
-    },
-    {
       "label": "chip",
       "n": 79,
       "slug": "chip"
+    },
+    {
+      "label": "chính sách",
+      "n": 78,
+      "slug": "chinh-sach"
     },
     {
       "label": "trung ương",
@@ -698,7 +698,7 @@
     },
     {
       "label": "dữ liệu",
-      "n": 73,
+      "n": 74,
       "slug": "du-lieu"
     },
     {
@@ -718,7 +718,7 @@
     },
     {
       "label": "xung đột",
-      "n": 54,
+      "n": 55,
       "slug": "xung-dot"
     },
     {
@@ -728,7 +728,7 @@
     },
     {
       "label": "xuất khẩu",
-      "n": 51,
+      "n": 52,
       "slug": "xuat-khau"
     },
     {
