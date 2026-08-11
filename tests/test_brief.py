@@ -6,7 +6,12 @@ from unittest.mock import patch
 import pytest
 import requests
 
-from newsvault.brief import BriefResult, fallback_brief, generate_brief
+from newsvault.brief import (
+    BriefResult,
+    fallback_brief,
+    generate_brief,
+    is_permanently_rejected_gemini_key,
+)
 from newsvault.model import Article
 
 
@@ -139,6 +144,50 @@ def test_generate_brief_400_logs_the_real_reason(caplog: pytest.LogCaptureFixtur
         result = generate_brief("2026-08-08", [_article()], api_key="secret")
     assert result.source == "fallback"
     assert any("API key not valid" in record.getMessage() for record in caplog.records)
+
+
+def test_invalid_gemini_key_is_logged_once_and_skipped_afterwards(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    response = _error_response(400, "API key not valid. Please pass a valid API key.")
+    with (
+        caplog.at_level("ERROR"),
+        patch("newsvault.brief.requests.post", return_value=response) as mock_post,
+    ):
+        first = generate_brief("2026-08-07", [_article()], api_key="secret")
+        second = generate_brief("2026-08-08", [_article()], api_key="secret")
+
+    assert first.source == "fallback"
+    assert first.error == "gemini key rejected"
+    assert second.source == "fallback"
+    assert second.error == "gemini key rejected"
+    assert mock_post.call_count == 1
+    assert [record.getMessage() for record in caplog.records] == [
+        "Gemini API key rejected permanently: API key not valid. Please pass a valid API key."
+    ]
+
+
+def test_gemini_500_remains_transient_across_days(monkeypatch: pytest.MonkeyPatch) -> None:
+    response = _mock_response(500)
+    monkeypatch.setattr("newsvault.brief.time.sleep", lambda seconds: None)
+    with patch("newsvault.brief.requests.post", return_value=response) as mock_post:
+        generate_brief("2026-08-07", [_article()], api_key="secret")
+        generate_brief("2026-08-08", [_article()], api_key="secret")
+
+    assert mock_post.call_count == 4
+
+
+@pytest.mark.parametrize(
+    ("body", "expected"),
+    [
+        ("API key not valid. Please pass a valid API key.", True),
+        ("RESOURCE_EXHAUSTED: quota exceeded", False),
+        ("The model is overloaded. Please try again later.", False),
+        ("Brief response not JSON", False),
+    ],
+)
+def test_invalid_key_classifier_is_narrow(body: str, *, expected: bool) -> None:
+    assert is_permanently_rejected_gemini_key(400, body) is expected
 
 
 def test_error_detail_never_raises_on_odd_responses() -> None:

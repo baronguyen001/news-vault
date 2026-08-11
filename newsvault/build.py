@@ -27,6 +27,7 @@ from newsvault.brief import (
     LLM_SOURCES,
     BriefResult,
     fallback_brief,
+    gemini_provider_issue,
     generate_brief,
     looks_like_refusal,
 )
@@ -86,6 +87,7 @@ class BuildReport:
     videos_included: int = 0
     curated_pages: int = 0
     brief_source: dict[str, str] = field(default_factory=dict)
+    provider_issues: list[str] = field(default_factory=list)
     bytes_written: int = 0
 
     def summary(self) -> str:
@@ -104,6 +106,8 @@ class BuildReport:
         )
         if degraded:
             line += f" | ⚠️ brief fallback {len(degraded)} ngày: {', '.join(degraded[:5])}"
+        for issue in self.provider_issues:
+            line += f" | ⚠️ {issue}"
         return line
 
 
@@ -469,6 +473,9 @@ def build_site(options: BuildOptions) -> BuildReport:
 
             brief = _brief_for(day, articles, options)
             report.brief_source[day] = brief.source
+            issue = gemini_provider_issue()
+            if issue is not None and issue not in report.provider_issues:
+                report.provider_issues.append(issue)
 
             history = {k: v for k, v in by_day.items() if k < day}
             data = payload.day_payload(

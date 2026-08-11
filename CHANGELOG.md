@@ -4,6 +4,21 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.11.3] - 2026-08-11
+
+### Fixed
+- **A dead Gemini safety net can no longer look healthy.** On 2026-08-11 the shared key was
+  verified permanently disabled: Gemini returned `400` with `API_KEY_INVALID` and *"API key not
+  valid"* in the body. The old code logged only the status, retried that known-dead key for every
+  day, and kept the operator's summary clean whenever AI Hub happened to write the brief.
+
+  Gemini now reads the response body before classifying a failure, recognizes only its explicit
+  invalid-key and `403 PERMISSION_DENIED` signals, logs the provider message once, and skips the
+  provider for the rest of that process. The existing run summary now carries the Vietnamese
+  warning that the safety net is gone, so the Telegram line reports the condition even while the
+  primary provider remains healthy; transient statuses, network errors, malformed responses, and
+  refusal handling continue on their previous paths.
+
 ## [0.11.2] - 2026-08-10
 
 ### Fixed

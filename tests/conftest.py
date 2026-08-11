@@ -5,6 +5,8 @@ from collections.abc import Iterator
 
 import pytest
 
+from newsvault.brief import reset_provider_state
+
 # Everything the AI Hub client reads. Cleared for every test by default.
 _AI_HUB_VARS = (
     "AI_HUB_BASE_URL",
@@ -42,3 +44,13 @@ def _no_ai_hub() -> Iterator[None]:
                 os.environ.pop(name, None)
             else:
                 os.environ[name] = value
+
+
+@pytest.fixture(autouse=True)
+def _reset_brief_provider_state() -> Iterator[None]:
+    """Do not let a process-local Gemini key failure leak between tests."""
+    reset_provider_state()
+    try:
+        yield
+    finally:
+        reset_provider_state()
