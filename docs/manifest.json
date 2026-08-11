@@ -627,13 +627,13 @@
     {
       "d": "2026-08-11",
       "months": "2026-08",
-      "n": 52
+      "n": 55
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 719,
+      "n": 720,
       "slug": "ai"
     },
     {
@@ -668,12 +668,12 @@
     },
     {
       "label": "ngân hàng",
-      "n": 96,
+      "n": 97,
       "slug": "ngan-hang"
     },
     {
       "label": "lãi suất",
-      "n": 80,
+      "n": 81,
       "slug": "lai-suat"
     },
     {
@@ -693,12 +693,12 @@
     },
     {
       "label": "lạm phát",
-      "n": 74,
+      "n": 75,
       "slug": "lam-phat"
     },
     {
       "label": "dữ liệu",
-      "n": 72,
+      "n": 73,
       "slug": "du-lieu"
     },
     {
@@ -718,7 +718,7 @@
     },
     {
       "label": "xung đột",
-      "n": 53,
+      "n": 54,
       "slug": "xung-dot"
     },
     {
