@@ -14,6 +14,12 @@
   const PATHS = {
     "kinh-te-tai-chinh":
       "M3 19h18M6 16V9m4.5 7V5m4.5 11v-6m4.5 6V7",
+    /* Candlesticks, not the bar chart used for kinh-te-tai-chinh: at 24px the two must be
+     * tellable apart at a glance, which is the whole point of a fixed icon per topic. */
+    "chung-khoan":
+      "M3 20h18M6 7v10M4.8 9.5h2.4v5H4.8zM12 4v14M10.8 7h2.4v7h-2.4zM18 6v11M16.8 8.5h2.4v6h-2.4z",
+    crypto:
+      "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM9.5 8h4a2 2 0 1 1 0 4h-4Zm0 4h4.5a2 2 0 1 1 0 4H9.5Zm0-4V6.5m0 11V16m3-9.5V6.5m0 11V16",
     "chinh-tri-chinh-sach":
       "M3 20h18M5 20V10m4.67 10V10m4.66 10V10M19 20V10M12 3l8 5H4l8-5Z",
     "cong-nghe-ai":
