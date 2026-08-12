@@ -587,18 +587,24 @@
   }
 
   /**
-   * The day's deep-dive analyses, as link cards.
+   * The day's deep-dive analyses, as folded link cards.
    *
-   * Not folded like the video panel and not part of the article list: each of these is an
-   * 800-1200 word piece living on its own page, so what belongs here is a signpost, not
-   * the text. Placed above the videos because it is the hand-picked reading of the day.
+   * Each is an 800-1200 word piece living on its own page, so what belongs here is a
+   * signpost, not the text. Placed above the videos because it is the hand-picked
+   * reading of the day. Folded but open by default like posts and videos: it is reading
+   * content, and the reader can still close it and keep that preference.
    */
   function renderCurated(parent) {
     if (!NV.curated) return;
     const list = payload.curated || [];
     if (!list.length) return;
+    const body = makePanel(parent, "day-curated", `${T.deepTitle} (${list.length})`, "", true);
     const section = NV.curated.daySection(list, config.base || "../../");
-    if (section) parent.appendChild(section);
+    if (!section) return;
+    // The fold's summary already names the section, so avoid printing the heading twice.
+    const heading = section.querySelector(".deepteaser__title");
+    if (heading) section.removeChild(heading);
+    body.appendChild(section);
   }
 
   /**
