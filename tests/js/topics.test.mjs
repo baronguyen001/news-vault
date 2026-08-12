@@ -28,6 +28,8 @@ test("KEYS contains the documented slugs in order and is frozen", () => {
   const topics = makeSandbox();
   assert.deepEqual(Array.from(topics.KEYS), [
     "kinh-te",
+    "chung-khoan",
+    "crypto",
     "chinh-tri",
     "cong-nghe",
     "xung-dot",
@@ -47,6 +49,31 @@ test("each database topic maps to its own slug", () => {
   assert.equal(topics.slug("Pháp luật/Nghị định"), "phap-luat");
   assert.equal(topics.slug("Văn hóa/Xã hội"), "van-hoa");
   assert.equal(topics.slug("Khác"), "khac");
+  // Added 2026-08-12 alongside the two new news-hunter topics.
+  assert.equal(topics.slug("Chứng khoán"), "chung-khoan");
+  assert.equal(topics.slug("Crypto"), "crypto");
+});
+
+test("the two new finance splits win over the generic money group", () => {
+  const topics = makeSandbox();
+  // "Chứng khoán" carries no "kinh te"/"tai chinh" substring, but a vertical label might,
+  // and the narrow hue has to win when both could match.
+  assert.equal(topics.slug("Tài chính - Chứng khoán"), "chung-khoan");
+  assert.equal(topics.slug("Tài chính Crypto"), "crypto");
+});
+
+test("Blockchain does not leak into technology through the bare AI keyword", () => {
+  const topics = makeSandbox();
+  // "blockchain" contains the letters "ai" inside "chain". The AI keyword is whole-word
+  // only for exactly this reason - this test keeps that guarantee nailed down.
+  assert.equal(topics.slug("Crypto/Blockchain"), "crypto");
+  assert.equal(topics.slug("Blockchain"), "crypto");
+});
+
+test("x-pulse vertical slugs already used by posts.py resolve to themselves", () => {
+  const topics = makeSandbox();
+  assert.equal(topics.slug("chung-khoan"), "chung-khoan");
+  assert.equal(topics.slug("crypto"), "crypto");
 });
 
 test("Tài chính and Kinh doanh maps to finance rather than technology", () => {
