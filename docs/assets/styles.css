@@ -2238,6 +2238,131 @@ code {
     padding-block: 0.4rem;
   }
 }
+/* === X posts section ===
+ *
+ * Denser than a video card and deliberately plainer: fifty of these fit on a day and the
+ * reader is scanning, not settling in. The credibility badge is the one piece of colour,
+ * because it is the one thing that has to be read before the headline. */
+.xposts {
+  margin-top: var(--space-lg);
+}
+
+.xposts__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+  font-size: 1.25rem;
+  color: var(--text);
+}
+
+.xposts__count {
+  color: var(--text-dim);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.xposts__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.xpost {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--border);
+  /* Set by the .topic-* class NV.topics.className() puts on the card, so an X post about
+   * AI carries the same hue as a newspaper article about AI. */
+  border-inline-start: 3px solid var(--topic-colour, var(--accent));
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.xpost__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs) var(--space-sm);
+  font-size: 0.8125rem;
+}
+
+.xpost__author {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.xpost__name,
+.xpost__vertical {
+  color: var(--text-dim);
+}
+
+.xpost__tier {
+  padding: 0.05rem 0.4rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+/* Three bands, because that is as much precision as a badge can carry honestly. */
+.xpost__tier--high { background: var(--ok); color: var(--accent-contrast); }
+.xpost__tier--mid { background: var(--surface-2); color: var(--text); }
+.xpost__tier--low { background: transparent; color: var(--text-dim); border: 1px dashed var(--border); }
+
+.xpost__impact { font-size: 0.75rem; }
+
+.xpost__title {
+  margin: var(--space-xs) 0 0;
+  font-size: 1rem;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.xpost__body p,
+.xpost__h {
+  margin: var(--space-xs) 0 0;
+  color: var(--text-dim);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.xpost__points,
+.xpost__bullets {
+  margin: var(--space-xs) 0 0;
+  padding-inline-start: 1.1rem;
+  color: var(--text-dim);
+  font-size: 0.9375rem;
+}
+
+.xpost__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-top: var(--space-xs);
+  font-size: 0.8125rem;
+  color: var(--text-dim);
+}
+
+/* Engagement last and quiet: it measures spread, not importance, and a card that shouts
+ * the like count teaches the reader to rank by virality. */
+.xpost__metrics { font-variant-numeric: tabular-nums; }
+
+.xpost__link {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--accent);
+}
+
+@media (max-width: 719px) {
+  .xpost { padding: var(--space-sm); }
+  .xpost__link { min-height: 44px; }
+}
+
 /* === Videos section === */
 .videos {
   margin-top: var(--space-lg);

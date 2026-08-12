@@ -18,6 +18,7 @@
     briefTitle: "Tóm tắt ngày",
     analysisPanels: "Chuyên mục · Biểu đồ · Xu hướng",
     videosTitle: "Video YouTube",
+    postsTitle: "Tin nóng từ X",
     videoLibrary: "Thư viện video",
     deepTitle: "Phân tích sâu",
     hideShorts: (n) => `Ẩn ${n} Short`,
@@ -475,6 +476,7 @@
     renderBlindspots(analysis);
     renderSearchbar(app);
     renderCurated(app);
+    renderPosts(app);
     renderVideos(app);
     const wrap = make("div", "cards-wrap", app);
     const countEl = make("div", "result-count sr-only", wrap);
@@ -597,6 +599,32 @@
     if (!list.length) return;
     const section = NV.curated.daySection(list, config.base || "../../");
     if (section) parent.appendChild(section);
+  }
+
+  /**
+   * The day's posts from X.
+   *
+   * Sits between the deep dives and the videos, which is the order these three streams
+   * go stale in: an X post is hours old and may already be wrong, a curated analysis is
+   * this morning's reading, a video recap keeps. Folded but open by default, like the
+   * videos — it is content to read, not a chart to consult.
+   *
+   * Its own section rather than merged into the article list, for the same reason the
+   * videos have one: these carry no source tier from the news taxonomy and no paid
+   * marker, so ranking them alongside a Reuters wire would mean inventing a number.
+   */
+  function renderPosts(parent) {
+    if (!NV.posts) return;
+    const list = payload.posts || [];
+    if (!list.length) return;
+    const body = makePanel(parent, "day-posts", `${T.postsTitle} (${list.length})`, "", true);
+    const section = NV.posts.section(list);
+    if (!section) return;
+    // The fold's summary already names the section; the section's own <h2> would be a
+    // second copy of the same words one line below it.
+    const heading = section.querySelector(".xposts__title");
+    if (heading) section.removeChild(heading);
+    body.appendChild(section);
   }
 
   /** Listing page for every deep dive in the archive. */
