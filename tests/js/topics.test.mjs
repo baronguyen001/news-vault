@@ -138,3 +138,46 @@ test("fallback and search fold produce the same answers", () => {
     assert.equal(searchTopics.className(value), fallbackTopics.className(value));
   }
 });
+
+/* Added 2026-08-12 after a real miss.
+ *
+ * Giving a topic a colour takes TWO edits in styles.css that live 50 lines apart: the
+ * `--topic-<slug>` value (four times, once per theme block) and the `.topic-<slug>` rule
+ * that maps it onto `--topic-colour`. The first two new topics got the values but not the
+ * mapping rule, so their cards silently rendered in the grey of "khac" - a wrong colour
+ * looks exactly like a deliberate one, and no test was watching.
+ *
+ * These read the stylesheet as text rather than a live browser: cheap, and they fail on the
+ * edit that was actually forgotten. */
+const stylesPath = path.resolve(__dirname, '..', '..', 'newsvault', 'assets', 'styles.css');
+const styles = fs.readFileSync(stylesPath, 'utf8');
+const iconsPath = path.resolve(__dirname, '..', '..', 'newsvault', 'assets', 'icons.js');
+const icons = fs.readFileSync(iconsPath, 'utf8');
+
+test('every topic key defines its colour in all four theme blocks', () => {
+  const topics = makeSandbox();
+  for (const key of topics.KEYS) {
+    const pattern = new RegExp(String.raw`--topic-${key}:\s*#`, 'g');
+    const declarations = styles.match(pattern) || [];
+    assert.equal(declarations.length, 4,
+      `--topic-${key} khai bao ${declarations.length} lan, phai la 4 (root sang / @media dark / data-theme dark / data-theme light)`);
+  }
+});
+
+test('every topic key maps its colour onto --topic-colour', () => {
+  const topics = makeSandbox();
+  for (const key of topics.KEYS) {
+    const pattern = new RegExp(
+      String.raw`\.topic-${key}\s*\{\s*--topic-colour:\s*var\(--topic-${key}\)`
+    );
+    assert.ok(pattern.test(styles),
+      `thieu luat .topic-${key} { --topic-colour: var(--topic-${key}) } -> the bai se an mau cua "khac"`);
+  }
+});
+
+test('the two finance splits carry their own icon rather than the generic one', () => {
+  // Icons are keyed by slugify(<ten chu de>), which for these two equals the colour slug.
+  for (const key of ['chung-khoan', 'crypto']) {
+    assert.ok(new RegExp(`["']?${key}["']?:`).test(icons), `icons.js thieu khoa ${key}`);
+  }
+});
