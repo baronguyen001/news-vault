@@ -8,7 +8,7 @@ const CACHE_NAME = "nv-cache-v1";
 // Bumped whenever the shell asset list or its contents change: the activate handler
 // deletes every "nv-" cache that is not one of the current names, so a returning
 // reader gets the new stylesheet instead of last week's from cache.
-const SHELL_CACHE = "nv-shell-v7";
+const SHELL_CACHE = "nv-shell-v8";
 const RUNTIME_CACHE = "nv-runtime-v1";
 const MAX_RUNTIME = 400;
 
