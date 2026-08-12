@@ -3110,8 +3110,10 @@ body.modal-open {
 
 /* ---------- day-page section ---------- */
 
+/* The day page wraps this in the same kind of <details> fold the video section uses, so
+   the section carries no outer margin of its own beyond the panel's own spacing. */
 .deepteaser {
-  margin-block: var(--space-lg);
+  margin-top: var(--space-lg);
 }
 
 .deepteaser__title {
@@ -3128,20 +3130,46 @@ body.modal-open {
   font-weight: 400;
 }
 
-/* On the day page this list sits above the article grid and must not compete with
-   it: one column on a phone, two once there is room, never the three the standalone
-   listing page uses. */
+/* One column at every width, like the .videos__list right below it. Two columns once
+   read as "more room, use it", but the second column forces the thumbnail to stack on
+   top of the text, and a stacked card is taller than the row it sits beside. The
+   standalone listing page keeps its 2- and 3-column grids. */
 .deepteaser__list {
   grid-template-columns: minmax(0, 1fr);
 }
 
-@media (min-width: 1024px) {
-  .deepteaser__list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+/* One badge, reading "Phân tích sâu", inside a fold whose summary already reads
+   "Phân tích sâu (5)" — the same duplication the removed <h2> caused, one level down.
+   The listing page has no fold above it, so its badge stays. */
+.deepteaser__list .dcard__badges {
+  display: none;
+}
+
+/* Sized against a closed video card, which is now the neighbouring row: the same
+   headline size, a shorter teaser, a narrower picture track. */
+.deepteaser__list .dcard__title {
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+/* On a phone the picture stacks on top of the text, so every text row costs full
+   height: one teaser line there, two once the picture moves to the side. */
+.deepteaser__list .dcard__lead {
+  font-size: 0.875rem;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+}
+
+@media (min-width: 720px) {
+  .deepteaser__list .dcard__link {
+    grid-template-columns: 13rem minmax(0, 1fr);
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
   }
 
-  .deepteaser__list .dcard__link {
-    grid-template-columns: minmax(0, 1fr);
+  .deepteaser__list .dcard__lead {
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
   }
 }
 
