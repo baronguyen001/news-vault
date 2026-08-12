@@ -1,15 +1,12 @@
 from __future__ import annotations
 
-import json
 import logging
 from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Any
 
 from newsvault import ai_hub
 from newsvault.model import Article
 from newsvault.prompts import brief_prompt
-
 
 # How many top-scoring articles the model gets to read, and how many bullets it returns.
 BRIEF_ITEMS: int = 12
