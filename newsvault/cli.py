@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import logging
 import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -57,6 +58,16 @@ def _resolve_video_db(explicit: str | None) -> Path | None:
     return Path(raw) if raw else None
 
 
+def _resolve_x_db(explicit: str | None) -> Path | None:
+    """Path to the x-pulse database, or None when the archive has no X section.
+
+    Optional for the same reason as the video database: a machine that runs only the news
+    crawler must still build, so an unset variable means "no X posts", not an error.
+    """
+    raw = explicit or os.environ.get("NEWSVAULT_X_DB", "")
+    return Path(raw) if raw else None
+
+
 def _resolve_db(explicit: str | None) -> Path:
     """Path to the news-hunter database."""
     raw = explicit or os.environ.get("NEWSVAULT_DB", "")
@@ -70,6 +81,10 @@ def _add_common(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--video-db",
         help="đường dẫn youtube_summarizer.db (mặc định: NEWSVAULT_VIDEO_DB; bỏ trống = không có video)",
+    )
+    parser.add_argument(
+        "--x-db",
+        help="đường dẫn x_pulse.db (mặc định: NEWSVAULT_X_DB; bỏ trống = không có mục X)",
     )
     parser.add_argument(
         "--out", default=None, help="thư mục đầu ra (mặc định: NEWSVAULT_OUT hoặc docs)"
@@ -95,7 +110,7 @@ def build_parser() -> argparse.ArgumentParser:
     build_cmd.add_argument("--backfill", action="store_true", help="dựng mọi ngày có trong CSDL")
     build_cmd.add_argument("--force", action="store_true", help="bỏ qua cache, dựng lại tất cả")
     build_cmd.add_argument(
-        "--no-brief", action="store_true", help="bỏ qua Gemini, dùng brief tự sinh"
+        "--no-brief", action="store_true", help="bỏ qua AI Hub, dùng brief tự sinh"
     )
     build_cmd.add_argument(
         "--min-relevance", type=int, default=0, help="lọc bài dưới ngưỡng relevance"
@@ -122,6 +137,13 @@ def build_parser() -> argparse.ArgumentParser:
     days_cmd = sub.add_parser("days", help="liệt kê các ngày có trong CSDL")
     _add_common(days_cmd)
 
+    sync_cmd = sub.add_parser("video-sync", help="sync channel videos")
+    _add_common(sync_cmd)
+    sync_cmd.add_argument("--channel", required=True, help="channel name")
+    sync_cmd.add_argument("--limit", type=int, default=10, help="maximum videos to process")
+    sync_cmd.add_argument("--dry-run", action="store_true", help="discover only; do not call AI or write")
+    sync_cmd.add_argument("--since", help="only include videos since YYYY-MM-DD")
+
     verify_cmd = sub.add_parser("verify", help="giải mã lại một ngày đã dựng để kiểm tra")
     verify_cmd.add_argument("--out", default=None)
     verify_cmd.add_argument("--date", required=True)
@@ -142,7 +164,7 @@ def _options_from(args: argparse.Namespace, *, force: bool, use_brief: bool) -> 
         site_url=args.site_url or os.environ.get("NEWSVAULT_SITE_URL", ""),
         min_relevance=getattr(args, "min_relevance", 0),
         video_db_path=_resolve_video_db(getattr(args, "video_db", None)),
-        api_key=os.environ.get("GEMINI_API_KEY") or None,
+        x_db_path=_resolve_x_db(getattr(args, "x_db", None)),
         cache_dir=Path(os.environ.get("NEWSVAULT_CACHE", ".cache")),
         use_brief=use_brief,
         feed_full=getattr(args, "feed_full", False),
@@ -202,6 +224,32 @@ def cmd_days(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_video_sync(args: argparse.Namespace) -> int:
+    """Run the local youtube-summarizer channel pipeline outside the static site."""
+    video_db = _resolve_video_db(args.video_db)
+    if video_db is None:
+        raise SystemExit("Missing NEWSVAULT_VIDEO_DB or --video-db.")
+    script = video_db.parent / "backfill_channels.py"
+    if not script.is_file():
+        raise SystemExit(f"Channel sync companion not found: {script}")
+    if args.limit < 1:
+        raise SystemExit("--limit must be greater than 0.")
+    command = [
+        sys.executable, str(script), "--channels", args.channel, "--limit", str(args.limit),
+        "--no-telegram",
+    ]
+    if args.dry_run:
+        command.append("--dry-run")
+    if args.since:
+        command.extend(["--since", args.since])
+    result = subprocess.run(command, check=False)
+    if result.returncode:
+        raise SystemExit(result.returncode)
+    if not args.dry_run:
+        print("Channel sync complete. Run `newsvault build --backfill` to update the library.")
+    return 0
+
+
 def cmd_verify(args: argparse.Namespace) -> int:
     """Decrypt a built day and report what is inside it."""
     out = Path(args.out or os.environ.get("NEWSVAULT_OUT", "docs"))
@@ -220,6 +268,8 @@ def cmd_verify(args: argparse.Namespace) -> int:
     print(f"brief     : {len(data.get('brief', []))} gạch đầu dòng")
     print(f"luồng tin : {len(data.get('clusters', []))}")
     print(f"chuyên mục: {len(data.get('categories', []))}")
+    print(f"video     : {len(data.get('videos', []))}")
+    print(f"bài X     : {len(data.get('posts', []))}")
     if articles:
         print(f"bài đầu   : {articles[0].get('t', '')[:80]}")
     return 0
@@ -253,6 +303,7 @@ def main(argv: list[str] | None = None) -> int:
         "rekey": cmd_rekey,
         "export": cmd_export,
         "days": cmd_days,
+        "video-sync": cmd_video_sync,
         "verify": cmd_verify,
     }
     return handlers[args.command](args)

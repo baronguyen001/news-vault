@@ -152,22 +152,32 @@ def test_summary_flags_days_whose_brief_fell_back() -> None:
     assert "2026-08-07, 2026-08-08" in line
 
 
-def test_summary_stays_quiet_when_every_brief_came_from_gemini() -> None:
+def test_summary_stays_quiet_when_every_brief_came_from_the_hub() -> None:
+    from newsvault.build import BuildReport
+
+    report = BuildReport()
+    report.brief_source = {"2026-08-08": "aihub"}
+    assert "fallback" not in report.summary()
+
+
+def test_summary_flags_a_brief_that_came_from_the_retired_gemini_label() -> None:
+    """Nhan "gemini" gio la RAC (cache cu). Phai bi coi la fallback de duoc sinh lai,
+    chu khong duoc lang le tinh la brief that."""
     from newsvault.build import BuildReport
 
     report = BuildReport()
     report.brief_source = {"2026-08-08": "gemini"}
-    assert "fallback" not in report.summary()
+    assert "fallback" in report.summary()
 
 
-def test_summary_reports_a_gemini_provider_issue() -> None:
+def test_summary_reports_a_provider_issue() -> None:
     from newsvault.build import BuildReport
 
-    report = BuildReport(provider_issues=["Gemini: key bị từ chối (API_KEY_INVALID) — mất lưới đỡ"])
+    report = BuildReport(provider_issues=["AI Hub không trả được brief — đã dùng bản tự sinh thay thế"])
     line = report.summary()
 
     assert line.startswith("0 ngày dựng, 0 bỏ qua (không đổi)")
-    assert "⚠️ Gemini: key bị từ chối (API_KEY_INVALID) — mất lưới đỡ" in line
+    assert "⚠️ AI Hub không trả được brief — đã dùng bản tự sinh thay thế" in line
 
 
 def test_summary_without_issues_keeps_its_exact_previous_text() -> None:
@@ -175,5 +185,5 @@ def test_summary_without_issues_keeps_its_exact_previous_text() -> None:
 
     assert BuildReport().summary() == (
         "0 ngày dựng, 0 bỏ qua (không đổi), 0 trang thực thể, 0 trang tuần, "
-        "0 shard tìm kiếm, 0 video, 0 bài phân tích sâu"
+        "0 shard tìm kiếm, 0 video, 0 bài phân tích sâu, 0 bài X"
     )

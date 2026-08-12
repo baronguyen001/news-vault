@@ -18,6 +18,8 @@
     briefTitle: "Tóm tắt ngày",
     analysisPanels: "Chuyên mục · Biểu đồ · Xu hướng",
     videosTitle: "Video YouTube",
+    postsTitle: "Tin nóng từ X",
+    videoLibrary: "Thư viện video",
     deepTitle: "Phân tích sâu",
     hideShorts: (n) => `Ẩn ${n} Short`,
     showShorts: (n) => `Hiện ${n} Short`,
@@ -395,6 +397,7 @@
     else if (config.kind === "week") renderWeek();
     else if (config.kind === "curatedIndex") renderCuratedIndex();
     else if (config.kind === "curated") renderCuratedArticle();
+    else if (config.kind === "videoIndex") renderVideoIndex();
     wireUser();
     applyHash();
     scrollToAnchor();
@@ -473,6 +476,7 @@
     renderBlindspots(analysis);
     renderSearchbar(app);
     renderCurated(app);
+    renderPosts(app);
     renderVideos(app);
     const wrap = make("div", "cards-wrap", app);
     const countEl = make("div", "result-count sr-only", wrap);
@@ -507,6 +511,7 @@
     home.href = config.base || "./";
     text(home, T.home);
     mountDeepLink(nav);
+    mountVideoLibraryLink(nav);
     // Column choice is a desktop affordance; the stylesheet hides it below 1024px.
     if (NV.layout) NV.layout.mount(nav);
     const theme = make("button", "topbar__btn", nav);
@@ -573,6 +578,14 @@
     return link;
   }
 
+  function mountVideoLibraryLink(nav) {
+    if (!nav || config.kind === "videoIndex") return;
+    const link = make("a", "topbar__link topbar__link--videos", nav);
+    link.href = `${config.base || ""}videos/`;
+    text(link, T.videoLibrary);
+    return link;
+  }
+
   /**
    * The day's deep-dive analyses, as folded link cards.
    *
@@ -594,6 +607,32 @@
     body.appendChild(section);
   }
 
+  /**
+   * The day's posts from X.
+   *
+   * Sits between the deep dives and the videos, which is the order these three streams
+   * go stale in: an X post is hours old and may already be wrong, a curated analysis is
+   * this morning's reading, a video recap keeps. Folded but open by default, like the
+   * videos — it is content to read, not a chart to consult.
+   *
+   * Its own section rather than merged into the article list, for the same reason the
+   * videos have one: these carry no source tier from the news taxonomy and no paid
+   * marker, so ranking them alongside a Reuters wire would mean inventing a number.
+   */
+  function renderPosts(parent) {
+    if (!NV.posts) return;
+    const list = payload.posts || [];
+    if (!list.length) return;
+    const body = makePanel(parent, "day-posts", `${T.postsTitle} (${list.length})`, "", true);
+    const section = NV.posts.section(list);
+    if (!section) return;
+    // The fold's summary already names the section; the section's own <h2> would be a
+    // second copy of the same words one line below it.
+    const heading = section.querySelector(".xposts__title");
+    if (heading) section.removeChild(heading);
+    body.appendChild(section);
+  }
+
   /** Listing page for every deep dive in the archive. */
   function renderCuratedIndex() {
     const app = $("#app");
@@ -601,6 +640,14 @@
     app.className = "app app--deeplist";
     renderSimpleTopbar(app);
     if (NV.curated) NV.curated.renderIndex(app, payload, config);
+  }
+
+  function renderVideoIndex() {
+    const app = $("#app");
+    text(app, "");
+    app.className = "app app--video-library";
+    renderSimpleTopbar(app);
+    if (NV.videoLibrary) NV.videoLibrary.render(app, payload);
   }
 
   /** One deep dive, laid out for long-form reading. */
@@ -1476,6 +1523,9 @@
       const count = make("span", "homenav__count", link);
       text(count, ` (${total})`);
     }
+    const videos = make("a", "homenav__link", nav);
+    videos.href = `${config.base || ""}videos/`;
+    text(videos, T.videoLibrary);
     return nav;
   }
 
@@ -1607,6 +1657,7 @@
       text(day, T.latestTitle);
     }
     mountDeepLink(nav);
+    mountVideoLibraryLink(nav);
     if (NV.layout) NV.layout.mount(nav);
     const theme = make("button", "topbar__btn", nav);
     theme.type = "button";

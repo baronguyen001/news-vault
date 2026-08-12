@@ -7,6 +7,7 @@ from newsvault.cluster import Cluster
 from newsvault.curated import CuratedItem
 from newsvault.entities import Entity
 from newsvault.model import Article
+from newsvault.posts import Post
 from newsvault.text import excerpt, fold
 from newsvault.trends import Trend
 from newsvault.videos import Video
@@ -117,6 +118,9 @@ def compact_video(video: Video) -> dict[str, object]:
             "p": video.processed_at,
             "d": video.day,
             "bl": [{"k": b.kind, "r": [[run, bold] for run, bold in b.runs]} for b in video.blocks],
+            "st": video.summary_status,
+            "er": video.error_message,
+            "at": video.attempts,
         }
     )
 
@@ -147,6 +151,28 @@ def video_index_items(videos: Sequence[Video]) -> list[dict[str, object]]:
             )
         )
     return items
+
+
+def video_library_payload(videos: Sequence[Video], *, generated_at: str) -> dict[str, object]:
+    """Payload for the private, channel-oriented video library.
+
+    The library intentionally contains only successfully summarised videos.  It is a
+    reading surface for the static archive, not a view of the summariser's work queue;
+    exposing failed or pending rows would require a live service and would make the
+    archive's data model misleading.
+    """
+    ordered = sorted(videos, key=lambda video: (video.day, video.processed_at, video.id), reverse=True)
+    channels = _count_values(video.channel or "Kênh chưa rõ" for video in ordered)
+    return _sorted(
+        {
+            "v": 1,
+            "kind": "videoIndex",
+            "generated_at": generated_at,
+            "total": len(ordered),
+            "channels": channels,
+            "videos": [compact_video(video) for video in ordered],
+        }
+    )
 
 
 def curated_teaser(item: CuratedItem) -> dict[str, object]:
@@ -242,6 +268,76 @@ def curated_index_items(items: Sequence[CuratedItem]) -> list[dict[str, object]]
     return out
 
 
+def compact_post(post: Post) -> dict[str, object]:
+    """Return the compact JSON shape for one X post.
+
+    Same discipline as :func:`compact_video`: the summary travels as pre-parsed blocks
+    and the key points as plain strings, so nothing a language model wrote can reach the
+    browser as markup.
+
+    ``tr`` (the author's tier) travels with the card because it is the only thing keeping
+    a viral anonymous post from reading like a wire report - the front end shows it as a
+    credibility mark, and a reader who cannot see it cannot weigh the source.
+    """
+    return _sorted(
+        {
+            "id": post.id,
+            "t": post.title,
+            "u": post.url,
+            "au": post.author,
+            "an": post.author_name,
+            "tr": round(post.author_tier, 2),
+            "pr": 1 if post.is_primary else 0,
+            "d": post.day,
+            "p": post.processed_at,
+            "pi": post.published_iso,
+            "ve": post.vertical,
+            "vl": post.vertical_label,
+            "tp": post.topic,
+            "im": post.impact,
+            "rel": post.relevance,
+            "sc": post.score,
+            "lk": post.likes,
+            "rt": post.retweets,
+            "ins": post.insight,
+            "bl": [{"k": b.kind, "r": [[run, bold] for run, bold in b.runs]} for b in post.blocks],
+            "kp": list(post.points),
+        }
+    )
+
+
+def post_index_items(posts: Sequence[Post]) -> list[dict[str, object]]:
+    """Search-index entries so whole-archive search reaches X posts too."""
+    out: list[dict[str, object]] = []
+    for index, post in enumerate(posts):
+        body = " ".join(run for block in post.blocks for run, _ in block.runs)
+        points = " ".join(post.points)
+        # The original English text is folded into the search string as well: a reader
+        # hunting for "FOMC" should find the post that used that word, not only the
+        # Vietnamese rendering of it.
+        searchable = fold(f"{post.title} {post.author} {body} {points} {post.text}".strip())
+        out.append(
+            _sorted(
+                {
+                    "d": post.day,
+                    "i": index,
+                    "k": "x",
+                    "t": post.title,
+                    "f": searchable,
+                    "s": f"@{post.author}",
+                    "sk": "x",
+                    "tr": "free",
+                    "tp": post.topic,
+                    "im": post.impact,
+                    "sc": post.score,
+                    "r": "",
+                    "tg": [],
+                }
+            )
+        )
+    return out
+
+
 def day_payload(
     day: str,
     articles: Sequence[Article],
@@ -256,6 +352,7 @@ def day_payload(
     generated_at: str,
     videos: Sequence[Video] = (),
     curated: Sequence[CuratedItem] = (),
+    posts: Sequence[Post] = (),
 ) -> dict[str, object]:
     """Build the encrypted JSON payload for a single day page."""
     compact = [compact_article(a, i, entities=entity_map) for i, a in enumerate(articles)]
@@ -295,6 +392,7 @@ def day_payload(
             "articles": compact,
             "videos": [compact_video(v) for v in videos],
             "curated": [curated_teaser(c) for c in curated],
+            "posts": [compact_post(p) for p in posts],
         }
     )
 

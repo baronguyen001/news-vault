@@ -427,3 +427,26 @@ def test_available_days_and_counts_use_archive_rows_only(tmp_path: Path):
     with videos.connect(path) as conn:
         assert videos.available_days(conn) == ["2026-08-03", "2026-08-05"]
         assert videos.counts_by_day(conn) == {"2026-08-03": 2, "2026-08-05": 1}
+
+
+def test_load_library_includes_unsummarised_rows_with_retry_status(tmp_path: Path):
+    path = _make_db(
+        tmp_path,
+        rows=(
+            {
+                "id": "done", "title": "done", "channel": "A", "url": "u",
+                "processed_at": "2026-08-04T10:00:00", "summary": "summary",
+                "video_type": "", "success": 1,
+            },
+            {
+                "id": "retry", "title": "retry", "channel": "A", "url": "u",
+                "processed_at": "2026-08-05T10:00:00", "summary": "",
+                "video_type": "", "success": 0,
+            },
+        ),
+    )
+    with videos.connect(path) as conn:
+        loaded = videos.load_library(conn)
+
+    assert [video.id for video in loaded] == ["retry", "done"]
+    assert [video.summary_status for video in loaded] == ["retry", "summarized"]

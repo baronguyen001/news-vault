@@ -16,7 +16,6 @@ def make_options(tmp_path):
         password="test",
         cache_dir=tmp_path / ".cache",
         use_brief=True,
-        api_key="khoa-gia",
     )
 
 
@@ -36,7 +35,7 @@ def test_refusal_cache_is_replaced(tmp_path, monkeypatch):
 
     monkeypatch.setattr(
         "newsvault.build.generate_brief",
-        lambda *args, **kwargs: BriefResult(GOOD_BULLETS, "gemini", ""),
+        lambda *args, **kwargs: BriefResult(GOOD_BULLETS, "aihub", ""),
     )
 
     result = _brief_for(day, [], options)

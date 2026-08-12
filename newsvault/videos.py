@@ -46,6 +46,9 @@ class Video:
     blocks: tuple[Block, ...]
     is_short: bool = False
     thumbnail_fallback: str = ""
+    summary_status: str = "summarized"  # summarized | retry | unavailable
+    error_message: str = ""
+    attempts: int = 0
 
 
 def clean_title(title: str, channel: str) -> str:
@@ -181,6 +184,51 @@ def load_all(conn: sqlite3.Connection) -> list[Video]:
     return videos
 
 
+def load_library(conn: sqlite3.Connection) -> list[Video]:
+    """Return every non-junk video with its current summarisation status.
+
+    Unlike :func:`load_all`, this deliberately includes unsuccessful rows.  The
+    channel library is where a reader can see which videos still need a retry;
+    day pages remain a clean archive of successful summaries only.
+    """
+    columns = [
+        "id", "title", "channel", "url", "processed_at", "summary", "video_type", "success",
+    ]
+    upload_date_present = has_upload_date(conn)
+    is_short_present = has_column(conn, "is_short")
+    permanent_present = has_column(conn, "permanent_fail")
+    attempts_present = has_column(conn, "attempts")
+    error_present = has_column(conn, "error_message")
+    if upload_date_present:
+        columns.append("upload_date")
+    if is_short_present:
+        columns.append("is_short")
+    if permanent_present:
+        columns.append("permanent_fail")
+    if attempts_present:
+        columns.append("attempts")
+    if error_present:
+        columns.append("error_message")
+    where = "1 = 1"
+    if has_column(conn, "junk"):
+        where += " AND COALESCE(junk, 0) = 0"
+    cursor = conn.execute(f"SELECT {', '.join(columns)} FROM videos WHERE {where} ORDER BY id")
+    try:
+        videos = [
+            _video_from_row(
+                row,
+                has_upload_date=upload_date_present,
+                has_is_short=is_short_present,
+                library=True,
+            )
+            for row in cursor
+        ]
+    finally:
+        cursor.close()
+    valid = [video for video in videos if video is not None]
+    return sorted(valid, key=lambda video: (video.day, video.processed_at, video.id), reverse=True)
+
+
 def _iter_videos(conn: sqlite3.Connection) -> Iterator[Video | None]:
     """Yield archive videos, or None for rows that cannot be filed under a day."""
     columns = [
@@ -223,6 +271,7 @@ def _video_from_row(
     *,
     has_upload_date: bool,
     has_is_short: bool,
+    library: bool = False,
 ) -> Video | None:
     """Build a Video, returning None when the row cannot be placed on a calendar day."""
     raw_title = row["title"] or ""
@@ -235,6 +284,10 @@ def _video_from_row(
     day, source = _resolve_day(processed_at, upload_date)
     if not day:
         return None
+    row_columns = set(row.keys())
+    success = bool(row["success"])
+    permanent_fail = bool(row["permanent_fail"]) if "permanent_fail" in row_columns else False
+    status = "summarized" if success and summary else ("unavailable" if permanent_fail else "retry")
     return Video(
         id=video_id,
         title=clean_title(raw_title, channel),
@@ -250,6 +303,9 @@ def _video_from_row(
         blocks=summary_blocks(summary),
         is_short=is_short,
         thumbnail_fallback=fallback_thumbnail_url(video_id) if is_short else "",
+        summary_status=status if library else "summarized",
+        error_message=(row["error_message"] or "") if "error_message" in row_columns else "",
+        attempts=int(row["attempts"] or 0) if "attempts" in row_columns else 0,
     )
 
 

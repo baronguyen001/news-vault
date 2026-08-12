@@ -21,13 +21,14 @@ from pathlib import Path
 
 from newsvault import __version__, charts, crypto, db, feeds, payload, render
 from newsvault import curated as curated_db
+from newsvault import posts as posts_db
 from newsvault import videos as videos_db
 from newsvault.blindspot import blindspots
 from newsvault.brief import (
     LLM_SOURCES,
     BriefResult,
+    brief_provider_issue,
     fallback_brief,
-    gemini_provider_issue,
     generate_brief,
     looks_like_refusal,
 )
@@ -36,6 +37,7 @@ from newsvault.curated import CuratedItem
 from newsvault.entities import Entity, EntityIndex, build_entity_index
 from newsvault.exports import day_markdown, write_markdown
 from newsvault.model import Article
+from newsvault.posts import Post
 from newsvault.sources import PAID
 from newsvault.text import slugify
 from newsvault.trends import trending_terms
@@ -62,12 +64,12 @@ class BuildOptions:
     out_dir: Path
     password: str
     video_db_path: Path | None = None
+    x_db_path: Path | None = None
     days: tuple[str, ...] = ()
     backfill: bool = False
     site: str = "Kho tin"
     site_url: str = ""
     min_relevance: int = 0
-    api_key: str | None = None
     cache_dir: Path = Path(".cache")
     use_brief: bool = True
     feed_full: bool = False
@@ -86,6 +88,7 @@ class BuildReport:
     index_shards: int = 0
     videos_included: int = 0
     curated_pages: int = 0
+    posts_included: int = 0
     brief_source: dict[str, str] = field(default_factory=dict)
     provider_issues: list[str] = field(default_factory=list)
     bytes_written: int = 0
@@ -96,7 +99,7 @@ class BuildReport:
             f"{len(self.days_built)} ngày dựng, {len(self.days_skipped)} bỏ qua (không đổi), "
             f"{self.entity_pages} trang thực thể, {self.week_pages} trang tuần, "
             f"{self.index_shards} shard tìm kiếm, {self.videos_included} video, "
-            f"{self.curated_pages} bài phân tích sâu"
+            f"{self.curated_pages} bài phân tích sâu, {self.posts_included} bài X"
         )
         # Brief tụt xuống bản fallback (xếp theo điểm, không qua LLM) là một sự cố CHẤT
         # LƯỢNG chứ không phải lỗi build — trước đây `brief_source` được ghi lại nhưng
@@ -298,7 +301,7 @@ def _brief_for(day: str, articles: Sequence[Article], options: BuildOptions) -> 
     """The day's five bullets, cached on disk and degrading to a deterministic fallback.
 
     The cache is what makes a rebuild free and a re-key lossless: without it, changing the
-    site password would silently replace every Gemini brief with the fallback text.
+    site password would silently replace every real brief with the fallback text.
     """
     cache = Path(options.cache_dir) / "brief" / f"{day}.json"
     if cache.exists():
@@ -321,7 +324,7 @@ def _brief_for(day: str, articles: Sequence[Article], options: BuildOptions) -> 
     result = (
         fallback_brief(articles)
         if not options.use_brief
-        else generate_brief(day, articles, api_key=options.api_key)
+        else generate_brief(day, articles)
     )
     # Cache anything a language model actually wrote, whichever engine wrote it. Pinning
     # this to "gemini" meant a hub-written brief was regenerated on every single build.
@@ -365,6 +368,48 @@ def _load_videos(options: BuildOptions) -> dict[str, list[Video]]:
     except sqlite3.Error as err:
         logger.warning("video database unreadable (%s); building without videos", err)
         return {}
+    finally:
+        conn.close()
+
+
+def _load_posts(options: BuildOptions) -> dict[str, list[Post]]:
+    """Group every publishable X post by day, or return nothing at all on any problem.
+
+    Same contract as `_load_videos` and `_load_curated`, and for the same reason: the
+    x-pulse database belongs to a scraper that runs three times a day and may be mid-write
+    when the nightly build starts. A missing file, a missing view or a lock degrades to an
+    archive without the X section, never to a failed build.
+    """
+    if not options.x_db_path:
+        return {}
+    try:
+        conn = posts_db.connect(options.x_db_path)
+    except (FileNotFoundError, sqlite3.Error) as err:
+        logger.warning("x-pulse database unavailable (%s); building without X posts", err)
+        return {}
+    try:
+        return posts_db.group_by_day(posts_db.load_all(conn))
+    except sqlite3.Error as err:
+        logger.warning("x-pulse database unreadable (%s); building without X posts", err)
+        return {}
+    finally:
+        conn.close()
+
+
+def _load_video_library(options: BuildOptions) -> list[Video]:
+    """Load successful and retryable videos for the channel library."""
+    if not options.video_db_path:
+        return []
+    try:
+        conn = videos_db.connect(options.video_db_path)
+    except (FileNotFoundError, sqlite3.Error) as err:
+        logger.warning("video database unavailable (%s); building empty video library", err)
+        return []
+    try:
+        return videos_db.load_library(conn)
+    except sqlite3.Error as err:
+        logger.warning("video library unreadable (%s); building empty video library", err)
+        return []
     finally:
         conn.close()
 
@@ -425,13 +470,15 @@ def build_site(options: BuildOptions) -> BuildReport:
     )
 
     videos_by_day = _load_videos(options)
+    library_videos = _load_video_library(options)
     curated_items = _load_curated(options)
     curated_by_day = curated_db.group_by_day(curated_items)
+    posts_by_day = _load_posts(options)
 
     conn = db.connect(options.db_path)
     try:
         target_days = select_days(
-            conn, options, extra_days=set(videos_by_day) | set(curated_by_day)
+            conn, options, extra_days=set(videos_by_day) | set(curated_by_day) | set(posts_by_day)
         )
         if not target_days:
             logger.warning("nothing to build")
@@ -440,12 +487,19 @@ def build_site(options: BuildOptions) -> BuildReport:
         # A day exists when it has articles OR videos OR a deep dive: the YouTube archive
         # reaches back months further than the news database, and a curated analysis made
         # on a quiet news day would otherwise have no day page to be linked from.
-        all_days = sorted(set(db.available_days(conn)) | set(videos_by_day) | set(curated_by_day))
+        all_days = sorted(
+            set(db.available_days(conn))
+            | set(videos_by_day)
+            | set(curated_by_day)
+            | set(posts_by_day)
+        )
         counts = db.counts_by_day(conn)
         for day, day_videos in videos_by_day.items():
             counts[day] = counts.get(day, 0) + len(day_videos)
         for day, day_curated in curated_by_day.items():
             counts[day] = counts.get(day, 0) + len(day_curated)
+        for day, day_posts in posts_by_day.items():
+            counts[day] = counts.get(day, 0) + len(day_posts)
 
         # One wide load covers the built days plus the baseline window behind them.
         history_start = _shift(min(target_days), -HISTORY_DAYS)
@@ -468,12 +522,13 @@ def build_site(options: BuildOptions) -> BuildReport:
             articles = by_day.get(day, [])
             day_videos = videos_by_day.get(day, [])
             day_curated = curated_by_day.get(day, [])
-            if not articles and not day_videos and not day_curated:
+            day_posts = posts_by_day.get(day, [])
+            if not articles and not day_videos and not day_curated and not day_posts:
                 continue
 
             brief = _brief_for(day, articles, options)
             report.brief_source[day] = brief.source
-            issue = gemini_provider_issue()
+            issue = brief_provider_issue()
             if issue is not None and issue not in report.provider_issues:
                 report.provider_issues.append(issue)
 
@@ -491,15 +546,18 @@ def build_site(options: BuildOptions) -> BuildReport:
                 generated_at=_day_anchor(day),
                 videos=day_videos,
                 curated=day_curated,
+                posts=day_posts,
             )
 
             key = f"day:{day}"
             fresh[key] = _digest(data, with_shell=True)
             report.videos_included += len(day_videos)
+            report.posts_included += len(day_posts)
             month_items = index_by_month.setdefault(day[:7], [])
             month_items.extend(payload.index_items(day, articles))
             month_items.extend(payload.video_index_items(day_videos))
             month_items.extend(payload.curated_index_items(day_curated))
+            month_items.extend(payload.post_index_items(day_posts))
             weeks.setdefault(_iso_week(day)[0], []).append(day)
 
             if state.get(key) == fresh[key] and (out_dir / "d" / day / "data.enc").exists():
@@ -556,6 +614,15 @@ def build_site(options: BuildOptions) -> BuildReport:
         )
         report.curated_pages = _write_curated_pages(
             out_dir, curated_items, options, meta, salt, state, fresh
+        )
+        _write_video_library(
+            out_dir,
+            library_videos,
+            options,
+            meta,
+            salt,
+            state,
+            fresh,
         )
         _write_home(out_dir, all_days, counts, options, meta, curated_total=len(curated_items))
         _write_root_files(
@@ -859,6 +926,47 @@ def _write_curated_pages(
         written += 1
 
     return written
+
+
+def _write_video_library(
+    out_dir: Path,
+    videos: Sequence[Video],
+    options: BuildOptions,
+    meta: render.SiteMeta,
+    salt: bytes,
+    state: Mapping[str, str],
+    fresh: dict[str, str],
+) -> None:
+    """Write the one private screen that groups every summary by YouTube channel."""
+    newest = max((video.day for video in videos), default=_today())
+    data = payload.video_library_payload(videos, generated_at=_day_anchor(newest))
+    key = "videos:index"
+    fresh[key] = _digest(data, with_shell=True)
+    target = out_dir / "videos"
+    if state.get(key) == fresh[key] and (target / "data.enc").exists():
+        return
+    config = {
+        "kind": "videoIndex",
+        "base": "../",
+        "version": __version__,
+        "kdfIterations": crypto.DEFAULT_ITERATIONS,
+        "site": options.site,
+        "siteUrl": options.site_url,
+        "dataUrl": "data.enc",
+        "manifestUrl": "../manifest.json",
+        "indexBase": "../idx/",
+    }
+    render.write_page(
+        target / "index.html",
+        render.render_page(
+            kind="videoIndex",
+            base="../",
+            title=f"Video YouTube — {options.site}",
+            config=config,
+            meta=meta,
+        ),
+    )
+    crypto.write_encrypted(target / "data.enc", data, options.password, salt=salt)
 
 
 def _today() -> str:
