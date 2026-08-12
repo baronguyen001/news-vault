@@ -2757,6 +2757,14 @@ body.modal-open {
   --topic-colour: var(--topic-kinh-te);
 }
 
+.topic-chung-khoan {
+  --topic-colour: var(--topic-chung-khoan);
+}
+
+.topic-crypto {
+  --topic-colour: var(--topic-crypto);
+}
+
 .topic-chinh-tri {
   --topic-colour: var(--topic-chinh-tri);
 }
