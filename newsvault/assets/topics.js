@@ -12,6 +12,8 @@ window.NV = window.NV || {};
 
   const KEYS = Object.freeze([
     "kinh-te",
+    "chung-khoan",
+    "crypto",
     "chinh-tri",
     "cong-nghe",
     "xung-dot",
@@ -36,6 +38,23 @@ window.NV = window.NV || {};
   // Order is also the tie-break order: "Tài chính & Kinh doanh" must land on money, and it
   // would land on technology if the tech group were tested first.
   const keywordGroups = [
+    // These two are tested BEFORE "kinh-te" on purpose. "Chứng khoán" and "Crypto" are
+    // narrower splits of finance, and a headline vertical like "Tài chính & Chứng khoán"
+    // must land on the narrow hue, not on the generic money one.
+    //
+    // The hyphenated spellings are not redundant: fold() collapses whitespace but leaves
+    // "-" alone, so the already-slugged form that posts.py stores in `vertical`
+    // ("chung-khoan") misses the spaced keyword and falls through to the hash, which put
+    // it on the money hue purely by accident. Cheaper to accept both spellings than to
+    // rely on nobody ever passing a slug in here.
+    {
+      slug: "chung-khoan",
+      keywords: ["chung khoan", "chung-khoan", "co phieu", "co-phieu", "stock", "equit"]
+    },
+    {
+      slug: "crypto",
+      keywords: ["crypto", "tien ma hoa", "tien so", "blockchain", "bitcoin", "defi", "web3"]
+    },
     {
       slug: "kinh-te",
       keywords: ["kinh te", "tai chinh", "business", "finance", "market"]

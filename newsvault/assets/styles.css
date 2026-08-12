@@ -2704,6 +2704,8 @@ body.modal-open {
   --topic-xung-dot: #c44848;
   --topic-phap-luat: #b98220;
   --topic-van-hoa: #c65387;
+  --topic-chung-khoan: #2a5cc4;
+  --topic-crypto: #6d8c1f;
   --topic-khac: #64748b;
 }
 
@@ -2715,6 +2717,8 @@ body.modal-open {
     --topic-xung-dot: #e28b8b;
     --topic-phap-luat: #e2bb70;
     --topic-van-hoa: #df91b3;
+    --topic-chung-khoan: #8ab0ec;
+    --topic-crypto: #bcd166;
     --topic-khac: #aab7c8;
   }
 }
@@ -2726,6 +2730,8 @@ body.modal-open {
   --topic-xung-dot: #e28b8b;
   --topic-phap-luat: #e2bb70;
   --topic-van-hoa: #df91b3;
+  --topic-chung-khoan: #8ab0ec;
+  --topic-crypto: #bcd166;
   --topic-khac: #aab7c8;
 }
 
@@ -2736,6 +2742,8 @@ body.modal-open {
   --topic-xung-dot: #c44848;
   --topic-phap-luat: #b98220;
   --topic-van-hoa: #c65387;
+  --topic-chung-khoan: #2a5cc4;
+  --topic-crypto: #6d8c1f;
   --topic-khac: #64748b;
 }
 
