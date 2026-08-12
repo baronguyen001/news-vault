@@ -635,23 +635,23 @@
     {
       "d": "2026-08-12",
       "months": "2026-08",
-      "n": 84
+      "n": 106
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 765,
+      "n": 780,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 224,
+      "n": 225,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 164,
+      "n": 166,
       "slug": "luat"
     },
     {
@@ -661,17 +661,17 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 127,
+      "n": 128,
       "slug": "doanh-nghiep"
     },
     {
       "label": "chính phủ",
-      "n": 112,
+      "n": 110,
       "slug": "chinh-phu"
     },
     {
       "label": "công nghệ",
-      "n": 107,
+      "n": 108,
       "slug": "cong-nghe"
     },
     {
@@ -680,24 +680,24 @@
       "slug": "ngan-hang"
     },
     {
+      "label": "chip",
+      "n": 82,
+      "slug": "chip"
+    },
+    {
       "label": "lãi suất",
       "n": 82,
       "slug": "lai-suat"
     },
     {
-      "label": "chip",
-      "n": 81,
-      "slug": "chip"
+      "label": "dữ liệu",
+      "n": 79,
+      "slug": "du-lieu"
     },
     {
       "label": "chính sách",
       "n": 78,
       "slug": "chinh-sach"
-    },
-    {
-      "label": "dữ liệu",
-      "n": 78,
-      "slug": "du-lieu"
     },
     {
       "label": "trung ương",
@@ -711,18 +711,23 @@
     },
     {
       "label": "đảng",
-      "n": 68,
+      "n": 70,
       "slug": "dang"
     },
     {
       "label": "quốc hội",
-      "n": 61,
+      "n": 62,
       "slug": "quoc-hoi"
     },
     {
       "label": "chứng khoán",
-      "n": 60,
+      "n": 61,
       "slug": "chung-khoan"
+    },
+    {
+      "label": "xuất khẩu",
+      "n": 55,
+      "slug": "xuat-khau"
     },
     {
       "label": "xung đột",
@@ -733,11 +738,6 @@
       "label": "nghị quyết",
       "n": 53,
       "slug": "nghi-quyet"
-    },
-    {
-      "label": "xuất khẩu",
-      "n": 53,
-      "slug": "xuat-khau"
     },
     {
       "label": "năng lượng",
@@ -755,6 +755,11 @@
       "slug": "nhap-khau"
     },
     {
+      "label": "startup",
+      "n": 35,
+      "slug": "startup"
+    },
+    {
       "label": "nghị định",
       "n": 34,
       "slug": "nghi-dinh"
@@ -770,19 +775,14 @@
       "slug": "thue-quan"
     },
     {
-      "label": "startup",
-      "n": 31,
-      "slug": "startup"
+      "label": "trừng phạt",
+      "n": 24,
+      "slug": "trung-phat"
     },
     {
       "label": "bán dẫn",
       "n": 23,
       "slug": "ban-dan"
-    },
-    {
-      "label": "trừng phạt",
-      "n": 22,
-      "slug": "trung-phat"
     },
     {
       "label": "hành chính",
@@ -993,6 +993,11 @@
       "label": "Hong Kong",
       "n": 3,
       "slug": "hong-kong"
+    },
+    {
+      "label": "khởi nghiệp",
+      "n": 3,
+      "slug": "khoi-nghiep"
     },
     {
       "label": "Lai Châu",
