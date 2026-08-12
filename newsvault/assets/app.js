@@ -1167,12 +1167,24 @@
     return header;
   }
 
-  function setHighlighted(el, val, parsed) {
+  // One funnel for the summary, the key points and all four analysis sections - so marking
+  // here covers both the inline fold and the modal, which borrows this very DOM node.
+  //
+  // An active search query wins over keyword marking: marking both at once would put two
+  // different colours on overlapping spans and neither would read as meaningful.
+  function setHighlighted(el, val, parsed, terms) {
     if (parsed && !parsed.isEmpty && val) {
       el.innerHTML = NV.search.highlight(val, parsed);
-    } else {
-      text(el, val);
+      return;
     }
+    if (val && NV.keyterms && NV.search.markSpans) {
+      const spans = NV.keyterms.findKeyTerms(val, terms);
+      if (spans.length) {
+        el.innerHTML = NV.search.markSpans(val, spans, "kw");
+        return;
+      }
+    }
+    text(el, val);
   }
 
   // The whole card body is now behind one toggle, so the summary no longer needs a
@@ -1183,7 +1195,7 @@
     const wrap = make("div", "card__summary", parent);
     for (let i = 0; i < paras.length; i++) {
       const p = make("p", i === 0 ? "card__summary__first" : "", wrap);
-      setHighlighted(p, paras[i], parsed);
+      setHighlighted(p, paras[i], parsed, a.ents);
     }
   }
 
@@ -1193,7 +1205,7 @@
     const ul = make("ul", "card__points", parent);
     for (const p of kp) {
       const li = make("li", "", ul);
-      setHighlighted(li, p, parsed);
+      setHighlighted(li, p, parsed, a.ents);
     }
   }
 
@@ -1236,7 +1248,7 @@
       const h = make("h4", "card__analysis__section", body);
       text(h, sec.label);
       const p = make("p", "", body);
-      setHighlighted(p, val || "", parsed);
+      setHighlighted(p, val || "", parsed, a.ents);
     }
     return details;
   }

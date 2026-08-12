@@ -590,14 +590,18 @@
     return merged;
   }
 
-  function insertMarks(escaped, intervals) {
+  // `cls` distinguishes query highlighting (no class) from keyword highlighting
+  // (class="kw"), so the two can be styled apart - and so keyword marks can be shown only
+  // inside the modal while the card list stays calm.
+  function insertMarks(escaped, intervals, cls) {
+    const open = cls ? '<mark class="' + cls + '">' : "<mark>";
     const parts = [];
     let last = 0;
     for (const [s, e] of intervals) {
       if (s > last) {
         parts.push(escaped.slice(last, s));
       }
-      parts.push("<mark>");
+      parts.push(open);
       parts.push(escaped.slice(s, e));
       parts.push("</mark>");
       last = e;
@@ -606,6 +610,21 @@
       parts.push(escaped.slice(last));
     }
     return parts.join("");
+  }
+
+  // Marks arbitrary spans of `text`, reusing the same escape-first machinery as
+  // `highlight`. Spans index into the ORIGINAL text; they are mapped onto the escaped
+  // string here, which is why callers must never pre-escape or hand-build markup.
+  function markSpans(text, spans, cls) {
+    const { escaped, origToEsc } = escapeHtmlWithMap(text);
+    if (!spans || !spans.length) return escaped;
+    const escSpans = [];
+    for (const [s, e] of spans) {
+      if (s == null || e == null || s >= e) continue;
+      if (s < 0 || e > text.length) continue;
+      escSpans.push([origToEsc[s], origToEsc[e]]);
+    }
+    return insertMarks(escaped, mergeIntervals(escSpans), cls);
   }
 
   function highlight(text, parsed) {
@@ -636,5 +655,6 @@
     matches,
     run,
     highlight,
+    markSpans,
   };
 })();

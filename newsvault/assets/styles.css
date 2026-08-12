@@ -143,6 +143,39 @@ mark {
   padding: 0 0.125rem;
 }
 
+/* Keyword highlight — deliberately a DIFFERENT hue from the accent-tinted query highlight
+   above, so "what I searched for" and "what matters in this article" never read as the same
+   thing. Only ever visible in the modal or an expanded card, because `.card__body` is
+   `hidden` while the card is collapsed.
+   `--kw-mark` is defined for both themes below; :root here is the DARK default. */
+:root {
+  --kw-mark: rgb(250 204 21 / 0.32);
+  --kw-mark-underline: rgb(250 204 21 / 0.85);
+}
+
+mark.kw {
+  background: var(--kw-mark);
+  box-shadow: inset 0 -0.4em 0 0 var(--kw-mark);
+  color: inherit;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --kw-mark: rgb(253 224 71 / 0.7);
+    --kw-mark-underline: rgb(202 138 4 / 0.9);
+  }
+}
+
+:root[data-theme="light"] {
+  --kw-mark: rgb(253 224 71 / 0.7);
+  --kw-mark-underline: rgb(202 138 4 / 0.9);
+}
+
+:root[data-theme="dark"] {
+  --kw-mark: rgb(250 204 21 / 0.32);
+  --kw-mark-underline: rgb(250 204 21 / 0.85);
+}
+
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
@@ -1045,6 +1078,14 @@ code {
 
   mark {
     background: transparent;
+    text-decoration: underline;
+  }
+
+  /* Yellow does not survive a black-and-white printer; keep the emphasis, drop the fill. */
+  mark.kw {
+    background: transparent;
+    box-shadow: none;
+    font-weight: 600;
     text-decoration: underline;
   }
 }
