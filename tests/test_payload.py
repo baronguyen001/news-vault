@@ -9,7 +9,14 @@ import pytest
 from newsvault.cluster import Cluster
 from newsvault.entities import Entity
 from newsvault.model import Article
-from newsvault.payload import compact_article, day_payload, manifest, stats_for
+from newsvault.payload import (
+    compact_article,
+    day_payload,
+    manifest,
+    stats_for,
+    video_library_payload,
+)
+from newsvault.videos import Video
 
 
 def make_article(**overrides: Any) -> Article:
@@ -137,6 +144,17 @@ def test_day_payload_deterministic() -> None:
     first = json.dumps(day_payload(**args), ensure_ascii=False)
     second = json.dumps(day_payload(**args), ensure_ascii=False)
     assert first == second
+
+
+def test_video_library_payload_sorts_videos_and_keeps_channel_names_private() -> None:
+    older = Video("older", "Cũ", "raw", "Kênh A", "u", "", "2026-08-01", "2026-08-01T10:00:00", "", "", "", ())
+    newest = Video("newest", "Mới", "raw", "Kênh B", "u", "", "2026-08-02", "2026-08-02T10:00:00", "", "", "", ())
+    result = video_library_payload([older, newest], generated_at="2026-08-02T23:59:59+07:00")
+
+    assert result["kind"] == "videoIndex"
+    assert result["total"] == 2
+    assert [video["id"] for video in result["videos"]] == ["newest", "older"]
+    assert result["channels"] == {"Kênh A": 1, "Kênh B": 1}
 
 
 def test_stats_for_is_stable_when_shuffled() -> None:

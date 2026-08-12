@@ -1,4 +1,4 @@
-"""Prompt construction for the Gemini daily brief.
+"""Prompt construction for the daily brief (MK1 AI Hub).
 
 Illustration prompts used to live here too. They are gone with the image pipeline: the
 day pages now use a fixed per-category icon, which costs no API call and keeps the
@@ -14,7 +14,7 @@ def brief_prompt(day: str, items: Sequence[Mapping[str, object]]) -> str:
     """Build the Vietnamese daily-brief prompt sent to the brief model.
 
     The JSON contract is spelled out in the prompt itself rather than left to the API.
-    Gemini is told the shape twice — here and through `responseSchema` — but MK1 AI Hub has
+    Truoc day Gemini duoc ta shape hai lan (o day + `responseSchema`); nay chi con MK1 AI Hub, va no
     no schema parameter, and `response_format: {"type": "json_object"}` alone was not
     enough: the model wrote five genuinely good Vietnamese bullets as markdown dashes and
     the parser found no JSON object at all, so every brief fell through to the fallback.

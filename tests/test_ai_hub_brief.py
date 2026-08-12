@@ -144,7 +144,7 @@ def test_brief_uses_the_hub_when_it_is_available(monkeypatch: pytest.MonkeyPatch
         return {"bullets": ["một", "hai", "ba", "bốn", "năm"]}
 
     monkeypatch.setattr(ai_hub, "chat_json", fake_chat_json)
-    result = generate_brief("2026-08-09", [_article()], api_key="gemini-key")
+    result = generate_brief("2026-08-09", [_article()])
 
     assert result.source == "aihub"
     assert result.bullets == ("một", "hai", "ba", "bốn", "năm")
@@ -152,19 +152,21 @@ def test_brief_uses_the_hub_when_it_is_available(monkeypatch: pytest.MonkeyPatch
     assert len(calls) == 1
 
 
-def test_brief_falls_to_gemini_when_the_hub_raises(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_brief_falls_to_the_deterministic_fallback_when_the_hub_raises(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Tu 2026-08-12 khong con Gemini o giua: hub nem loi la ra thang fallback,
+    va ngoai le KHONG duoc thoat ra ngoai lam vo ca lan dung."""
     _enable_hub(monkeypatch)
 
     def boom(prompt: str, **kwargs: object) -> dict[str, object]:
         raise RuntimeError("AI Hub 524")
 
     monkeypatch.setattr(ai_hub, "chat_json", boom)
-    # No Gemini key either, so the chain must end in the deterministic fallback rather
-    # than in an exception escaping into the build.
-    result = generate_brief("2026-08-09", [_article()], api_key=None)
+    result = generate_brief("2026-08-09", [_article()])
 
     assert result.source == "fallback"
-    assert result.error == "no api key"
+    assert result.error == "ai hub failed"
     assert result.bullets
 
 
@@ -173,7 +175,7 @@ def test_brief_falls_through_when_the_hub_returns_no_bullets(
 ) -> None:
     _enable_hub(monkeypatch)
     monkeypatch.setattr(ai_hub, "chat_json", lambda prompt, **kw: {"bullets": []})
-    result = generate_brief("2026-08-09", [_article()], api_key=None)
+    result = generate_brief("2026-08-09", [_article()])
     assert result.source == "fallback"
 
 
@@ -182,7 +184,7 @@ def test_brief_falls_through_when_bullets_is_not_a_list(
 ) -> None:
     _enable_hub(monkeypatch)
     monkeypatch.setattr(ai_hub, "chat_json", lambda prompt, **kw: {"bullets": "một, hai"})
-    result = generate_brief("2026-08-09", [_article()], api_key=None)
+    result = generate_brief("2026-08-09", [_article()])
     assert result.source == "fallback"
 
 
@@ -192,7 +194,7 @@ def test_brief_skips_the_hub_entirely_when_it_is_not_configured(
     """No hub configured means no hub call — not a call that fails slowly."""
     called: list[str] = []
     monkeypatch.setattr(ai_hub, "chat_json", lambda prompt, **kw: called.append(prompt) or {})
-    result = generate_brief("2026-08-09", [_article()], api_key=None)
+    result = generate_brief("2026-08-09", [_article()])
     assert called == []
     assert result.source == "fallback"
 
@@ -215,11 +217,11 @@ def test_clean_bullets_rejects_a_non_list() -> None:
 # --- the label the build reads ------------------------------------------------------------
 
 
-def test_both_engines_count_as_a_real_brief() -> None:
-    """`build` caches on this set and warns on anything outside it.
+def test_only_the_hub_counts_as_a_real_brief() -> None:
+    """`build` cache theo tap nay va canh bao voi bat cu gi nam ngoai.
 
-    Pinning either check to the literal "gemini" is what made a hub-written brief look
-    degraded in the summary line and get regenerated on every single build.
+    Truoc day tap co ca "gemini"; tu 2026-08-12 chi con "aihub". Neu ai them lai mot
+    nguon vao day thi phai sua ca `_brief_for` va `BuildReport.summary()` cho khop.
     """
-    assert frozenset({"aihub", "gemini"}) == LLM_SOURCES
+    assert frozenset({"aihub"}) == LLM_SOURCES
     assert "fallback" not in LLM_SOURCES
