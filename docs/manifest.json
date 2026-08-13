@@ -635,78 +635,83 @@
       "d": "2026-08-12",
       "months": "2026-08",
       "n": 134
+    },
+    {
+      "d": "2026-08-13",
+      "months": "2026-08",
+      "n": 104
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 780,
+      "n": 838,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 225,
+      "n": 232,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 166,
+      "n": 172,
       "slug": "luat"
     },
     {
       "label": "thuế",
-      "n": 142,
+      "n": 145,
       "slug": "thue"
     },
     {
       "label": "doanh nghiệp",
-      "n": 128,
+      "n": 137,
       "slug": "doanh-nghiep"
     },
     {
       "label": "chính phủ",
-      "n": 110,
+      "n": 115,
       "slug": "chinh-phu"
     },
     {
       "label": "công nghệ",
-      "n": 108,
+      "n": 110,
       "slug": "cong-nghe"
     },
     {
       "label": "ngân hàng",
-      "n": 99,
+      "n": 104,
       "slug": "ngan-hang"
     },
     {
       "label": "chip",
-      "n": 82,
+      "n": 89,
       "slug": "chip"
     },
     {
       "label": "lãi suất",
-      "n": 82,
+      "n": 86,
       "slug": "lai-suat"
     },
     {
       "label": "dữ liệu",
-      "n": 79,
+      "n": 82,
       "slug": "du-lieu"
     },
     {
       "label": "chính sách",
-      "n": 78,
+      "n": 79,
       "slug": "chinh-sach"
+    },
+    {
+      "label": "lạm phát",
+      "n": 77,
+      "slug": "lam-phat"
     },
     {
       "label": "trung ương",
       "n": 77,
       "slug": "trung-uong"
-    },
-    {
-      "label": "lạm phát",
-      "n": 76,
-      "slug": "lam-phat"
     },
     {
       "label": "đảng",
@@ -715,22 +720,22 @@
     },
     {
       "label": "quốc hội",
-      "n": 62,
+      "n": 64,
       "slug": "quoc-hoi"
     },
     {
       "label": "chứng khoán",
-      "n": 61,
+      "n": 62,
       "slug": "chung-khoan"
     },
     {
       "label": "xuất khẩu",
-      "n": 55,
+      "n": 59,
       "slug": "xuat-khau"
     },
     {
       "label": "xung đột",
-      "n": 55,
+      "n": 56,
       "slug": "xung-dot"
     },
     {
@@ -740,7 +745,7 @@
     },
     {
       "label": "năng lượng",
-      "n": 41,
+      "n": 44,
       "slug": "nang-luong"
     },
     {
@@ -749,14 +754,14 @@
       "slug": "chien-tranh"
     },
     {
-      "label": "nhập khẩu",
-      "n": 37,
-      "slug": "nhap-khau"
+      "label": "startup",
+      "n": 39,
+      "slug": "startup"
     },
     {
-      "label": "startup",
-      "n": 35,
-      "slug": "startup"
+      "label": "nhập khẩu",
+      "n": 38,
+      "slug": "nhap-khau"
     },
     {
       "label": "nghị định",
@@ -775,12 +780,12 @@
     },
     {
       "label": "trừng phạt",
-      "n": 24,
+      "n": 26,
       "slug": "trung-phat"
     },
     {
       "label": "bán dẫn",
-      "n": 23,
+      "n": 25,
       "slug": "ban-dan"
     },
     {
@@ -789,14 +794,14 @@
       "slug": "hanh-chinh"
     },
     {
+      "label": "bảo hiểm",
+      "n": 20,
+      "slug": "bao-hiem"
+    },
+    {
       "label": "trí tuệ nhân tạo",
       "n": 20,
       "slug": "tri-tue-nhan-tao"
-    },
-    {
-      "label": "bảo hiểm",
-      "n": 18,
-      "slug": "bao-hiem"
     },
     {
       "label": "bất động sản",
@@ -805,7 +810,7 @@
     },
     {
       "label": "bộ chính trị",
-      "n": 16,
+      "n": 17,
       "slug": "bo-chinh-tri"
     },
     {
@@ -914,6 +919,11 @@
       "slug": "dien-toan-dam-may"
     },
     {
+      "label": "khởi nghiệp",
+      "n": 4,
+      "slug": "khoi-nghiep"
+    },
+    {
       "label": "Nhật Bản",
       "n": 4,
       "slug": "nhat-ban"
@@ -994,11 +1004,6 @@
       "slug": "hong-kong"
     },
     {
-      "label": "khởi nghiệp",
-      "n": 3,
-      "slug": "khoi-nghiep"
-    },
-    {
       "label": "Lai Châu",
       "n": 3,
       "slug": "lai-chau"
@@ -1069,7 +1074,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-08-12T23:59:59+07:00",
+  "generated_at": "2026-08-13T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
