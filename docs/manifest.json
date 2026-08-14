@@ -644,13 +644,13 @@
     {
       "d": "2026-08-14",
       "months": "2026-08",
-      "n": 122
+      "n": 142
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 886,
+      "n": 887,
       "slug": "ai"
     },
     {
@@ -695,7 +695,7 @@
     },
     {
       "label": "lãi suất",
-      "n": 86,
+      "n": 87,
       "slug": "lai-suat"
     },
     {
@@ -709,14 +709,14 @@
       "slug": "chinh-sach"
     },
     {
+      "label": "lạm phát",
+      "n": 78,
+      "slug": "lam-phat"
+    },
+    {
       "label": "trung ương",
       "n": 78,
       "slug": "trung-uong"
-    },
-    {
-      "label": "lạm phát",
-      "n": 77,
-      "slug": "lam-phat"
     },
     {
       "label": "đảng",
