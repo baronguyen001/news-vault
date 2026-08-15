@@ -612,8 +612,8 @@
    *
    * Sits between the deep dives and the videos, which is the order these three streams
    * go stale in: an X post is hours old and may already be wrong, a curated analysis is
-   * this morning's reading, a video recap keeps. Folded but open by default, like the
-   * videos — it is content to read, not a chart to consult.
+   * this morning's reading, a video recap keeps. Folded by default: this is a scanning
+   * surface, so readers opt into the stream only when it matters to them.
    *
    * Its own section rather than merged into the article list, for the same reason the
    * videos have one: these carry no source tier from the news taxonomy and no paid
@@ -623,7 +623,7 @@
     if (!NV.posts) return;
     const list = payload.posts || [];
     if (!list.length) return;
-    const body = makePanel(parent, "day-posts", `${T.postsTitle} (${list.length})`, "", true);
+    const body = makePanel(parent, "day-posts", `${T.postsTitle} (${list.length})`);
     const section = NV.posts.section(list);
     if (!section) return;
     // The fold's summary already names the section; the section's own <h2> would be a

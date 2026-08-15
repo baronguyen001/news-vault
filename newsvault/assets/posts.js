@@ -27,6 +27,7 @@
     tierMid: "nguồn tin cậy",
     tierLow: "chưa xác thực",
     open: "Xem bài gốc",
+    details: "Xem chi tiết",
     points: "Ý chính"
   };
 
@@ -129,6 +130,11 @@
       text(vertical, p.vl);
     }
 
+    if (typeof p.tp === "string" && p.tp !== "") {
+      const topic = make("span", "xpost__topic", header);
+      text(topic, p.tp);
+    }
+
     const impact = IMPACT_MARK[p.im];
     if (impact) {
       const mark = make("span", "xpost__impact", header);
@@ -142,8 +148,17 @@
     const body = make("div", "xpost__body", li);
     blocksInto(body, p.bl);
 
-    if (Array.isArray(p.kp) && p.kp.length) {
-      const points = make("ul", "xpost__points", li);
+    const hasPoints = Array.isArray(p.kp) && p.kp.some((point) => typeof point === "string" && point !== "");
+    const hasInsight = typeof p.ins === "string" && p.ins !== "";
+    if (hasPoints || hasInsight) {
+      const details = make("details", "xpost__details", li);
+      const summary = make("summary", "xpost__details-toggle", details);
+      text(summary, T.details);
+      if (hasInsight) {
+        const insight = make("p", "xpost__insight", details);
+        text(insight, p.ins);
+      }
+      const points = make("ul", "xpost__points", details);
       for (let i = 0; i < p.kp.length; i++) {
         if (typeof p.kp[i] !== "string" || p.kp[i] === "") continue;
         text(make("li", "", points), p.kp[i]);
@@ -177,13 +192,42 @@
     text(h2, T.sectionTitle);
     const count = make("span", "xposts__count", h2);
     text(count, "(" + list.length + ")");
+    const filters = make("div", "xposts__filters", sec);
+    filters.setAttribute("aria-label", "Lọc tin X");
     const ul = make("ul", "xposts__list", sec);
+    const cards = [];
     for (let i = 0; i < list.length; i++) {
       try {
-        ul.appendChild(card(list[i]));
+        const item = card(list[i]);
+        ul.appendChild(item);
+        cards.push({ item: item, post: list[i] || {} });
       } catch (e) {
         // Drop a malformed entry rather than losing the section.
       }
+    }
+    const topics = Array.from(new Set(list.map((post) => post && post.tp).filter(Boolean))).slice(0, 6);
+    const choices = [{ label: "Tất cả", match: () => true }]
+      .concat(topics.map((topic) => ({ label: topic, match: (post) => post.tp === topic })))
+      .concat([
+        { label: "Nguồn gốc", match: (post) => !!post.pr },
+        { label: "Tác động cao", match: (post) => post.im === "cao" },
+      ]);
+    for (let i = 0; i < choices.length; i++) {
+      const choice = choices[i];
+      const button = make("button", "xposts__filter", filters);
+      button.type = "button";
+      button.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+      text(button, choice.label);
+      if (typeof button.addEventListener !== "function") continue;
+      button.addEventListener("click", () => {
+        const shown = cards.filter(({ item, post }) => {
+          const keep = choice.match(post);
+          item.hidden = !keep;
+          return keep;
+        }).length;
+        for (const peer of filters.children) peer.setAttribute("aria-pressed", peer === button ? "true" : "false");
+        text(count, "(" + shown + ")");
+      });
     }
     return sec;
   }
