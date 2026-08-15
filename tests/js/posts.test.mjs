@@ -123,6 +123,15 @@ test('the count in the heading matches the list', () => {
   assert.equal(section.querySelector('.xposts__count').textContent, '(2)');
 });
 
+test('quick filters include categories, primary sources and high impact', () => {
+  const { posts } = load();
+  const section = posts.section([WIRE, ANON]);
+  const labels = section.querySelector('.xposts__filters').children.map((el) => el.textContent);
+  assert.equal(labels.includes(WIRE.tp), true);
+  assert.equal(labels.includes('Nguồn gốc'), true);
+  assert.equal(labels.includes('Tác động cao'), true);
+});
+
 test('a malformed entry is skipped, not thrown', () => {
   const { posts } = load();
   const section = posts.section([WIRE, null, undefined, 42]);
@@ -200,6 +209,16 @@ test('an empty key_points array renders no list', () => {
   const { posts } = load();
   const card = posts.card(Object.assign({}, WIRE, { kp: [] }));
   assert.equal(card.querySelector('.xpost__points'), null);
+});
+
+test('category is visible and supporting detail starts collapsed', () => {
+  const { posts } = load();
+  const card = posts.card(WIRE);
+  assert.equal(card.querySelector('.xpost__topic').textContent, WIRE.tp);
+  const details = card.querySelector('.xpost__details');
+  assert.equal(details.tagName, 'DETAILS');
+  assert.equal(details.open, undefined);
+  assert.equal(card.querySelector('.xpost__points').parentNode, details);
 });
 
 test('engagement is compacted and sits in the footer', () => {

@@ -2340,6 +2340,44 @@ code {
   color: var(--text-dim);
 }
 
+.xposts__filters {
+  display: flex;
+  gap: var(--space-xs);
+  overflow-x: auto;
+  margin: 0 0 var(--space-sm);
+  padding-bottom: 0.1rem;
+}
+
+.xposts__filter {
+  flex: 0 0 auto;
+  min-height: 32px;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-dim);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.8125rem;
+}
+
+.xposts__filter[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+/* The topic is a readable category label; the card's leading border uses the same topic
+ * colour, so colour reinforces the text rather than carrying meaning by itself. */
+.xpost__topic {
+  padding: 0.05rem 0.4rem;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--topic-colour, var(--accent)) 16%, var(--surface));
+  color: var(--topic-colour, var(--accent));
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
 .xpost__tier {
   padding: 0.05rem 0.4rem;
   border-radius: var(--radius-sm);
@@ -2365,6 +2403,31 @@ code {
 .xpost__h {
   margin: var(--space-xs) 0 0;
   color: var(--text-dim);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+/* Keep the scan view to roughly two lines. Supporting detail is opt-in below. */
+.xpost__body {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.xpost__details {
+  margin-top: var(--space-xs);
+  color: var(--text-dim);
+}
+
+.xpost__details-toggle {
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 0.875rem;
+}
+
+.xpost__insight {
+  margin: var(--space-xs) 0 0;
   font-size: 0.9375rem;
   line-height: 1.55;
 }
