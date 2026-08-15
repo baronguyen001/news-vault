@@ -649,13 +649,13 @@
     {
       "d": "2026-08-15",
       "months": "2026-08",
-      "n": 134
+      "n": 154
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 926,
+      "n": 925,
       "slug": "ai"
     },
     {
@@ -725,7 +725,7 @@
     },
     {
       "label": "đảng",
-      "n": 74,
+      "n": 73,
       "slug": "dang"
     },
     {
@@ -754,14 +754,14 @@
       "slug": "nghi-quyet"
     },
     {
+      "label": "chiến tranh",
+      "n": 44,
+      "slug": "chien-tranh"
+    },
+    {
       "label": "năng lượng",
       "n": 44,
       "slug": "nang-luong"
-    },
-    {
-      "label": "chiến tranh",
-      "n": 43,
-      "slug": "chien-tranh"
     },
     {
       "label": "startup",
