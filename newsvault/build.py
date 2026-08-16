@@ -297,24 +297,69 @@ def _categories(articles: Sequence[Article]) -> list[dict[str, object]]:
     ]
 
 
-def _brief_for(day: str, articles: Sequence[Article], options: BuildOptions) -> BriefResult:
+def _brief_fingerprint(articles: Sequence[Article], posts: Sequence[Post]) -> str:
+    """Vân tay của TOÀN BỘ tin trong ngày mà brief được phép đọc.
+
+    Lấy trên cả ngày chứ không chỉ trên phần lọt vào prompt: nếu chỉ băm top-12 thì một bài
+    mới điểm thấp sẽ không đổi vân tay, và ta lại rơi đúng vào cái bẫy "brief không biết có
+    tin mới" mà hàm này sinh ra để chặn.
+
+    Chỉ gồm bài báo + bài X vì đó đúng là hai thứ đi vào prompt. Cố tình KHÔNG gồm video và
+    bài phân tích sâu: chúng không vào prompt nên không thể làm đổi năm dòng brief, băm kèm
+    chỉ tạo ra những lượt gọi LLM sinh lại y hệt bản cũ.
+    """
+    digest = hashlib.sha256()
+    for key in sorted(f"a:{article.id}" for article in articles):
+        digest.update(key.encode("utf-8"))
+        digest.update(b"\x00")
+    for key in sorted(f"p:{post.id}" for post in posts):
+        digest.update(key.encode("utf-8"))
+        digest.update(b"\x00")
+    return digest.hexdigest()[:16]
+
+
+def _brief_for(
+    day: str,
+    articles: Sequence[Article],
+    options: BuildOptions,
+    posts: Sequence[Post] = (),
+) -> BriefResult:
     """The day's five bullets, cached on disk and degrading to a deterministic fallback.
 
     The cache is what makes a rebuild free and a re-key lossless: without it, changing the
     site password would silently replace every real brief with the fallback text.
+
+    ⚠️ Trước 16/08/2026 khoá cache CHỈ là ngày, không có vân tay nội dung. Mà một ngày được
+    dựng NHIỀU LẦN: 14:00, 17:26, 21:15 — cộng thêm job retry 19:00 của news-hunter và ba
+    khe thu của x-pulse đổ tin vào giữa chừng. Hệ quả đo được: brief ngày 14/08 ghi lúc
+    14:00, trong khi 5 bài về lúc 17:00 và 19:00 chưa bao giờ được tóm tắt; bài X của ngày
+    15/08 tăng 100 → 114 mà "Tóm tắt ngày" không đổi một chữ. Nói cách khác, phần trên cùng
+    của trang đông cứng ở lần dựng ĐẦU TIÊN trong ngày.
     """
     cache = Path(options.cache_dir) / "brief" / f"{day}.json"
+    fingerprint = _brief_fingerprint(articles, posts)
     if cache.exists():
         try:
             stored = json.loads(cache.read_text(encoding="utf-8"))
             bullets = tuple(str(b) for b in stored.get("bullets", ()) if str(b).strip())
+            cached_fp = str(stored.get("fp", ""))
             if bullets and looks_like_refusal(bullets):
                 # ĐÂY là chỗ làm hệ thống tự lành. Ngày 09/08/2026 có một câu từ chối được
                 # cache kèm nhãn "aihub"; nếu chỉ chặn ở lúc GHI thì file rác đã nằm trên đĩa
                 # vẫn được đọc lại mãi mãi và phải xoá tay. Bỏ qua cache ⇒ lần dựng kế tiếp
                 # sinh lại brief thật rồi ghi đè.
                 logger.warning("brief cache của %s là câu từ chối, sinh lại", day)
+            elif bullets and cached_fp and cached_fp != fingerprint:
+                logger.info("brief của %s: ngày đã có thêm tin, sinh lại", day)
             elif bullets:
+                if not cached_fp:
+                    # File từ thời chưa có vân tay. NHẬN NUÔI thay vì sinh lại: job đêm chạy
+                    # `--backfill` nên `_brief_for` được gọi cho cả 129 ngày trong kho, và
+                    # coi mọi file cũ là hỏng sẽ nổ ra 129 lượt gọi LLM ngay lần dựng kế
+                    # tiếp — đủ để build trượt sang cửa sổ của lần chạy sau. Đóng dấu vân
+                    # tay hiện tại rồi đi tiếp; từ lần dựng sau nó so sánh bình thường.
+                    _write_brief_cache(cache, list(bullets), str(stored.get("source", "")),
+                                       fingerprint)
                 return BriefResult(
                     bullets=bullets, source=str(stored.get("source", "cache")), error=""
                 )
@@ -322,23 +367,32 @@ def _brief_for(day: str, articles: Sequence[Article], options: BuildOptions) -> 
             logger.warning("brief cache unreadable for %s", day)
 
     result = (
-        fallback_brief(articles)
+        fallback_brief(articles, posts=posts)
         if not options.use_brief
-        else generate_brief(day, articles)
+        else generate_brief(day, articles, posts=posts)
     )
     # Cache anything a language model actually wrote, whichever engine wrote it. Pinning
     # this to "gemini" meant a hub-written brief was regenerated on every single build.
     # Thắt lưng lẫn dây đeo: `generate_brief` lẽ ra đã chặn câu từ chối rồi, nhưng cache là
     # thứ sống lâu nhất trong hệ thống — một dòng rác lọt vào đây là hỏng vĩnh viễn.
     if result.source in LLM_SOURCES and result.bullets and not looks_like_refusal(result.bullets):
+        _write_brief_cache(cache, list(result.bullets), result.source, fingerprint)
+    return result
+
+
+def _write_brief_cache(cache: Path, bullets: list[str], source: str, fingerprint: str) -> None:
+    """Ghi cache brief. Lỗi ghi KHÔNG được làm chết build — brief đã có trong tay rồi."""
+    try:
         cache.parent.mkdir(parents=True, exist_ok=True)
         cache.write_text(
             json.dumps(
-                {"bullets": list(result.bullets), "source": result.source}, ensure_ascii=False
+                {"bullets": bullets, "source": source, "fp": fingerprint},
+                ensure_ascii=False,
             ),
             encoding="utf-8",
         )
-    return result
+    except OSError as exc:
+        logger.warning("không ghi được brief cache %s: %s", cache.name, exc)
 
 
 # --------------------------------------------------------------------------------------
@@ -526,7 +580,7 @@ def build_site(options: BuildOptions) -> BuildReport:
             if not articles and not day_videos and not day_curated and not day_posts:
                 continue
 
-            brief = _brief_for(day, articles, options)
+            brief = _brief_for(day, articles, options, posts=day_posts)
             report.brief_source[day] = brief.source
             issue = brief_provider_issue()
             if issue is not None and issue not in report.provider_issues:
