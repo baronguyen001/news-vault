@@ -654,13 +654,13 @@
     {
       "d": "2026-08-16",
       "months": "2026-08",
-      "n": 85
+      "n": 108
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 952,
+      "n": 954,
       "slug": "ai"
     },
     {
@@ -675,17 +675,17 @@
     },
     {
       "label": "thuế",
-      "n": 155,
+      "n": 156,
       "slug": "thue"
     },
     {
       "label": "doanh nghiệp",
-      "n": 152,
+      "n": 153,
       "slug": "doanh-nghiep"
     },
     {
       "label": "chính phủ",
-      "n": 122,
+      "n": 123,
       "slug": "chinh-phu"
     },
     {
@@ -715,7 +715,7 @@
     },
     {
       "label": "chính sách",
-      "n": 80,
+      "n": 81,
       "slug": "chinh-sach"
     },
     {
