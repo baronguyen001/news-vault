@@ -639,38 +639,38 @@
     {
       "d": "2026-08-13",
       "months": "2026-08",
-      "n": 152
+      "n": 149
     },
     {
       "d": "2026-08-14",
       "months": "2026-08",
-      "n": 142
+      "n": 122
     },
     {
       "d": "2026-08-15",
       "months": "2026-08",
-      "n": 154
+      "n": 139
     },
     {
       "d": "2026-08-16",
       "months": "2026-08",
-      "n": 13
+      "n": 35
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 925,
+      "n": 934,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 237,
+      "n": 241,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 178,
+      "n": 182,
       "slug": "luat"
     },
     {
@@ -680,12 +680,12 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 147,
+      "n": 148,
       "slug": "doanh-nghiep"
     },
     {
       "label": "chính phủ",
-      "n": 119,
+      "n": 122,
       "slug": "chinh-phu"
     },
     {
@@ -695,12 +695,12 @@
     },
     {
       "label": "ngân hàng",
-      "n": 107,
+      "n": 111,
       "slug": "ngan-hang"
     },
     {
       "label": "chip",
-      "n": 97,
+      "n": 99,
       "slug": "chip"
     },
     {
@@ -715,8 +715,13 @@
     },
     {
       "label": "chính sách",
-      "n": 79,
+      "n": 80,
       "slug": "chinh-sach"
+    },
+    {
+      "label": "trung ương",
+      "n": 80,
+      "slug": "trung-uong"
     },
     {
       "label": "lạm phát",
@@ -724,33 +729,28 @@
       "slug": "lam-phat"
     },
     {
-      "label": "trung ương",
-      "n": 78,
-      "slug": "trung-uong"
-    },
-    {
       "label": "đảng",
-      "n": 73,
+      "n": 75,
       "slug": "dang"
     },
     {
       "label": "quốc hội",
-      "n": 69,
+      "n": 71,
       "slug": "quoc-hoi"
     },
     {
       "label": "xuất khẩu",
-      "n": 66,
+      "n": 67,
       "slug": "xuat-khau"
     },
     {
       "label": "chứng khoán",
-      "n": 64,
+      "n": 65,
       "slug": "chung-khoan"
     },
     {
       "label": "xung đột",
-      "n": 58,
+      "n": 59,
       "slug": "xung-dot"
     },
     {
@@ -760,7 +760,7 @@
     },
     {
       "label": "chiến tranh",
-      "n": 44,
+      "n": 45,
       "slug": "chien-tranh"
     },
     {
@@ -775,7 +775,7 @@
     },
     {
       "label": "nhập khẩu",
-      "n": 39,
+      "n": 40,
       "slug": "nhap-khau"
     },
     {
@@ -795,17 +795,17 @@
     },
     {
       "label": "bán dẫn",
-      "n": 26,
+      "n": 27,
       "slug": "ban-dan"
     },
     {
       "label": "trừng phạt",
-      "n": 26,
+      "n": 27,
       "slug": "trung-phat"
     },
     {
       "label": "bảo hiểm",
-      "n": 21,
+      "n": 22,
       "slug": "bao-hiem"
     },
     {
