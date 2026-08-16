@@ -6,11 +6,21 @@ from dataclasses import dataclass
 
 from newsvault import ai_hub
 from newsvault.model import Article
+from newsvault.posts import Post
 from newsvault.prompts import brief_prompt
 
 # How many top-scoring articles the model gets to read, and how many bullets it returns.
 BRIEF_ITEMS: int = 12
 BRIEF_BULLETS: int = 5
+
+# Bài X đọc kèm, tính RIÊNG với bài báo. Trước 16/08/2026 brief chỉ đọc `articles`, nên
+# "Tóm tắt ngày" — thứ nằm trên cùng trang ngày VÀ trên trang chủ — về cấu trúc chưa bao giờ
+# nhắc tới một dòng nào từ X, dù x-pulse đổ vào đúng trang đó ba lượt mỗi ngày.
+#
+# Hạn riêng chứ không gộp chung vào `BRIEF_ITEMS` là có lý do: điểm của bài X (`score` của
+# x-pulse) và điểm của bài báo (`score` của news-hunter) là hai thang khác nhau, trộn rồi
+# sắp chung sẽ để một thang nuốt hết suất của thang kia. Cắt riêng thì mỗi bên giữ được chỗ.
+BRIEF_POST_ITEMS: int = 6
 
 logger = logging.getLogger(__name__)
 
@@ -98,8 +108,19 @@ def _first_sentence(text: str) -> str:
     return first.strip()
 
 
-def fallback_brief(articles: Sequence[Article], *, limit: int = 5) -> BriefResult:
-    """Deterministic brief with no network: top `limit` articles by score."""
+def fallback_brief(
+    articles: Sequence[Article],
+    *,
+    limit: int = 5,
+    posts: Sequence[Post] = (),
+) -> BriefResult:
+    """Deterministic brief with no network: top `limit` articles by score.
+
+    Bài X chỉ được dùng để ĐỘN CHO ĐỦ khi bài báo không đủ `limit`, không trộn chung rồi sắp
+    lại: hai nguồn chấm điểm theo hai thang khác nhau (xem ghi chú ở `BRIEF_POST_ITEMS`).
+    Nhưng một ngày chỉ có bài X mà brief trả rỗng thì trang ngày mất hẳn phần trên cùng —
+    tệ hơn hẳn so với năm dòng lấy từ X.
+    """
     ordered = sorted(articles, key=lambda article: article.score, reverse=True)
     bullets: list[str] = []
     for article in ordered[:limit]:
@@ -108,6 +129,14 @@ def fallback_brief(articles: Sequence[Article], *, limit: int = 5) -> BriefResul
         if len(line) > 220:
             line = line[:220]
         bullets.append(line)
+    if len(bullets) < limit and posts:
+        ranked = sorted(posts, key=lambda post: post.score, reverse=True)
+        for post in ranked[: limit - len(bullets)]:
+            sentence = _first_sentence(post.summary)
+            line = f"@{post.author or 'X'} — {sentence or post.title}"
+            if len(line) > 220:
+                line = line[:220]
+            bullets.append(line)
     if not bullets:
         return BriefResult(tuple(), "fallback", "no articles")
     return BriefResult(tuple(bullets), "fallback", "")
@@ -128,11 +157,32 @@ def _brief_items(articles: Sequence[Article], limit: int) -> list[dict[str, obje
     ]
 
 
+def _post_items(posts: Sequence[Post], limit: int) -> list[dict[str, object]]:
+    """The top-scoring X posts, in the same shape `brief_prompt` reads for articles.
+
+    `source` mang dấu "@" để model phân biệt được đây là bài đăng cá nhân/tổ chức trên X chứ
+    không phải một toà soạn — sắc thái đó phải giữ, vì độ tin cậy của hai loại khác nhau.
+    """
+    selected = sorted(posts, key=lambda post: post.score, reverse=True)[:limit]
+    return [
+        {
+            "title": post.title,
+            "source": f"@{post.author}" if post.author else "X",
+            "topic": post.topic,
+            "impact": post.impact,
+            "summary": (post.summary or "")[:300],
+        }
+        for post in selected
+    ]
+
+
 def generate_brief(
     day: str,
     articles: Sequence[Article],
     *,
     limit: int = BRIEF_ITEMS,
+    posts: Sequence[Post] = (),
+    post_limit: int = BRIEF_POST_ITEMS,
 ) -> BriefResult:
     """Nam gach dau dong tieng Viet ve trong ngay: AI Hub, roi den fallback tinh.
 
@@ -149,21 +199,30 @@ def generate_brief(
             "AI Hub chua cau hinh (AI_HUB_BASE_URL/AI_HUB_KEY) — brief tut xuong ban tu sinh"
         )
         logger.warning("No AI Hub for %s brief; using fallback", day)
-        fb = fallback_brief(articles, limit=BRIEF_BULLETS)
+        fb = fallback_brief(articles, limit=BRIEF_BULLETS, posts=posts)
         return BriefResult(fb.bullets, "fallback", "no ai hub")
 
-    result = _brief_via_hub(day, articles, limit=limit)
+    result = _brief_via_hub(day, articles, limit=limit, posts=posts, post_limit=post_limit)
     if result is not None:
         return result
 
     _brief_provider_issue = "AI Hub khong tra duoc brief — da dung ban tu sinh thay the"
-    fb = fallback_brief(articles, limit=BRIEF_BULLETS)
+    fb = fallback_brief(articles, limit=BRIEF_BULLETS, posts=posts)
     return BriefResult(fb.bullets, "fallback", "ai hub failed")
 
 
-def _brief_via_hub(day: str, articles: Sequence[Article], *, limit: int) -> BriefResult | None:
+def _brief_via_hub(
+    day: str,
+    articles: Sequence[Article],
+    *,
+    limit: int,
+    posts: Sequence[Post] = (),
+    post_limit: int = BRIEF_POST_ITEMS,
+) -> BriefResult | None:
     """Goi hub. Tra None (khong phai BriefResult) de caller quyet dinh dung fallback."""
-    prompt = brief_prompt(day, _brief_items(articles, limit))
+    prompt = brief_prompt(
+        day, _brief_items(articles, limit) + _post_items(posts, post_limit)
+    )
     try:
         # 8192 is deliberately roomy: the model burns budget on a hidden reasoning phase
         # before writing a single character, and a tight ceiling yields empty content that
