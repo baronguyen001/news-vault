@@ -655,72 +655,77 @@
       "d": "2026-08-16",
       "months": "2026-08",
       "n": 108
+    },
+    {
+      "d": "2026-08-17",
+      "months": "2026-08",
+      "n": 106
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 954,
+      "n": 991,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 246,
+      "n": 254,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 184,
+      "n": 191,
       "slug": "luat"
     },
     {
-      "label": "thuế",
-      "n": 156,
-      "slug": "thue"
-    },
-    {
       "label": "doanh nghiệp",
-      "n": 153,
+      "n": 163,
       "slug": "doanh-nghiep"
     },
     {
+      "label": "thuế",
+      "n": 161,
+      "slug": "thue"
+    },
+    {
       "label": "chính phủ",
-      "n": 123,
+      "n": 128,
       "slug": "chinh-phu"
     },
     {
       "label": "công nghệ",
-      "n": 116,
+      "n": 125,
       "slug": "cong-nghe"
     },
     {
       "label": "ngân hàng",
-      "n": 111,
+      "n": 117,
       "slug": "ngan-hang"
     },
     {
       "label": "chip",
-      "n": 100,
+      "n": 104,
       "slug": "chip"
     },
     {
       "label": "dữ liệu",
-      "n": 90,
+      "n": 97,
       "slug": "du-lieu"
     },
     {
       "label": "lãi suất",
-      "n": 89,
+      "n": 93,
       "slug": "lai-suat"
     },
     {
       "label": "chính sách",
-      "n": 81,
+      "n": 82,
       "slug": "chinh-sach"
     },
     {
       "label": "lạm phát",
-      "n": 80,
+      "n": 81,
       "slug": "lam-phat"
     },
     {
@@ -730,42 +735,42 @@
     },
     {
       "label": "đảng",
-      "n": 76,
+      "n": 78,
       "slug": "dang"
     },
     {
       "label": "quốc hội",
-      "n": 71,
+      "n": 73,
       "slug": "quoc-hoi"
     },
     {
       "label": "xuất khẩu",
-      "n": 67,
+      "n": 68,
       "slug": "xuat-khau"
     },
     {
       "label": "chứng khoán",
-      "n": 65,
+      "n": 67,
       "slug": "chung-khoan"
     },
     {
       "label": "xung đột",
-      "n": 60,
+      "n": 63,
       "slug": "xung-dot"
     },
     {
       "label": "nghị quyết",
-      "n": 54,
+      "n": 57,
       "slug": "nghi-quyet"
     },
     {
       "label": "chiến tranh",
-      "n": 46,
+      "n": 47,
       "slug": "chien-tranh"
     },
     {
       "label": "năng lượng",
-      "n": 44,
+      "n": 45,
       "slug": "nang-luong"
     },
     {
@@ -780,38 +785,48 @@
     },
     {
       "label": "nghị định",
-      "n": 38,
+      "n": 39,
       "slug": "nghi-dinh"
     },
     {
       "label": "pháp lý",
-      "n": 35,
+      "n": 38,
       "slug": "phap-ly"
     },
     {
       "label": "thuế quan",
-      "n": 33,
+      "n": 35,
       "slug": "thue-quan"
     },
     {
       "label": "trừng phạt",
-      "n": 30,
+      "n": 31,
       "slug": "trung-phat"
     },
     {
       "label": "bán dẫn",
-      "n": 28,
+      "n": 29,
       "slug": "ban-dan"
     },
     {
       "label": "bảo hiểm",
-      "n": 23,
+      "n": 25,
       "slug": "bao-hiem"
     },
     {
       "label": "hành chính",
-      "n": 21,
+      "n": 22,
       "slug": "hanh-chinh"
+    },
+    {
+      "label": "bất động sản",
+      "n": 20,
+      "slug": "bat-dong-san"
+    },
+    {
+      "label": "cải cách",
+      "n": 20,
+      "slug": "cai-cach"
     },
     {
       "label": "trí tuệ nhân tạo",
@@ -819,23 +834,13 @@
       "slug": "tri-tue-nhan-tao"
     },
     {
-      "label": "cải cách",
-      "n": 19,
-      "slug": "cai-cach"
-    },
-    {
-      "label": "bất động sản",
-      "n": 18,
-      "slug": "bat-dong-san"
-    },
-    {
       "label": "bộ chính trị",
-      "n": 17,
+      "n": 18,
       "slug": "bo-chinh-tri"
     },
     {
       "label": "FDI",
-      "n": 16,
+      "n": 17,
       "slug": "fdi"
     },
     {
@@ -1094,7 +1099,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-08-16T23:59:59+07:00",
+  "generated_at": "2026-08-17T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
@@ -1134,6 +1139,11 @@
       "e": "2026-08-16",
       "s": "2026-08-10",
       "w": "2026-W33"
+    },
+    {
+      "e": "2026-08-23",
+      "s": "2026-08-17",
+      "w": "2026-W34"
     }
   ]
 }
