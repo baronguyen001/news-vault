@@ -19,7 +19,7 @@ from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from newsvault import __version__, charts, crypto, db, feeds, payload, render
+from newsvault import __version__, charts, crypto, db, feeds, payload, quality, render
 from newsvault import curated as curated_db
 from newsvault import posts as posts_db
 from newsvault import videos as videos_db
@@ -658,6 +658,7 @@ def build_site(options: BuildOptions) -> BuildReport:
         report.week_pages, live_weeks = _write_week_pages(
             out_dir, weeks, by_day, entity_map, options, meta, salt, state, fresh
         )
+        _write_quality_pages(out_dir, weeks, options, meta, salt, state, fresh)
         # `weeks` only covers the days this run targeted. Publishing that partial list would
         # tell the pruner that every week outside it is an orphan, and deleting a week page is
         # not reversible - so a run that did not sweep the whole archive publishes no week list
@@ -801,6 +802,7 @@ def _write_week_pages(
             "kind": "week",
             "base": "../../",
             "version": __version__,
+            "qualityUrl": f"../../q/{week}/",
             "kdfIterations": crypto.DEFAULT_ITERATIONS,
             "site": options.site,
             "siteUrl": options.site_url,
@@ -822,6 +824,61 @@ def _write_week_pages(
         crypto.write_encrypted(target / "data.enc", data, options.password, salt=salt)
         written += 1
     return written, live
+
+
+def _write_quality_pages(
+    out_dir: Path,
+    weeks: Mapping[str, Sequence[str]],
+    options: BuildOptions,
+    meta: render.SiteMeta,
+    salt: bytes,
+    state: Mapping[str, str],
+    fresh: dict[str, str],
+) -> int:
+    """Write optional weekly quality pages without letting source failures stop the build."""
+    written = 0
+    for week, days in sorted(weeks.items()):
+        _, start, end = _iso_week(days[0])
+        systems = quality.collect(start, end)
+        data = payload.quality_payload(
+            week,
+            start,
+            end,
+            systems,
+            generated_at=_day_anchor(end),
+        )
+        key = f"quality:{week}"
+        # The current week is collected every run because its source databases are still changing.
+        # The content digest still avoids rewriting its shell and ciphertext when values are stable.
+        fresh[key] = _digest(data, with_shell=True)
+        target = out_dir / "q" / week
+        if state.get(key) == fresh[key] and (target / "data.enc").exists():
+            continue
+        config = {
+            "kind": "quality",
+            "base": "../../",
+            "version": __version__,
+            "kdfIterations": crypto.DEFAULT_ITERATIONS,
+            "site": options.site,
+            "siteUrl": options.site_url,
+            "dataUrl": "data.enc",
+            "manifestUrl": "../../manifest.json",
+            "indexBase": "../../idx/",
+            "week": week,
+        }
+        render.write_page(
+            target / "index.html",
+            render.render_page(
+                kind="quality",
+                base="../../",
+                title=f"Chất lượng {week} — {options.site}",
+                config=config,
+                meta=meta,
+            ),
+        )
+        crypto.write_encrypted(target / "data.enc", data, options.password, salt=salt)
+        written += 1
+    return written
 
 
 def _write_entity_pages(

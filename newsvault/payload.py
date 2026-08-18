@@ -463,6 +463,28 @@ def entity_payload(
     )
 
 
+def quality_payload(
+    week: str,
+    start: str,
+    end: str,
+    systems: Sequence[Mapping[str, object]],
+    *,
+    generated_at: str,
+) -> dict[str, object]:
+    """Build the encrypted JSON payload for a weekly quality page."""
+    return _sorted(
+        {
+            "v": 1,
+            "kind": "quality",
+            "week": week,
+            "start": start,
+            "end": end,
+            "generated_at": generated_at,
+            "systems": [dict(system) for system in systems],
+        }
+    )
+
+
 def week_payload(
     week: str,
     start: str,

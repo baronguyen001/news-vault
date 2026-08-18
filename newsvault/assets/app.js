@@ -395,6 +395,7 @@
     else if (config.kind === "home") renderHomeAfterUnlock();
     else if (config.kind === "entity") renderEntity();
     else if (config.kind === "week") renderWeek();
+    else if (config.kind === "quality") renderQualityPage();
     else if (config.kind === "curatedIndex") renderCuratedIndex();
     else if (config.kind === "curated") renderCuratedArticle();
     else if (config.kind === "videoIndex") renderVideoIndex();
@@ -641,6 +642,14 @@
     app.className = "app app--deeplist";
     renderSimpleTopbar(app);
     if (NV.curated) NV.curated.renderIndex(app, payload, config);
+  }
+
+  function renderQualityPage() {
+    const app = $("#app");
+    text(app, "");
+    app.className = "app app--quality";
+    renderSimpleTopbar(app);
+    if (NV.quality) NV.quality.render(app, payload, config);
   }
 
   function renderSearchPage() {
@@ -1764,6 +1773,12 @@
     const header = make("header", "week__header", app);
     const h = make("h1", "week__title", header);
     text(h, T.weekRange(fmtDay(payload.start), fmtDay(payload.end)));
+    const qualityUrl = config.qualityUrl || payload.qualityUrl;
+    if (qualityUrl) {
+      const quality = make("a", "week__quality-link", header);
+      quality.href = qualityUrl;
+      text(quality, "Chất lượng tuần này");
+    }
     if (payload.stats) renderWeekStats(app, payload.stats);
     const charts = payload.charts || {};
     const titles = { topics: "Chủ đề", volume: "Khối lượng", sources: "Nguồn" };
