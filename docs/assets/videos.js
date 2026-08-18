@@ -151,9 +151,10 @@
     return wrapper;
   }
 
-  function card(video) {
+  function card(video, index) {
     const v = video && typeof video === "object" ? video : {};
     const li = make("li", "card card--video card--closed");
+    if (index >= 0) li.id = "v-" + index;
     if (v.sh) li.classList.add("card--short");
 
     const header = make("div", "card__header", li);
@@ -244,9 +245,16 @@
     return li;
   }
 
-  function section(videos) {
+  /* `anchors` maps a position in `videos` to the video's position in the day's FULL list.
+   *
+   * The two are not the same list. A reader who has hidden Shorts sees a filtered array,
+   * and 42% of the archive is Shorts - so numbering the cards by their position here would
+   * put `#v-7` on a different video than the search index means by 7, and only for readers
+   * with that preference on. Callers that render the whole list can omit it. */
+  function section(videos, anchors) {
     const list = Array.isArray(videos) ? videos : [];
     if (!list.length) return null;
+    const at = Array.isArray(anchors) ? anchors : null;
     const sec = make("section", "videos");
     const h2 = make("h2", "videos__title", sec);
     text(h2, T.sectionTitle);
@@ -255,7 +263,7 @@
     const ul = make("ul", "cards videos__list", sec);
     for (let i = 0; i < list.length; i++) {
       try {
-        ul.appendChild(card(list[i]));
+        ul.appendChild(card(list[i], at ? at[i] : i));
       } catch (e) {
         // Drop malformed entries instead of breaking the whole page.
       }

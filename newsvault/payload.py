@@ -18,6 +18,15 @@ def _sorted(value: dict[str, object]) -> dict[str, object]:
     return {k: _sorted(v) if isinstance(v, dict) else v for k, v in sorted(value.items())}
 
 
+def _search_snippet(value: str, limit: int = 160) -> str:
+    """Return a reader-facing excerpt without splitting a word."""
+    value = " ".join(value.split())
+    if len(value) <= limit:
+        return value
+    cut = value[: limit - 1].rsplit(" ", 1)[0]
+    return f"{cut or value[: limit - 1]}…"
+
+
 def _count_values(values: Iterable[str]) -> dict[str, int]:
     counts: dict[str, int] = {}
     for value in values:
@@ -131,6 +140,8 @@ def video_index_items(videos: Sequence[Video]) -> list[dict[str, object]]:
     for index, video in enumerate(videos):
         summary = " ".join(run for block in video.blocks for run, _ in block.runs)
         searchable = fold(f"{video.title} {video.channel} {video.video_type} {summary}".strip())
+        # Adding `sn` changes every index-shard digest, so the next build rewrites all
+        # seven shards (~1.2 MB) once. Day payloads are hashed separately and unaffected.
         items.append(
             _sorted(
                 {
@@ -139,6 +150,7 @@ def video_index_items(videos: Sequence[Video]) -> list[dict[str, object]]:
                     "k": "v",
                     "t": video.title,
                     "f": searchable,
+                    "sn": _search_snippet(summary),
                     "s": video.channel,
                     "sk": "youtube",
                     "tr": "free",
@@ -254,6 +266,7 @@ def curated_index_items(items: Sequence[CuratedItem]) -> list[dict[str, object]]
                     "k": "c",
                     "t": item.title,
                     "f": searchable,
+                    "sn": _search_snippet(body),
                     "s": item.channel,
                     "sk": "youtube",
                     "tr": "free",
@@ -279,31 +292,42 @@ def compact_post(post: Post) -> dict[str, object]:
     a viral anonymous post from reading like a wire report - the front end shows it as a
     credibility mark, and a reader who cannot see it cannot weigh the source.
     """
-    return _sorted(
-        {
-            "id": post.id,
-            "t": post.title,
-            "u": post.url,
-            "au": post.author,
-            "an": post.author_name,
-            "tr": round(post.author_tier, 2),
-            "pr": 1 if post.is_primary else 0,
-            "d": post.day,
-            "p": post.processed_at,
-            "pi": post.published_iso,
-            "ve": post.vertical,
-            "vl": post.vertical_label,
-            "tp": post.topic,
-            "im": post.impact,
-            "rel": post.relevance,
-            "sc": post.score,
-            "lk": post.likes,
-            "rt": post.retweets,
-            "ins": post.insight,
-            "bl": [{"k": b.kind, "r": [[run, bold] for run, bold in b.runs]} for b in post.blocks],
-            "kp": list(post.points),
+    value: dict[str, object] = {
+        "id": post.id,
+        "t": post.title,
+        "u": post.url,
+        "au": post.author,
+        "an": post.author_name,
+        "tr": round(post.author_tier, 2),
+        "pr": 1 if post.is_primary else 0,
+        "d": post.day,
+        "p": post.processed_at,
+        "pi": post.published_iso,
+        "ve": post.vertical,
+        "vl": post.vertical_label,
+        "tp": post.topic,
+        "im": post.impact,
+        "rel": post.relevance,
+        "sc": post.score,
+        "lk": post.likes,
+        "rt": post.retweets,
+        "ins": post.insight,
+        "bl": [{"k": b.kind, "r": [[run, bold] for run, bold in b.runs]} for b in post.blocks],
+        "kp": list(post.points),
+    }
+    if post.image:
+        value["img"] = post.image
+    if post.also_by:
+        value["ab"] = list(post.also_by)
+    if post.impact_reasoning:
+        value["ia"] = {
+            "ch": post.impact_channel,
+            "as": list(post.impact_assets),
+            "dir": post.impact_direction,
+            "cf": post.impact_confidence,
+            "why": post.impact_reasoning,
         }
-    )
+    return _sorted(value)
 
 
 def post_index_items(posts: Sequence[Post]) -> list[dict[str, object]]:
@@ -324,6 +348,7 @@ def post_index_items(posts: Sequence[Post]) -> list[dict[str, object]]:
                     "k": "x",
                     "t": post.title,
                     "f": searchable,
+                    "sn": _search_snippet(f"{body} {points}".strip()),
                     "s": f"@{post.author}",
                     "sk": "x",
                     "tr": "free",
@@ -493,6 +518,7 @@ def index_items(day: str, articles: Sequence[Article]) -> list[dict[str, object]
                     "i": index,
                     "t": title,
                     "f": searchable,
+                    "sn": _search_snippet(article.summary_vi or ""),
                     "s": article.source or "",
                     "sk": article.source_key or "",
                     "tr": article.tier,

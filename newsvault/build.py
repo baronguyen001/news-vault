@@ -679,6 +679,11 @@ def build_site(options: BuildOptions) -> BuildReport:
             fresh,
         )
         _write_home(out_dir, all_days, counts, options, meta, curated_total=len(curated_items))
+        # Cùng một biểu thức `_write_root_files` dùng để dựng `manifest.json`. Trang tìm
+        # kiếm phải thấy ĐÚNG danh sách tháng đó, vì nó nạp mảnh chỉ mục theo tên tháng.
+        _write_search_page(
+            out_dir, all_days, options, meta, sorted({day[:7] for day in all_days})
+        )
         _write_root_files(
             out_dir,
             all_days,
@@ -1055,6 +1060,40 @@ def _write_home(
     render.write_page(
         out_dir / "index.html",
         render.render_page(kind="home", base="", title=options.site, config=config, meta=meta),
+    )
+
+
+def _write_search_page(
+    out_dir: Path,
+    all_days: Sequence[str],
+    options: BuildOptions,
+    meta: render.SiteMeta,
+    months: Sequence[str],
+) -> None:
+    """Write the dedicated archive-search shell."""
+    latest = all_days[-1] if all_days else ""
+    config = {
+        "kind": "search",
+        "base": "../",
+        "version": __version__,
+        "kdfIterations": crypto.DEFAULT_ITERATIONS,
+        "site": options.site,
+        "siteUrl": options.site_url,
+        "latest": latest,
+        "dataUrl": f"../d/{latest}/data.enc" if latest else "",
+        "manifestUrl": "../manifest.json",
+        "indexBase": "../idx/",
+        "months": list(months),
+    }
+    render.write_page(
+        out_dir / "s" / "index.html",
+        render.render_page(
+            kind="search",
+            base="../",
+            title=f"Tìm kiếm · {options.site}",
+            config=config,
+            meta=meta,
+        ),
     )
 
 
