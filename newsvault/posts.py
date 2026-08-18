@@ -73,6 +73,13 @@ class Post:
     is_primary: bool = False
     text: str = ""  # the original post, for search only
     vertical_label: str = field(default="")
+    image: str = ""  # media_url, only https is accepted
+    also_by: tuple[str, ...] = ()
+    impact_channel: str = ""
+    impact_assets: tuple[str, ...] = ()
+    impact_direction: str = ""
+    impact_confidence: str = ""
+    impact_reasoning: str = ""
 
 
 def has_table(conn: sqlite3.Connection) -> bool:
@@ -172,6 +179,13 @@ def _post_from_row(row: sqlite3.Row) -> Post | None:
         is_primary=bool(row["is_primary"]) if "is_primary" in columns else False,
         text=row["text"] if "text" in columns else "",
         vertical_label=VERTICAL_LABELS.get(row["vertical"] if "vertical" in columns else "", ""),
+        image=_https_url(row["media_url"] if "media_url" in columns else ""),
+        also_by=_json_strings(row["dup_sources"] if "dup_sources" in columns else ""),
+        impact_channel=(row["impact_channel"] or "") if "impact_channel" in columns else "",
+        impact_assets=_json_strings(row["impact_assets"] if "impact_assets" in columns else ""),
+        impact_direction=(row["impact_direction"] or "") if "impact_direction" in columns else "",
+        impact_confidence=(row["impact_confidence"] or "") if "impact_confidence" in columns else "",
+        impact_reasoning=(row["impact_reasoning"] or "") if "impact_reasoning" in columns else "",
     )
 
 
@@ -182,6 +196,11 @@ def _key_points(raw: str) -> tuple[str, ...]:
     has no two separable facts in it - so a missing or malformed value is not an error,
     it just means the card shows its summary and nothing more.
     """
+    return _json_strings(raw)
+
+
+def _json_strings(raw: str) -> tuple[str, ...]:
+    """Return non-empty strings from a JSON array, or no values for bad feed data."""
     if not raw:
         return ()
     try:
@@ -191,6 +210,11 @@ def _key_points(raw: str) -> tuple[str, ...]:
     if not isinstance(parsed, list):
         return ()
     return tuple(item.strip() for item in parsed if isinstance(item, str) and item.strip())
+
+
+def _https_url(raw: object) -> str:
+    """Keep untrusted media URLs inert unless x-pulse supplied HTTPS."""
+    return raw.strip() if isinstance(raw, str) and raw.strip().startswith("https://") else ""
 
 
 def _resolve_day(day: str, created_at: str, processed_at: str) -> str:

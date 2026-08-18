@@ -2390,7 +2390,7 @@ code {
 .xpost__tier--mid { background: var(--surface-2); color: var(--text); }
 .xpost__tier--low { background: transparent; color: var(--text-dim); border: 1px dashed var(--border); }
 
-.xpost__impact { font-size: 0.75rem; }
+.xpost__header .xpost__impact { font-size: 0.75rem; }
 
 .xpost__title {
   margin: var(--space-xs) 0 0;
@@ -2413,6 +2413,81 @@ code {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
+}
+
+.xpost__image {
+  display: block;
+  max-width: 100%;
+  width: 100%;
+  max-height: 28rem;
+  height: auto;
+  margin-top: var(--space-sm);
+  border-radius: var(--radius-sm);
+  object-fit: contain;
+  background: var(--surface-2);
+}
+
+.xpost--compact .xpost__body {
+  display: block;
+  overflow: visible;
+}
+
+.xpost__fold {
+  margin-top: var(--space-xs);
+  color: var(--text-dim);
+}
+
+.xpost__fold summary {
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 0.875rem;
+}
+
+.xpost__also {
+  margin: var(--space-xs) 0 0;
+  color: var(--text-dim);
+  font-size: 0.8125rem;
+}
+
+.xpost > .xpost__impact {
+  margin-top: var(--space-sm);
+  padding: var(--space-sm);
+  border: 1px solid var(--border);
+  border-inline-start: 3px solid var(--accent);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--text-dim);
+}
+
+.xpost__impact-label {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.xpost__impact-channel,
+.xpost__impact-direction,
+.xpost__impact-confidence,
+.xpost__impact-reasoning {
+  margin: var(--space-xs) 0 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.xpost__impact-assets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-top: var(--space-xs);
+}
+
+.xpost__impact-asset {
+  padding: 0.05rem 0.4rem;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.75rem;
 }
 
 .xpost__details {
@@ -2460,6 +2535,15 @@ code {
   display: inline-flex;
   align-items: center;
   color: var(--accent);
+}
+
+.archive__kind {
+  padding: 0.05rem 0.4rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  white-space: nowrap;
 }
 
 @media (max-width: 719px) {

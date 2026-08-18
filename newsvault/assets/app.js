@@ -398,6 +398,7 @@
     else if (config.kind === "curatedIndex") renderCuratedIndex();
     else if (config.kind === "curated") renderCuratedArticle();
     else if (config.kind === "videoIndex") renderVideoIndex();
+    else if (config.kind === "search") renderSearchPage();
     wireUser();
     applyHash();
     scrollToAnchor();
@@ -642,6 +643,14 @@
     if (NV.curated) NV.curated.renderIndex(app, payload, config);
   }
 
+  function renderSearchPage() {
+    const app = $("#app");
+    text(app, "");
+    app.className = "app app--search";
+    renderSimpleTopbar(app);
+    if (NV.searchPage) NV.searchPage.render(app, config, secret);
+  }
+
   function renderVideoIndex() {
     const app = $("#app");
     text(app, "");
@@ -686,7 +695,10 @@
     if (previous && NV.modal && NV.modal.isOpen()) NV.modal.close();
     if (previous) body.removeChild(previous);
     const visible = hideShorts() ? list.filter((v) => !(v && v.sh)) : list;
-    const section = NV.videos.section(visible);
+    // Anchors come from the FULL list: `#v-<i>` in a search result counts every video the
+    // day published, including the Shorts this reader has chosen not to see.
+    const anchors = visible.map((v) => list.indexOf(v));
+    const section = NV.videos.section(visible, anchors);
     if (!section) return;
     // The fold's own summary already names the section. While the panel opened closed
     // nobody saw the second copy; now that it starts open, the heading would appear twice.
@@ -1407,6 +1419,17 @@
     return all ? sorted : sorted.slice(0, 3);
   }
 
+  /* Where an archive hit actually lives. The index has carried `k` since videos, deep
+   * dives and X posts were added to it; this function is what finally reads it. Before it,
+   * every hit was linked as `d/<day>/#a-<i>` - so a video result scrolled the reader to
+   * whichever *article* happened to share its position that day, and nothing errored. */
+  function archiveHref(it) {
+    if (it.k === "c") return `${config.base}c/${it.i}/`;
+    if (it.k === "v") return `${config.base}d/${it.d}/#v-${it.i}`;
+    if (it.k === "x") return `${config.base}d/${it.d}/#x-${it.i}`;
+    return `${config.base}d/${it.d}/#a-${it.i}`;
+  }
+
   function renderArchiveResults(results, parsed, forceAll) {
     const list = $("#app .cards-wrap .cards");
     if (!list) return;
@@ -1422,15 +1445,18 @@
     }
     for (const it of results) {
       const li = make("li", "archive__hit", list);
+      const href = archiveHref(it);
       const dayLink = make("a", "archive__day", li);
-      dayLink.href = `${config.base}d/${it.d}/#a-${it.i}`;
+      dayLink.href = href;
       text(dayLink, fmtDay(it.d));
+      const kind = make("span", "archive__kind", li);
+      text(kind, it.k === "c" ? "Phân tích" : it.k === "v" ? "Video" : it.k === "x" ? "Bài X" : "Bài báo");
       const src = make("span", "archive__source", li);
       text(src, it.tr === "paid" ? `${it.s || ""} · ${T.paid}` : it.s || "");
       const score = make("span", "archive__score", li);
       text(score, it.sc ?? 0);
       const title = make("a", "archive__title", li);
-      title.href = `${config.base}d/${it.d}/#a-${it.i}`;
+      title.href = href;
       if (parsed && !parsed.isEmpty && it.t) {
         title.innerHTML = NV.search.highlight(it.t, parsed);
       } else {
@@ -1492,9 +1518,20 @@
   }
 
   function scrollToAnchor() {
-    if (!location.hash.startsWith("#a-")) return;
+    const prefixes = ["#a-", "#x-", "#v-"];
+    if (!prefixes.some((prefix) => location.hash.startsWith(prefix))) return;
     const el = document.getElementById(location.hash.slice(1));
     if (el) {
+      // Open EVERY folded ancestor, not just the nearest one. The analysis panels are a
+      // `panel--outer` fold wrapping more folds, so stopping at the first match can leave
+      // the target sitting inside a panel that is still closed.
+      let parent = el.parentNode;
+      while (parent) {
+        if (parent.tagName === "DETAILS" && parent.classList.contains("panel--fold")) {
+          parent.open = true;
+        }
+        parent = parent.parentNode;
+      }
       el.scrollIntoView({ behavior: "smooth", block: "center" });
       el.classList.add("card--target");
     }
@@ -1538,6 +1575,9 @@
     const videos = make("a", "homenav__link", nav);
     videos.href = `${config.base || ""}videos/`;
     text(videos, T.videoLibrary);
+    const search = make("a", "homenav__link", nav);
+    search.href = `${config.base || ""}s/`;
+    text(search, "Tìm kiếm");
     return nav;
   }
 

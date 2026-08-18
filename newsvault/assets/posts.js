@@ -28,7 +28,11 @@
     tierLow: "chưa xác thực",
     open: "Xem bài gốc",
     details: "Xem chi tiết",
-    points: "Ý chính"
+    points: "Ý chính",
+    fold: "Xem tóm tắt",
+    alsoBy: "cùng đưa tin:",
+    impactLabel: "Tác động dự kiến — suy luận, không phải tin",
+    confidence: "độ chắc chắn:"
   };
 
   const IMPACT_MARK = { "cao": "🔴", "trung bình": "🟡", "thấp": "⚪" };
@@ -103,9 +107,10 @@
     return "" + value;
   }
 
-  function card(post) {
+  function card(post, index) {
     const p = post && typeof post === "object" ? post : {};
     const li = make("li", "xpost");
+    if (index >= 0) li.id = "x-" + index;
 
     const topics = window.NV.topics;
     const topicClass = topics && typeof p.tp === "string" ? topics.className(p.tp) : "";
@@ -145,8 +150,76 @@
     const title = make("h3", "xpost__title", li);
     text(title, p.t);
 
-    const body = make("div", "xpost__body", li);
+    if (Array.isArray(p.ab) && p.ab.length) {
+      const names = [];
+      for (let i = 0; i < p.ab.length && i < 3; i++) {
+        if (typeof p.ab[i] === "string" && p.ab[i] !== "") {
+          names.push("@" + p.ab[i].replace(/^@/, ""));
+        }
+      }
+      if (names.length) {
+        if (p.ab.length > 3) names.push("+" + (p.ab.length - 3));
+        const also = make("p", "xpost__also", li);
+        text(also, T.alsoBy + " " + names.join(", "));
+      }
+    }
+
+    const imageUrl = validHttpsUrl(p.img);
+    if (imageUrl) {
+      const image = make("img", "xpost__image", li);
+      image.src = imageUrl;
+      image.loading = "lazy";
+      image.decoding = "async";
+      image.alt = typeof p.t === "string" ? p.t : "";
+      image.onerror = function () {
+        if (image.parentNode) image.parentNode.removeChild(image);
+      };
+    } else {
+      li.classList.add("xpost--compact");
+    }
+
+    let bodyParent = li;
+    if (!imageUrl) {
+      const fold = make("details", "xpost__fold", li);
+      const foldSummary = make("summary", "", fold);
+      text(foldSummary, T.fold);
+      bodyParent = fold;
+    }
+    const body = make("div", "xpost__body", bodyParent);
     blocksInto(body, p.bl);
+
+    if (p.ia && typeof p.ia === "object") {
+      const analysis = make("section", "xpost__impact", li);
+      const label = make("p", "xpost__impact-label", analysis);
+      text(label, T.impactLabel);
+
+      if (typeof p.ia.ch === "string" && p.ia.ch !== "") {
+        text(make("p", "xpost__impact-channel", analysis), p.ia.ch);
+      }
+
+      if (Array.isArray(p.ia.as) && p.ia.as.length) {
+        const assets = make("div", "xpost__impact-assets", analysis);
+        for (let i = 0; i < p.ia.as.length; i++) {
+          if (typeof p.ia.as[i] !== "string" || p.ia.as[i] === "") continue;
+          text(make("span", "xpost__impact-asset", assets), p.ia.as[i]);
+        }
+      }
+
+      if (typeof p.ia.dir === "string" && p.ia.dir !== "") {
+        const arrows = { "tăng": "▲", "giảm": "▼", "hai chiều": "⇅", "không rõ": "–" };
+        const direction = make("p", "xpost__impact-direction", analysis);
+        text(direction, (arrows[p.ia.dir] || "–") + " " + p.ia.dir);
+      }
+
+      if (typeof p.ia.cf === "string" && p.ia.cf !== "") {
+        const confidence = make("p", "xpost__impact-confidence", analysis);
+        text(confidence, T.confidence + " " + p.ia.cf);
+      }
+
+      if (typeof p.ia.why === "string" && p.ia.why !== "") {
+        text(make("p", "xpost__impact-reasoning", analysis), p.ia.why);
+      }
+    }
 
     const hasPoints = Array.isArray(p.kp) && p.kp.some((point) => typeof point === "string" && point !== "");
     const hasInsight = typeof p.ins === "string" && p.ins !== "";
@@ -198,7 +271,7 @@
     const cards = [];
     for (let i = 0; i < list.length; i++) {
       try {
-        const item = card(list[i]);
+        const item = card(list[i], i);
         ul.appendChild(item);
         cards.push({ item: item, post: list[i] || {} });
       } catch (e) {
