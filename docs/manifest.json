@@ -679,13 +679,13 @@
     {
       "d": "2026-08-21",
       "months": "2026-08",
-      "n": 86
+      "n": 109
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 1128,
+      "n": 1136,
       "slug": "ai"
     },
     {
@@ -695,7 +695,7 @@
     },
     {
       "label": "luật",
-      "n": 215,
+      "n": 216,
       "slug": "luat"
     },
     {
@@ -705,7 +705,7 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 176,
+      "n": 177,
       "slug": "doanh-nghiep"
     },
     {
@@ -725,12 +725,12 @@
     },
     {
       "label": "chip",
-      "n": 121,
+      "n": 122,
       "slug": "chip"
     },
     {
       "label": "dữ liệu",
-      "n": 118,
+      "n": 119,
       "slug": "du-lieu"
     },
     {
@@ -760,7 +760,7 @@
     },
     {
       "label": "trung ương",
-      "n": 84,
+      "n": 85,
       "slug": "trung-uong"
     },
     {
@@ -810,7 +810,7 @@
     },
     {
       "label": "pháp lý",
-      "n": 39,
+      "n": 40,
       "slug": "phap-ly"
     },
     {
@@ -884,6 +884,11 @@
       "slug": "dia-chinh-tri"
     },
     {
+      "label": "khởi nghiệp",
+      "n": 7,
+      "slug": "khoi-nghiep"
+    },
+    {
       "label": "kinh tế",
       "n": 7,
       "slug": "kinh-te"
@@ -907,11 +912,6 @@
       "label": "Iran",
       "n": 6,
       "slug": "iran"
-    },
-    {
-      "label": "khởi nghiệp",
-      "n": 6,
-      "slug": "khoi-nghiep"
     },
     {
       "label": "kinh tế vĩ mô",
