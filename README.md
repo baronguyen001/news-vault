@@ -125,9 +125,9 @@ Two features can undo this and are therefore **off by default**:
 * `--feed-full` puts headlines into `feed.xml` and `feed.json`, which are plaintext and public.
 * `newsvault.audio` renders the brief to an mp3, which is likewise public.
 
-A published archive is only as private as its password. `[REDACTED]`-class passwords resist casual
+A published archive is only as private as its password. A short, guessable password resists casual
 snooping, not an attacker willing to spend GPU time on 250 000-round PBKDF2. Treat this as a lock on a
-filing cabinet, not a safe.
+filing cabinet, not a safe — pick a long, unique password and keep it out of anything public.
 
 ## Install
 
