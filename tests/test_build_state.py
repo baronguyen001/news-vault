@@ -185,5 +185,5 @@ def test_summary_without_issues_keeps_its_exact_previous_text() -> None:
 
     assert BuildReport().summary() == (
         "0 ngày dựng, 0 bỏ qua (không đổi), 0 trang thực thể, 0 trang tuần, "
-        "0 shard tìm kiếm, 0 video, 0 bài phân tích sâu, 0 bài X"
+        "0 shard tìm kiếm, 0 video, 0 bài phân tích sâu, 0 báo cáo, 0 bài X"
     )

@@ -42,6 +42,7 @@ class Article:
     relevance: int
     score: int
     image_url: str = ""
+    is_teaser: bool = False
 
     @property
     def tier(self) -> str:
@@ -151,6 +152,13 @@ def _image_url(row: sqlite3.Row) -> str:
     return value if value.startswith(("http://", "https://")) else ""
 
 
+def _is_teaser(row: sqlite3.Row) -> bool:
+    """Read the optional teaser flag without requiring a newly migrated database."""
+    # row.keys() is deliberate, not row itself — see _image_url's note on why
+    # sqlite3.Row.__contains__ (searching values) is the wrong check here.
+    return bool(row["is_teaser"] or 0) if "is_teaser" in row.keys() else False  # noqa: SIM118
+
+
 def article_from_row(row: sqlite3.Row) -> Article:
     """Build an Article from a raw database row, applying every normalisation above."""
     title_vi_raw = row["title_vi"] or ""
@@ -185,4 +193,5 @@ def article_from_row(row: sqlite3.Row) -> Article:
         relevance=relevance,
         score=score,
         image_url=_image_url(row),
+        is_teaser=_is_teaser(row),
     )

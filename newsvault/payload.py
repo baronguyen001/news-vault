@@ -95,6 +95,7 @@ def compact_article(
         "tg": list(article.tags),
         "an": article.analysis or {},
         "law": bool(article.is_law_policy),
+        "te": bool(article.is_teaser),
         "img": article.image_url,
         "ents": article_entities,
     }
@@ -281,6 +282,32 @@ def curated_index_items(items: Sequence[CuratedItem]) -> list[dict[str, object]]
     return out
 
 
+def report_index_payload(reports: Sequence[Article], *, generated_at: str) -> dict[str, object]:
+    """Payload for the analyst-report listing, newest report first.
+
+    Reports reuse the normal compact-article shape so full reports can render with the
+    normal article card. They already enter the archive-search shards through
+    :func:`index_items`, therefore this listing must not create duplicate search entries.
+    """
+    ordered = sorted(
+        reports,
+        key=lambda article: (article.day, article.published_iso, article.id),
+        reverse=True,
+    )
+    return _sorted(
+        {
+            "v": 1,
+            "kind": "reportsIndex",
+            "generated_at": generated_at,
+            "total": len(ordered),
+            "items": [
+                compact_article(article, index, with_day=True)
+                for index, article in enumerate(ordered)
+            ],
+        }
+    )
+
+
 def compact_post(post: Post) -> dict[str, object]:
     """Return the compact JSON shape for one X post.
 
@@ -377,6 +404,7 @@ def day_payload(
     generated_at: str,
     videos: Sequence[Video] = (),
     curated: Sequence[CuratedItem] = (),
+    reports: Sequence[Article] = (),
     posts: Sequence[Post] = (),
 ) -> dict[str, object]:
     """Build the encrypted JSON payload for a single day page."""
@@ -417,6 +445,12 @@ def day_payload(
             "articles": compact,
             "videos": [compact_video(v) for v in videos],
             "curated": [curated_teaser(c) for c in curated],
+            # Preserve the original article indices: normal report cards retain their
+            # cluster anchors and reader state when rendered in their own section.
+            "reports": [
+                compact_article(report, url_to_index.get(report.url, -1), entities=entity_map)
+                for report in reports
+            ],
             "posts": [compact_post(p) for p in posts],
         }
     )

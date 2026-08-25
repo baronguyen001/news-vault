@@ -21,6 +21,7 @@
     postsTitle: "Tin nóng từ X",
     videoLibrary: "Thư viện video",
     deepTitle: "Phân tích sâu",
+    reportsTitle: "Báo cáo phân tích",
     hideShorts: (n) => `Ẩn ${n} Short`,
     showShorts: (n) => `Hiện ${n} Short`,
     categoriesTitle: "Chuyên mục",
@@ -398,6 +399,7 @@
     else if (config.kind === "quality") renderQualityPage();
     else if (config.kind === "curatedIndex") renderCuratedIndex();
     else if (config.kind === "curated") renderCuratedArticle();
+    else if (config.kind === "reportsIndex") renderReportsIndex();
     else if (config.kind === "videoIndex") renderVideoIndex();
     else if (config.kind === "search") renderSearchPage();
     wireUser();
@@ -478,6 +480,7 @@
     renderBlindspots(analysis);
     renderSearchbar(app);
     renderCurated(app);
+    renderReports(app);
     renderPosts(app);
     renderVideos(app);
     const wrap = make("div", "cards-wrap", app);
@@ -513,6 +516,7 @@
     home.href = config.base || "./";
     text(home, T.home);
     mountDeepLink(nav);
+    mountReportsLink(nav);
     mountVideoLibraryLink(nav);
     // Column choice is a desktop affordance; the stylesheet hides it below 1024px.
     if (NV.layout) NV.layout.mount(nav);
@@ -588,6 +592,14 @@
     return link;
   }
 
+  function mountReportsLink(nav) {
+    if (!nav || config.kind === "reportsIndex") return;
+    const link = make("a", "topbar__link topbar__link--reports", nav);
+    link.href = `${config.base || ""}r/`;
+    text(link, T.reportsTitle);
+    return link;
+  }
+
   /**
    * The day's deep-dive analyses, as folded link cards.
    *
@@ -605,6 +617,18 @@
     if (!section) return;
     // The fold's summary already names the section, so avoid printing the heading twice.
     const heading = section.querySelector(".deepteaser__title");
+    if (heading) section.removeChild(heading);
+    body.appendChild(section);
+  }
+
+  function renderReports(parent) {
+    if (!NV.reports) return;
+    const list = payload.reports || [];
+    if (!list.length) return;
+    const body = makePanel(parent, "day-reports", `${T.reportsTitle} (${list.length})`, "", true);
+    const section = NV.reports.daySection(list, config.base || "../../");
+    if (!section) return;
+    const heading = section.querySelector(".reports__title");
     if (heading) section.removeChild(heading);
     body.appendChild(section);
   }
@@ -642,6 +666,14 @@
     app.className = "app app--deeplist";
     renderSimpleTopbar(app);
     if (NV.curated) NV.curated.renderIndex(app, payload, config);
+  }
+
+  function renderReportsIndex() {
+    const app = $("#app");
+    text(app, "");
+    app.className = "app app--reports";
+    renderSimpleTopbar(app);
+    if (NV.reports) NV.reports.renderIndex(app, payload, config);
   }
 
   function renderQualityPage() {
@@ -1007,7 +1039,9 @@
       runArchiveSearch();
       return;
     }
-    const items = buildSearchItems(payload.articles || [], config.day || payload.day);
+    const reportIndexes = new Set((payload.reports || []).map((report) => report && report.i));
+    const articles = (payload.articles || []).filter((_article, index) => !reportIndexes.has(index));
+    const items = buildSearchItems(articles, config.day || payload.day);
     setUserFlags(items);
     const results = NV.search.run(items, full, { sort: currentSort });
     renderResults(results, NV.search.parse(full || ""));
@@ -1581,6 +1615,14 @@
       const count = make("span", "homenav__count", link);
       text(count, ` (${total})`);
     }
+    const reports = make("a", "homenav__link", nav);
+    reports.href = `${config.base || ""}r/`;
+    text(reports, T.reportsTitle);
+    const reportsTotal = Number(config.reportsTotal);
+    if (reportsTotal > 0) {
+      const count = make("span", "homenav__count", reports);
+      text(count, ` (${reportsTotal})`);
+    }
     const videos = make("a", "homenav__link", nav);
     videos.href = `${config.base || ""}videos/`;
     text(videos, T.videoLibrary);
@@ -1718,6 +1760,7 @@
       text(day, T.latestTitle);
     }
     mountDeepLink(nav);
+    mountReportsLink(nav);
     mountVideoLibraryLink(nav);
     if (NV.layout) NV.layout.mount(nav);
     const theme = make("button", "topbar__btn", nav);
@@ -2102,7 +2145,8 @@
     forgetDevice: forgetDevice,
     refresh: refresh,
     setQuery: setQuery,
-    unlock: unlock
+    unlock: unlock,
+    articleCard: (article) => renderCard(article, { raw: article, u: article.u, i: article.i }, null)
   };
 
   document.addEventListener("DOMContentLoaded", boot);

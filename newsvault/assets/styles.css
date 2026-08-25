@@ -3388,6 +3388,94 @@ body.modal-open {
   padding-block: var(--space-xl);
 }
 
+/* ---------- analyst reports ---------- */
+
+.app--reports {
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: var(--space-md);
+}
+
+.reports {
+  margin-top: var(--space-lg);
+}
+
+.reports__title,
+.reports-index__title {
+  margin: 0;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.reports__day-list {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.reports-index__head {
+  margin-block: var(--space-lg) var(--space-md);
+}
+
+.reports-index__count,
+.reports-index__empty {
+  color: var(--text-dim);
+}
+
+.reports-index__empty {
+  padding-block: var(--space-xl);
+}
+
+.report-teaser {
+  list-style: none;
+  border: 1px solid var(--border);
+  border-inline-start: 3px solid var(--accent);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  padding: var(--space-md);
+}
+
+.report-teaser__title {
+  margin: var(--space-sm) 0 0;
+  font-size: 1.0625rem;
+  line-height: 1.35;
+}
+
+.report-teaser__link,
+.report-teaser__cta {
+  color: inherit;
+}
+
+.report-teaser__link:hover,
+.report-teaser__link:focus-visible {
+  color: var(--accent);
+}
+
+.report-teaser__meta,
+.report-teaser__snippet {
+  color: var(--text-dim);
+}
+
+.report-teaser__meta {
+  margin: var(--space-xs) 0 0;
+  font-size: 0.8125rem;
+}
+
+.report-teaser__snippet {
+  margin: var(--space-sm) 0 0;
+  line-height: 1.6;
+}
+
+.report-teaser__cta {
+  display: inline-block;
+  margin-top: var(--space-sm);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+@media (min-width: 1024px) {
+  .reports-index__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (min-width: 1024px) {
   .deeplist__items {
     grid-template-columns: repeat(2, minmax(0, 1fr));

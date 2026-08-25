@@ -8,7 +8,7 @@ const CACHE_NAME = "nv-cache-v1";
 // Bumped whenever the shell asset list or its contents change: the activate handler
 // deletes every "nv-" cache that is not one of the current names, so a returning
 // reader gets the new stylesheet instead of last week's from cache.
-const SHELL_CACHE = "nv-shell-v9";
+const SHELL_CACHE = "nv-shell-v10";
 const RUNTIME_CACHE = "nv-runtime-v1";
 const MAX_RUNTIME = 400;
 
@@ -25,6 +25,7 @@ const SHELL_URLS = [
   // curated.js was missing from this list until posts.js was added: the page loaded it
   // over the network every visit while every sibling came from cache.
   "/assets/curated.js",
+  "/assets/reports.js",
   "/assets/posts.js",
   "/assets/search.js",
   "/assets/keyterms.js",

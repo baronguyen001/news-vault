@@ -70,6 +70,7 @@ def test_compact_article_full_key_set_no_none() -> None:
         "tg",
         "an",
         "law",
+        "te",
         "img",
         "ents",
     }

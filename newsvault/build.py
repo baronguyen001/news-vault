@@ -22,6 +22,7 @@ from pathlib import Path
 from newsvault import __version__, charts, crypto, db, feeds, payload, quality, render
 from newsvault import curated as curated_db
 from newsvault import posts as posts_db
+from newsvault import reports as reports_db
 from newsvault import videos as videos_db
 from newsvault.blindspot import blindspots
 from newsvault.brief import (
@@ -88,6 +89,7 @@ class BuildReport:
     index_shards: int = 0
     videos_included: int = 0
     curated_pages: int = 0
+    reports_included: int = 0
     posts_included: int = 0
     brief_source: dict[str, str] = field(default_factory=dict)
     provider_issues: list[str] = field(default_factory=list)
@@ -99,7 +101,8 @@ class BuildReport:
             f"{len(self.days_built)} ngày dựng, {len(self.days_skipped)} bỏ qua (không đổi), "
             f"{self.entity_pages} trang thực thể, {self.week_pages} trang tuần, "
             f"{self.index_shards} shard tìm kiếm, {self.videos_included} video, "
-            f"{self.curated_pages} bài phân tích sâu, {self.posts_included} bài X"
+            f"{self.curated_pages} bài phân tích sâu, {self.reports_included} báo cáo, "
+            f"{self.posts_included} bài X"
         )
         # Brief tụt xuống bản fallback (xếp theo điểm, không qua LLM) là một sự cố CHẤT
         # LƯỢNG chứ không phải lỗi build — trước đây `brief_source` được ghi lại nhưng
@@ -565,6 +568,9 @@ def build_site(options: BuildOptions) -> BuildReport:
             by_day.setdefault(article.day, []).append(article)
         for articles in by_day.values():
             articles.sort(key=lambda a: (-a.score, a.title_vi))
+        reports = reports_db.reports_of(loaded)
+        reports_by_day = reports_db.group_by_day(reports)
+        report.reports_included = len(reports)
 
         entity_index = build_entity_index(loaded, min_mentions=ENTITY_MIN_MENTIONS)
         entity_map = entity_index.by_article
@@ -576,6 +582,7 @@ def build_site(options: BuildOptions) -> BuildReport:
             articles = by_day.get(day, [])
             day_videos = videos_by_day.get(day, [])
             day_curated = curated_by_day.get(day, [])
+            day_reports = reports_by_day.get(day, [])
             day_posts = posts_by_day.get(day, [])
             if not articles and not day_videos and not day_curated and not day_posts:
                 continue
@@ -600,6 +607,7 @@ def build_site(options: BuildOptions) -> BuildReport:
                 generated_at=_day_anchor(day),
                 videos=day_videos,
                 curated=day_curated,
+                reports=day_reports,
                 posts=day_posts,
             )
 
@@ -670,6 +678,7 @@ def build_site(options: BuildOptions) -> BuildReport:
         report.curated_pages = _write_curated_pages(
             out_dir, curated_items, options, meta, salt, state, fresh
         )
+        _write_reports_index(out_dir, reports, options, meta, salt, state, fresh)
         _write_video_library(
             out_dir,
             library_videos,
@@ -679,7 +688,15 @@ def build_site(options: BuildOptions) -> BuildReport:
             state,
             fresh,
         )
-        _write_home(out_dir, all_days, counts, options, meta, curated_total=len(curated_items))
+        _write_home(
+            out_dir,
+            all_days,
+            counts,
+            options,
+            meta,
+            curated_total=len(curated_items),
+            reports_total=len(reports),
+        )
         # Cùng một biểu thức `_write_root_files` dùng để dựng `manifest.json`. Trang tìm
         # kiếm phải thấy ĐÚNG danh sách tháng đó, vì nó nạp mảnh chỉ mục theo tên tháng.
         _write_search_page(
@@ -1044,6 +1061,51 @@ def _write_curated_pages(
     return written
 
 
+def _write_reports_index(
+    out_dir: Path,
+    reports: Sequence[Article],
+    options: BuildOptions,
+    meta: render.SiteMeta,
+    salt: bytes,
+    state: Mapping[str, str],
+    fresh: dict[str, str],
+) -> None:
+    """Write the dedicated listing of report-source articles.
+
+    The article rows are already part of each day payload and search shard. This is only
+    a second reading surface, so it has one encrypted listing page and no per-item pages.
+    """
+    newest = max((article.day for article in reports), default=_today())
+    data = payload.report_index_payload(reports, generated_at=_day_anchor(newest))
+    key = "reports:index"
+    fresh[key] = _digest(data, with_shell=True)
+    target = out_dir / "r"
+    if state.get(key) == fresh[key] and (target / "data.enc").exists():
+        return
+    config = {
+        "kind": "reportsIndex",
+        "base": "../",
+        "version": __version__,
+        "kdfIterations": crypto.DEFAULT_ITERATIONS,
+        "site": options.site,
+        "siteUrl": options.site_url,
+        "dataUrl": "data.enc",
+        "manifestUrl": "../manifest.json",
+        "indexBase": "../idx/",
+    }
+    render.write_page(
+        target / "index.html",
+        render.render_page(
+            kind="reportsIndex",
+            base="../",
+            title=f"Báo cáo phân tích — {options.site}",
+            config=config,
+            meta=meta,
+        ),
+    )
+    crypto.write_encrypted(target / "data.enc", data, options.password, salt=salt)
+
+
 def _write_video_library(
     out_dir: Path,
     videos: Sequence[Video],
@@ -1096,6 +1158,7 @@ def _write_home(
     options: BuildOptions,
     meta: render.SiteMeta,
     curated_total: int = 0,
+    reports_total: int = 0,
 ) -> None:
     """Write the landing page. Its calendar reads from the plain manifest."""
     latest = all_days[-1] if all_days else ""
@@ -1113,6 +1176,7 @@ def _write_home(
         "days": len(all_days),
         "articles": sum(counts.values()),
         "curatedTotal": curated_total,
+        "reportsTotal": reports_total,
     }
     render.write_page(
         out_dir / "index.html",
