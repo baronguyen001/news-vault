@@ -709,18 +709,18 @@
     {
       "d": "2026-08-25",
       "months": "2026-08",
-      "n": 101
+      "n": 126
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 1253,
+      "n": 1255,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 298,
+      "n": 299,
       "slug": "dau-tu"
     },
     {
@@ -750,12 +750,12 @@
     },
     {
       "label": "dữ liệu",
-      "n": 136,
+      "n": 137,
       "slug": "du-lieu"
     },
     {
       "label": "chip",
-      "n": 135,
+      "n": 136,
       "slug": "chip"
     },
     {
@@ -835,7 +835,7 @@
     },
     {
       "label": "startup",
-      "n": 44,
+      "n": 45,
       "slug": "startup"
     },
     {

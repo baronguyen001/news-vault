@@ -2437,17 +2437,6 @@ code {
   overflow: visible;
 }
 
-.xpost__fold {
-  margin-top: var(--space-xs);
-  color: var(--text-dim);
-}
-
-.xpost__fold summary {
-  cursor: pointer;
-  color: var(--accent);
-  font-size: 0.875rem;
-}
-
 .xpost__also {
   margin: var(--space-xs) 0 0;
   color: var(--text-dim);
@@ -2464,11 +2453,30 @@ code {
   color: var(--text-dim);
 }
 
+/* `.xpost > .xpost__impact` is a <details>, closed by default so the "this is inference,
+ * not the tweet" caveat does not compete with the actual post for the reader's eye - it is
+ * one click away, not gone. */
 .xpost__impact-label {
   margin: 0;
   color: var(--text);
   font-size: 0.8125rem;
   font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.xpost__impact-label::-webkit-details-marker { display: none; }
+
+.xpost__impact-label::after {
+  content: "▸";
+  display: inline-block;
+  margin-inline-start: 0.35rem;
+  color: var(--text-dim);
+  transition: transform 0.15s ease;
+}
+
+.xpost__impact[open] > .xpost__impact-label::after {
+  transform: rotate(90deg);
 }
 
 .xpost__impact-channel,
@@ -2789,17 +2797,38 @@ code {
 
   /* Grid mode: dense auto-fill columns and vertical cards. .xposts__list joins here too -
    * previously it stayed a plain flex column under every layout mode (the "Lưới" button
-   * had no effect on it at all), which is what made its already-inconsistent image sizes
-   * (see .xpost__image above) stand out the most. An .xpost card has no closed/compact
-   * state to fall back on the way .card does, so it does not need the "opened card spans
-   * the full row" rule below - it is always full, and a masonry-style grid of uneven card
-   * heights (align-items: start) is the correct look here, not a bug. */
+   * had no effect on it at all). .card/.videos__list keep align-items: start above because
+   * a closed card is deliberately short and only an opened one spans the full row - but
+   * .xpost has no such closed/compact state, so an uneven masonry here just reads as messy
+   * rather than meaningful. Overridden to align-items: stretch for .xposts__list only,
+   * right below. */
   [data-layout="grid"] .cards-wrap .cards,
   [data-layout="grid"] .videos__list,
   [data-layout="grid"] .xposts__list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     align-items: start;
+  }
+
+  [data-layout="two"] .xposts__list,
+  [data-layout="three"] .xposts__list,
+  [data-layout="grid"] .xposts__list {
+    align-items: stretch;
+  }
+
+  [data-layout="two"] .xpost,
+  [data-layout="three"] .xpost,
+  [data-layout="grid"] .xpost {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  [data-layout="two"] .xpost__footer,
+  [data-layout="three"] .xpost__footer,
+  [data-layout="grid"] .xpost__footer {
+    margin-top: auto;
+    padding-top: var(--space-xs);
   }
 
   /* An opened card should span the full row in every multi-column mode. */
