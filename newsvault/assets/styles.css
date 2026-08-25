@@ -3820,3 +3820,424 @@ body.modal-open {
     max-width: none;
   }
 }
+
+/* ---------- Substack essays ---------- */
+/* Mirrors the ".dcard" / ".deep__*" block above almost rule for rule — same reasoning as
+   substack.js's header comment: the reading problem is identical, only the source differs.
+   No thumbnail track here: an essay card has no picture, so `.scard__link` never needs the
+   side-by-side grid `.dcard__link` gets at 720px. */
+
+.badge--sub {
+  background: color-mix(in srgb, var(--accent) 18%, var(--surface-2));
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.scards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-md);
+}
+
+.scards-wrap {
+  margin-block-start: var(--space-lg);
+}
+
+.scard {
+  border: 1px solid var(--border);
+  border-inline-start: 3px solid var(--accent);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.scard__link {
+  display: block;
+  padding: var(--space-md);
+  color: inherit;
+  text-decoration: none;
+}
+
+.scard__link:hover,
+.scard__link:focus-visible {
+  background: var(--surface-2);
+  text-decoration: none;
+}
+
+.scard__link:hover .scard__title,
+.scard__link:focus-visible .scard__title {
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+.scard__body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.scard__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.scard__title {
+  margin: 0;
+  font-size: 1.0625rem;
+  line-height: 1.35;
+}
+
+.scard__meta {
+  color: var(--text-dim);
+  font-size: 0.8125rem;
+}
+
+.scard__lead {
+  margin: var(--space-xs) 0 0;
+  color: var(--text-dim);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.scard__cta {
+  margin-block-start: var(--space-xs);
+  color: var(--accent);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.scard__cta::after {
+  content: " \2192";
+}
+
+/* ---------- day-page section ---------- */
+
+.subteaser {
+  margin-top: var(--space-lg);
+}
+
+.subteaser__title {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+  margin: 0 0 var(--space-md);
+  font-size: 1.125rem;
+}
+
+.subteaser__count {
+  color: var(--text-dim);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.subteaser__list {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* One badge, reading "Từ Substack", inside a fold whose summary already says it —
+   same duplication `.deepteaser__list .dcard__badges` hides one level up. */
+.subteaser__list .scard__badges {
+  display: none;
+}
+
+.subteaser__list .scard__title {
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.subteaser__list .scard__lead {
+  font-size: 0.875rem;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+}
+
+/* ---------- listing page ---------- */
+
+.app--sublist {
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: var(--space-md);
+}
+
+.sublist__head {
+  margin-block: var(--space-lg) var(--space-md);
+}
+
+.sublist__title {
+  margin: 0;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.sublist__count {
+  margin: var(--space-xs) 0 0;
+  color: var(--text-dim);
+}
+
+.sublist__empty {
+  color: var(--text-dim);
+  padding-block: var(--space-xl);
+}
+
+@media (min-width: 1024px) {
+  .sublist__items {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1440px) {
+  .sublist__items {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ---------- article page ---------- */
+
+.app--sub {
+  padding-inline: var(--space-md);
+}
+
+.sub {
+  position: relative;
+  max-width: 78rem;
+  margin-inline: auto;
+  padding-block-end: var(--space-xl);
+}
+
+.sub__progress {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  height: 3px;
+  background: var(--surface-2);
+  z-index: 40;
+  pointer-events: none;
+}
+
+.sub__progress-bar {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sub__progress-bar {
+    transition: width 120ms linear;
+  }
+}
+
+.sub__header {
+  margin-block: var(--space-lg) var(--space-xl);
+  max-width: 46rem;
+}
+
+.sub__badges {
+  display: flex;
+  gap: var(--space-xs);
+  margin-block-end: var(--space-sm);
+}
+
+.sub__title {
+  margin: 0;
+  font-size: clamp(1.5rem, 4.5vw, 2.25rem);
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.sub__meta {
+  margin: var(--space-sm) 0 0;
+  color: var(--text-dim);
+  font-size: 0.9375rem;
+}
+
+.sub__media {
+  margin-block-start: var(--space-md);
+}
+
+.sub__read {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--accent);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.sub__read::before {
+  content: "\2197\00A0";
+}
+
+.sub__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-xl);
+  align-items: start;
+}
+
+.sub__body {
+  max-width: 42rem;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+
+.sub__p {
+  margin: 0 0 var(--space-md);
+}
+
+/* `--nv-topbar-h` is the same variable curated.js measures and writes; substack.js
+   re-measures it independently but both read the same custom property here. */
+.sub__h {
+  scroll-margin-block-start: calc(var(--nv-topbar-h, 5rem) + var(--space-md));
+  margin: var(--space-xl) 0 var(--space-sm);
+  font-size: 1.25rem;
+  line-height: 1.35;
+  padding-block-end: var(--space-xs);
+  border-block-end: 1px solid var(--border);
+}
+
+.sub__h:first-child {
+  margin-block-start: 0;
+}
+
+.sub__list {
+  margin: 0 0 var(--space-md);
+  padding-inline-start: 1.25rem;
+}
+
+.sub__li {
+  margin-block-end: var(--space-xs);
+}
+
+.sub__toc {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  padding: var(--space-md);
+}
+
+.sub__toc-title {
+  margin: 0 0 var(--space-sm);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+
+.sub__toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.sub__toc-item {
+  margin: 0;
+}
+
+.sub__toc-link {
+  display: block;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  border-inline-start: 2px solid transparent;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.sub__toc-link:hover,
+.sub__toc-link:focus-visible {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.sub__toc-link--active {
+  color: var(--text);
+  border-inline-start-color: var(--accent);
+  background: var(--surface-2);
+  font-weight: 600;
+}
+
+.sub__foot {
+  margin-block-start: var(--space-xl);
+  padding-block-start: var(--space-md);
+  border-block-start: 1px solid var(--border);
+  max-width: 42rem;
+}
+
+.sub__back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.sub__back::before {
+  content: "\2190\00A0";
+}
+
+@media (max-width: 1023px) {
+  .sub__toc-list {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: var(--space-sm);
+    padding-block-end: var(--space-xs);
+  }
+
+  .sub__toc-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    white-space: nowrap;
+    border-inline-start: 0;
+    border-block-end: 2px solid transparent;
+  }
+
+  .sub__toc-link--active {
+    border-inline-start: 0;
+    border-block-end-color: var(--accent);
+  }
+}
+
+@media (min-width: 1024px) {
+  .sub__layout {
+    grid-template-columns: 16rem minmax(0, 1fr);
+  }
+
+  .sub__toc {
+    position: sticky;
+    inset-block-start: var(--space-lg);
+    order: -1;
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+  }
+
+  .sub__body {
+    font-size: 1.125rem;
+  }
+}
+
+@media print {
+  .sub__progress,
+  .sub__toc,
+  .sub__foot {
+    display: none;
+  }
+
+  .sub__body {
+    max-width: none;
+  }
+}

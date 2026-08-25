@@ -41,6 +41,8 @@ def expected_paths(manifest: dict, docs: Path) -> set[Path]:
         expected.add(docs / "w" / str(label))
     for curated_id in manifest.get("curated", []):
         expected.add(docs / "c" / str(curated_id))
+    for substack_id in manifest.get("substack", []):
+        expected.add(docs / "sub" / str(substack_id))
     return expected
 
 
@@ -49,7 +51,7 @@ def find_orphans(manifest: dict, docs: Path) -> list[Path]:
     expected = expected_paths(manifest, docs)
     orphans: list[Path] = []
 
-    for name in ("d", "e", "w", "c"):
+    for name in ("d", "e", "w", "c", "sub"):
         parent = docs / name
         if not parent.is_dir():
             continue
@@ -62,6 +64,9 @@ def find_orphans(manifest: dict, docs: Path) -> list[Path]:
         # directories and so is never a candidate here (only directories are scanned).
         # An absent `curated` key means the build did not survey them -> hands off.
         if name == "c" and "curated" not in manifest:
+            continue
+        # Same non-destructive contract for Substack essays, keyed by `docs/sub`.
+        if name == "sub" and "substack" not in manifest:
             continue
         orphans.extend(
             child for child in sorted(parent.iterdir()) if child.is_dir() and child not in expected

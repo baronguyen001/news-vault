@@ -68,6 +68,17 @@ def _resolve_x_db(explicit: str | None) -> Path | None:
     return Path(raw) if raw else None
 
 
+def _resolve_substack_db(explicit: str | None) -> Path | None:
+    """Path to the substack-digest database, or None when the archive has no essays.
+
+    Optional for the same reason as the video and X databases: a machine that has never
+    run substack-digest must still build, so an unset variable means "no essays", not an
+    error.
+    """
+    raw = explicit or os.environ.get("NEWSVAULT_SUBSTACK_DB", "")
+    return Path(raw) if raw else None
+
+
 def _resolve_db(explicit: str | None) -> Path:
     """Path to the news-hunter database."""
     raw = explicit or os.environ.get("NEWSVAULT_DB", "")
@@ -85,6 +96,13 @@ def _add_common(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--x-db",
         help="đường dẫn x_pulse.db (mặc định: NEWSVAULT_X_DB; bỏ trống = không có mục X)",
+    )
+    parser.add_argument(
+        "--substack-db",
+        help=(
+            "đường dẫn substack_digest.db "
+            "(mặc định: NEWSVAULT_SUBSTACK_DB; bỏ trống = không có mục Substack)"
+        ),
     )
     parser.add_argument(
         "--out", default=None, help="thư mục đầu ra (mặc định: NEWSVAULT_OUT hoặc docs)"
@@ -165,6 +183,7 @@ def _options_from(args: argparse.Namespace, *, force: bool, use_brief: bool) -> 
         min_relevance=getattr(args, "min_relevance", 0),
         video_db_path=_resolve_video_db(getattr(args, "video_db", None)),
         x_db_path=_resolve_x_db(getattr(args, "x_db", None)),
+        substack_db_path=_resolve_substack_db(getattr(args, "substack_db", None)),
         cache_dir=Path(os.environ.get("NEWSVAULT_CACHE", ".cache")),
         use_brief=use_brief,
         feed_full=getattr(args, "feed_full", False),

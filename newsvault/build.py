@@ -23,6 +23,7 @@ from newsvault import __version__, charts, crypto, db, feeds, payload, quality, 
 from newsvault import curated as curated_db
 from newsvault import posts as posts_db
 from newsvault import reports as reports_db
+from newsvault import substack as substack_db
 from newsvault import videos as videos_db
 from newsvault.blindspot import blindspots
 from newsvault.brief import (
@@ -40,6 +41,7 @@ from newsvault.exports import day_markdown, write_markdown
 from newsvault.model import Article
 from newsvault.posts import Post
 from newsvault.sources import PAID
+from newsvault.substack import Essay
 from newsvault.text import slugify
 from newsvault.trends import trending_terms
 from newsvault.videos import Video
@@ -66,6 +68,7 @@ class BuildOptions:
     password: str
     video_db_path: Path | None = None
     x_db_path: Path | None = None
+    substack_db_path: Path | None = None
     days: tuple[str, ...] = ()
     backfill: bool = False
     site: str = "Kho tin"
@@ -91,6 +94,7 @@ class BuildReport:
     curated_pages: int = 0
     reports_included: int = 0
     posts_included: int = 0
+    substack_pages: int = 0
     brief_source: dict[str, str] = field(default_factory=dict)
     provider_issues: list[str] = field(default_factory=list)
     bytes_written: int = 0
@@ -102,7 +106,7 @@ class BuildReport:
             f"{self.entity_pages} trang thực thể, {self.week_pages} trang tuần, "
             f"{self.index_shards} shard tìm kiếm, {self.videos_included} video, "
             f"{self.curated_pages} bài phân tích sâu, {self.reports_included} báo cáo, "
-            f"{self.posts_included} bài X"
+            f"{self.posts_included} bài X, {self.substack_pages} bài Substack"
         )
         # Brief tụt xuống bản fallback (xếp theo điểm, không qua LLM) là một sự cố CHẤT
         # LƯỢNG chứ không phải lỗi build — trước đây `brief_source` được ghi lại nhưng
@@ -453,6 +457,29 @@ def _load_posts(options: BuildOptions) -> dict[str, list[Post]]:
         conn.close()
 
 
+def _load_substack(options: BuildOptions) -> list[Essay]:
+    """Every summarised Substack essay, or nothing at all on any problem.
+
+    Same contract as `_load_posts`: substack-digest is a separate scraper writing its own
+    database, so a missing file, a missing table or a lock degrades to an archive without
+    the Substack section, never to a failed build.
+    """
+    if not options.substack_db_path:
+        return []
+    try:
+        conn = substack_db.connect(options.substack_db_path)
+    except (FileNotFoundError, sqlite3.Error) as err:
+        logger.warning("substack-digest database unavailable (%s); building without essays", err)
+        return []
+    try:
+        return substack_db.load_all(conn)
+    except sqlite3.Error as err:
+        logger.warning("substack-digest database unreadable (%s); building without essays", err)
+        return []
+    finally:
+        conn.close()
+
+
 def _load_video_library(options: BuildOptions) -> list[Video]:
     """Load successful and retryable videos for the channel library."""
     if not options.video_db_path:
@@ -531,11 +558,18 @@ def build_site(options: BuildOptions) -> BuildReport:
     curated_items = _load_curated(options)
     curated_by_day = curated_db.group_by_day(curated_items)
     posts_by_day = _load_posts(options)
+    substack_items = _load_substack(options)
+    substack_by_day = substack_db.group_by_day(substack_items)
 
     conn = db.connect(options.db_path)
     try:
         target_days = select_days(
-            conn, options, extra_days=set(videos_by_day) | set(curated_by_day) | set(posts_by_day)
+            conn,
+            options,
+            extra_days=set(videos_by_day)
+            | set(curated_by_day)
+            | set(posts_by_day)
+            | set(substack_by_day),
         )
         if not target_days:
             logger.warning("nothing to build")
@@ -549,6 +583,7 @@ def build_site(options: BuildOptions) -> BuildReport:
             | set(videos_by_day)
             | set(curated_by_day)
             | set(posts_by_day)
+            | set(substack_by_day)
         )
         counts = db.counts_by_day(conn)
         for day, day_videos in videos_by_day.items():
@@ -557,6 +592,8 @@ def build_site(options: BuildOptions) -> BuildReport:
             counts[day] = counts.get(day, 0) + len(day_curated)
         for day, day_posts in posts_by_day.items():
             counts[day] = counts.get(day, 0) + len(day_posts)
+        for day, day_substack in substack_by_day.items():
+            counts[day] = counts.get(day, 0) + len(day_substack)
 
         # One wide load covers the built days plus the baseline window behind them.
         history_start = _shift(min(target_days), -HISTORY_DAYS)
@@ -584,7 +621,14 @@ def build_site(options: BuildOptions) -> BuildReport:
             day_curated = curated_by_day.get(day, [])
             day_reports = reports_by_day.get(day, [])
             day_posts = posts_by_day.get(day, [])
-            if not articles and not day_videos and not day_curated and not day_posts:
+            day_substack = substack_by_day.get(day, [])
+            if (
+                not articles
+                and not day_videos
+                and not day_curated
+                and not day_posts
+                and not day_substack
+            ):
                 continue
 
             brief = _brief_for(day, articles, options, posts=day_posts)
@@ -609,6 +653,7 @@ def build_site(options: BuildOptions) -> BuildReport:
                 curated=day_curated,
                 reports=day_reports,
                 posts=day_posts,
+                substack=day_substack,
             )
 
             key = f"day:{day}"
@@ -620,6 +665,7 @@ def build_site(options: BuildOptions) -> BuildReport:
             month_items.extend(payload.video_index_items(day_videos))
             month_items.extend(payload.curated_index_items(day_curated))
             month_items.extend(payload.post_index_items(day_posts))
+            month_items.extend(payload.substack_index_items(day_substack))
             weeks.setdefault(_iso_week(day)[0], []).append(day)
 
             if state.get(key) == fresh[key] and (out_dir / "d" / day / "data.enc").exists():
@@ -679,6 +725,9 @@ def build_site(options: BuildOptions) -> BuildReport:
             out_dir, curated_items, options, meta, salt, state, fresh
         )
         _write_reports_index(out_dir, reports, options, meta, salt, state, fresh)
+        report.substack_pages = _write_substack_pages(
+            out_dir, substack_items, options, meta, salt, state, fresh
+        )
         _write_video_library(
             out_dir,
             library_videos,
@@ -696,6 +745,7 @@ def build_site(options: BuildOptions) -> BuildReport:
             meta,
             curated_total=len(curated_items),
             reports_total=len(reports),
+            substack_total=len(substack_items),
         )
         # Cùng một biểu thức `_write_root_files` dùng để dựng `manifest.json`. Trang tìm
         # kiếm phải thấy ĐÚNG danh sách tháng đó, vì nó nạp mảnh chỉ mục theo tên tháng.
@@ -717,6 +767,10 @@ def build_site(options: BuildOptions) -> BuildReport:
             # days were targeted, so this can never be the partial list that would make
             # the pruner delete live analyses.
             curated_ids=[item.id for item in curated_items],
+            # Same full-list contract as `curated_ids`: `_load_substack` reads every row
+            # and `_write_substack_pages` writes every page on every run, so this can never
+            # be the partial list that would make the pruner delete live essays.
+            substack_ids=[item.id for item in substack_items],
         )
     finally:
         conn.close()
@@ -1061,6 +1115,92 @@ def _write_curated_pages(
     return written
 
 
+def _write_substack_pages(
+    out_dir: Path,
+    items: Sequence[Essay],
+    options: BuildOptions,
+    meta: render.SiteMeta,
+    salt: bytes,
+    state: Mapping[str, str],
+    fresh: dict[str, str],
+) -> int:
+    """Write the Substack listing plus one reading page per essay.
+
+    A page per item, same reasoning as `_write_curated_pages`: an 800-2000 word essay with
+    its own table of contents needs a shareable URL and a resumable scroll position.
+    """
+    written = 0
+
+    for item in items:
+        data = payload.substack_payload(item)
+        key = f"substack:{item.id}"
+        fresh[key] = _digest(data, with_shell=True)
+        target = out_dir / "sub" / item.id
+        if state.get(key) == fresh[key] and (target / "data.enc").exists():
+            continue
+        config = {
+            "kind": "substack",
+            "base": "../../",
+            "version": __version__,
+            "kdfIterations": crypto.DEFAULT_ITERATIONS,
+            "site": options.site,
+            "siteUrl": options.site_url,
+            "substackId": item.id,
+            "day": item.day,
+            "dataUrl": "data.enc",
+            "manifestUrl": "../../manifest.json",
+            "indexBase": "../../idx/",
+        }
+        render.write_page(
+            target / "index.html",
+            render.render_page(
+                kind="substack",
+                base="../../",
+                # Generic title on purpose, same rule as curated pages: the essay title is
+                # private archive text and must not leak to a crawler through <title>.
+                title=f"Từ Substack — {options.site}",
+                config=config,
+                meta=meta,
+            ),
+        )
+        crypto.write_encrypted(target / "data.enc", data, options.password, salt=salt)
+        written += 1
+
+    # The listing is written even with zero items so the menu link never lands on a 404.
+    index_data = payload.substack_index_payload(
+        items, generated_at=_day_anchor(items[0].day) if items else _day_anchor(_today())
+    )
+    index_key = "substack:index"
+    fresh[index_key] = _digest(index_data, with_shell=True)
+    index_target = out_dir / "sub"
+    if not (state.get(index_key) == fresh[index_key] and (index_target / "data.enc").exists()):
+        config = {
+            "kind": "substackIndex",
+            "base": "../",
+            "version": __version__,
+            "kdfIterations": crypto.DEFAULT_ITERATIONS,
+            "site": options.site,
+            "siteUrl": options.site_url,
+            "dataUrl": "data.enc",
+            "manifestUrl": "../manifest.json",
+            "indexBase": "../idx/",
+        }
+        render.write_page(
+            index_target / "index.html",
+            render.render_page(
+                kind="substackIndex",
+                base="../",
+                title=f"Từ Substack — {options.site}",
+                config=config,
+                meta=meta,
+            ),
+        )
+        crypto.write_encrypted(index_target / "data.enc", index_data, options.password, salt=salt)
+        written += 1
+
+    return written
+
+
 def _write_reports_index(
     out_dir: Path,
     reports: Sequence[Article],
@@ -1159,6 +1299,7 @@ def _write_home(
     meta: render.SiteMeta,
     curated_total: int = 0,
     reports_total: int = 0,
+    substack_total: int = 0,
 ) -> None:
     """Write the landing page. Its calendar reads from the plain manifest."""
     latest = all_days[-1] if all_days else ""
@@ -1177,6 +1318,7 @@ def _write_home(
         "articles": sum(counts.values()),
         "curatedTotal": curated_total,
         "reportsTotal": reports_total,
+        "substackTotal": substack_total,
     }
     render.write_page(
         out_dir / "index.html",
@@ -1229,6 +1371,7 @@ def _write_root_files(
     salt: bytes,
     weeks: Sequence[tuple[str, str, str]] = (),
     curated_ids: Sequence[str] | None = None,
+    substack_ids: Sequence[str] | None = None,
 ) -> None:
     """Manifest, feeds, assets and the static root files."""
     # Anchored to the newest day, not to the clock, for the same reason `_day_anchor` exists:
@@ -1247,6 +1390,7 @@ def _write_root_files(
         entity_index.top(MAX_ENTITY_PAGES),
         weeks=weeks,
         curated=curated_ids,
+        substack=substack_ids,
         generated_at=generated_at,
         kdf_iterations=crypto.DEFAULT_ITERATIONS,
         site=options.site,

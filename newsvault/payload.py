@@ -8,6 +8,7 @@ from newsvault.curated import CuratedItem
 from newsvault.entities import Entity
 from newsvault.model import Article
 from newsvault.posts import Post
+from newsvault.substack import Essay
 from newsvault.text import excerpt, fold
 from newsvault.trends import Trend
 from newsvault.videos import Video
@@ -390,6 +391,97 @@ def post_index_items(posts: Sequence[Post]) -> list[dict[str, object]]:
     return out
 
 
+def substack_teaser(item: Essay) -> dict[str, object]:
+    """Compact shape for a Substack essay: enough for a card, not the essay itself.
+
+    Same reasoning as `curated_teaser`: the body is absent so a day page carrying several
+    long essays does not triple its payload for text the reader opens a dedicated page for
+    anyway.
+    """
+    return _sorted(
+        {
+            "id": item.id,
+            "t": item.title,
+            "c": item.author_name,
+            "u": item.url,
+            "d": item.day,
+            "p": item.published_iso,
+            "lead": item.lead,
+            "w": item.words,
+            "m": item.minutes,
+            "ns": len(item.sections),
+        }
+    )
+
+
+def substack_payload(item: Essay) -> dict[str, object]:
+    """Full essay for its own reading page.
+
+    Like a curated analysis, the body travels as pre-parsed blocks and never as markup, so
+    no text a language model produced can reach the browser as HTML.
+    """
+    return _sorted(
+        {
+            "v": 1,
+            "kind": "substack",
+            "id": item.id,
+            "t": item.title,
+            "c": item.author_name,
+            "u": item.url,
+            "d": item.day,
+            "p": item.published_iso,
+            "w": item.words,
+            "m": item.minutes,
+            "toc": [{"a": s.anchor, "l": s.label} for s in item.sections],
+            "bl": [{"k": b.kind, "r": [[run, bold] for run, bold in b.runs]} for b in item.blocks],
+        }
+    )
+
+
+def substack_index_payload(items: Sequence[Essay], *, generated_at: str) -> dict[str, object]:
+    """Payload for the "Từ Substack" listing page."""
+    return _sorted(
+        {
+            "v": 1,
+            "kind": "substackIndex",
+            "generated_at": generated_at,
+            "total": len(items),
+            "items": [substack_teaser(item) for item in items],
+        }
+    )
+
+
+def substack_index_items(items: Sequence[Essay]) -> list[dict[str, object]]:
+    """Search-index entries so whole-archive search reaches the essays too."""
+    out: list[dict[str, object]] = []
+    for item in items:
+        body = " ".join(run for block in item.blocks for run, _ in block.runs)
+        searchable = fold(f"{item.title} {item.author_name} {body}".strip())
+        out.append(
+            _sorted(
+                {
+                    "d": item.day,
+                    # The id, not a positional index: a Substack essay is addressed by its
+                    # own page, so the front end needs the id to build the link.
+                    "i": item.id,
+                    "k": "e",
+                    "t": item.title,
+                    "f": searchable,
+                    "sn": _search_snippet(body),
+                    "s": item.author_name,
+                    "sk": "substack",
+                    "tr": "free",
+                    "tp": "Substack",
+                    "im": "",
+                    "sc": 0,
+                    "r": "",
+                    "tg": [],
+                }
+            )
+        )
+    return out
+
+
 def day_payload(
     day: str,
     articles: Sequence[Article],
@@ -406,6 +498,7 @@ def day_payload(
     curated: Sequence[CuratedItem] = (),
     reports: Sequence[Article] = (),
     posts: Sequence[Post] = (),
+    substack: Sequence[Essay] = (),
 ) -> dict[str, object]:
     """Build the encrypted JSON payload for a single day page."""
     compact = [compact_article(a, i, entities=entity_map) for i, a in enumerate(articles)]
@@ -452,6 +545,7 @@ def day_payload(
                 for report in reports
             ],
             "posts": [compact_post(p) for p in posts],
+            "substack": [substack_teaser(item) for item in substack],
         }
     )
 
@@ -613,6 +707,7 @@ def manifest(
     *,
     weeks: Sequence[tuple[str, str, str]] = (),
     curated: Sequence[str] | None = None,
+    substack: Sequence[str] | None = None,
     generated_at: str,
     kdf_iterations: int,
     site: str,
@@ -642,6 +737,10 @@ def manifest(
     # failure mode `weeks` uses. An empty list means "surveyed, and there are none".
     if curated is not None:
         data["curated"] = list(curated)
+    # Same non-destructive contract as `curated`: `None` means this run did not survey
+    # Substack essays and the pruner must leave docs/sub alone.
+    if substack is not None:
+        data["substack"] = list(substack)
 
     return _sorted(data)
 

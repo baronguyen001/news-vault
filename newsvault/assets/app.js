@@ -22,6 +22,7 @@
     videoLibrary: "Thư viện video",
     deepTitle: "Phân tích sâu",
     reportsTitle: "Báo cáo phân tích",
+    substackTitle: "Từ Substack",
     hideShorts: (n) => `Ẩn ${n} Short`,
     showShorts: (n) => `Hiện ${n} Short`,
     categoriesTitle: "Chuyên mục",
@@ -400,6 +401,8 @@
     else if (config.kind === "curatedIndex") renderCuratedIndex();
     else if (config.kind === "curated") renderCuratedArticle();
     else if (config.kind === "reportsIndex") renderReportsIndex();
+    else if (config.kind === "substackIndex") renderSubstackIndex();
+    else if (config.kind === "substack") renderSubstackArticle();
     else if (config.kind === "videoIndex") renderVideoIndex();
     else if (config.kind === "search") renderSearchPage();
     wireUser();
@@ -481,6 +484,7 @@
     renderSearchbar(app);
     renderCurated(app);
     renderReports(app);
+    renderSubstack(app);
     renderPosts(app);
     renderVideos(app);
     const wrap = make("div", "cards-wrap", app);
@@ -517,6 +521,7 @@
     text(home, T.home);
     mountDeepLink(nav);
     mountReportsLink(nav);
+    mountSubstackLink(nav);
     mountVideoLibraryLink(nav);
     // Column choice is a desktop affordance; the stylesheet hides it below 1024px.
     if (NV.layout) NV.layout.mount(nav);
@@ -600,6 +605,14 @@
     return link;
   }
 
+  function mountSubstackLink(nav) {
+    if (!nav || config.kind === "substackIndex") return;
+    const link = make("a", "topbar__link topbar__link--substack", nav);
+    link.href = `${config.base || ""}sub/`;
+    text(link, T.substackTitle);
+    return link;
+  }
+
   /**
    * The day's deep-dive analyses, as folded link cards.
    *
@@ -629,6 +642,25 @@
     const section = NV.reports.daySection(list, config.base || "../../");
     if (!section) return;
     const heading = section.querySelector(".reports__title");
+    if (heading) section.removeChild(heading);
+    body.appendChild(section);
+  }
+
+  /**
+   * The day's Substack essays, as folded link cards.
+   *
+   * Same placement logic as `renderCurated`: an 800-2000 word essay lives on its own page,
+   * so what belongs on the day view is a signpost, folded open by default like the other
+   * long-form reading sections.
+   */
+  function renderSubstack(parent) {
+    if (!NV.substack) return;
+    const list = payload.substack || [];
+    if (!list.length) return;
+    const body = makePanel(parent, "day-substack", `${T.substackTitle} (${list.length})`, "", true);
+    const section = NV.substack.daySection(list, config.base || "../../");
+    if (!section) return;
+    const heading = section.querySelector(".subteaser__title");
     if (heading) section.removeChild(heading);
     body.appendChild(section);
   }
@@ -674,6 +706,24 @@
     app.className = "app app--reports";
     renderSimpleTopbar(app);
     if (NV.reports) NV.reports.renderIndex(app, payload, config);
+  }
+
+  /** Listing page for every Substack essay in the archive. */
+  function renderSubstackIndex() {
+    const app = $("#app");
+    text(app, "");
+    app.className = "app app--sublist";
+    renderSimpleTopbar(app);
+    if (NV.substack) NV.substack.renderIndex(app, payload, config);
+  }
+
+  /** One Substack essay, laid out for long-form reading. */
+  function renderSubstackArticle() {
+    const app = $("#app");
+    text(app, "");
+    app.className = "app app--sub";
+    renderSimpleTopbar(app);
+    if (NV.substack) NV.substack.renderArticle(app, payload, config);
   }
 
   function renderQualityPage() {
@@ -1623,6 +1673,14 @@
       const count = make("span", "homenav__count", reports);
       text(count, ` (${reportsTotal})`);
     }
+    const substack = make("a", "homenav__link", nav);
+    substack.href = `${config.base || ""}sub/`;
+    text(substack, T.substackTitle);
+    const substackTotal = Number(config.substackTotal);
+    if (substackTotal > 0) {
+      const count = make("span", "homenav__count", substack);
+      text(count, ` (${substackTotal})`);
+    }
     const videos = make("a", "homenav__link", nav);
     videos.href = `${config.base || ""}videos/`;
     text(videos, T.videoLibrary);
@@ -1761,6 +1819,7 @@
     }
     mountDeepLink(nav);
     mountReportsLink(nav);
+    mountSubstackLink(nav);
     mountVideoLibraryLink(nav);
     if (NV.layout) NV.layout.mount(nav);
     const theme = make("button", "topbar__btn", nav);
