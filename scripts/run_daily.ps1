@@ -197,6 +197,22 @@ if (-not $env:NEWSVAULT_SOURCING_ONLY) {
     # keeps a stale page a while longer. Log it and carry on.
     if ($pruneExit -ne 0) { Write-Log "PRUNE FAILED exit=$pruneExit (tiep tuc xuat ban)" }
 
+    # Video-freshness check: catches youtube-summarizer hanging silently at 20:00 (no error,
+    # no bad exit code, just zero new rows) before the 21:15 build quietly publishes without
+    # that night's videos. No-ops before 20:00 and until enough evening history exists — see
+    # scripts/check_video_freshness.py. Never allowed to fail the build over this.
+    $videoWarning = ""
+    $previousEAP = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    & $python (Join-Path $RepoPath "scripts\check_video_freshness.py") 2>&1 | ForEach-Object {
+        Write-Log $_
+        if ("$_" -match "^\[video-freshness-warn\] (.+)$") { $videoWarning = $Matches[1] }
+    }
+    $ErrorActionPreference = $previousEAP
+    if ($videoWarning) {
+        Send-Telegram ("⚠️ $videoWarning`n🕒 {0} · {1}" -f $runStamp, $runMode)
+    }
+
     # Refuse to publish a site that still carries the plaintext password anywhere.
     $password = Get-EnvValue "NEWSVAULT_PASSWORD"
     if ($password) {
