@@ -2415,14 +2415,19 @@ code {
   overflow: hidden;
 }
 
+/* Fixed 16:9 box regardless of the source screenshot's own dimensions (portrait tweet
+ * grabs, wide chart exports, ...) - previously `height: auto` let every card compute its
+ * own height from its image's aspect ratio, so consecutive cards in the list read as
+ * randomly big/small. `contain` (not `cover`) keeps the whole screenshot on screen -
+ * these are often chart/tweet grabs where a crop can throw away the axis labels - and lets
+ * the aspect ratio mismatch show as letterbox bars instead of a lost edge. */
 .xpost__image {
   display: block;
-  max-width: 100%;
   width: 100%;
-  max-height: 28rem;
-  height: auto;
+  aspect-ratio: 16 / 9;
   margin-top: var(--space-sm);
   border-radius: var(--radius-sm);
+  overflow: hidden;
   object-fit: contain;
   background: var(--surface-2);
 }
@@ -2773,16 +2778,25 @@ code {
   /* Two-column and three-column fallback (two columns until 1280px). */
   [data-layout="two"] .cards-wrap .cards,
   [data-layout="two"] .videos__list,
+  [data-layout="two"] .xposts__list,
   [data-layout="three"] .cards-wrap .cards,
-  [data-layout="three"] .videos__list {
+  [data-layout="three"] .videos__list,
+  [data-layout="three"] .xposts__list {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: start;
   }
 
-  /* Grid mode: dense auto-fill columns and vertical cards. */
+  /* Grid mode: dense auto-fill columns and vertical cards. .xposts__list joins here too -
+   * previously it stayed a plain flex column under every layout mode (the "Lưới" button
+   * had no effect on it at all), which is what made its already-inconsistent image sizes
+   * (see .xpost__image above) stand out the most. An .xpost card has no closed/compact
+   * state to fall back on the way .card does, so it does not need the "opened card spans
+   * the full row" rule below - it is always full, and a masonry-style grid of uneven card
+   * heights (align-items: start) is the correct look here, not a bug. */
   [data-layout="grid"] .cards-wrap .cards,
-  [data-layout="grid"] .videos__list {
+  [data-layout="grid"] .videos__list,
+  [data-layout="grid"] .xposts__list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     align-items: start;
@@ -2821,7 +2835,8 @@ code {
 
   /* Three columns only from 1280px upward. */
   [data-layout="three"] .cards-wrap .cards,
-  [data-layout="three"] .videos__list {
+  [data-layout="three"] .videos__list,
+  [data-layout="three"] .xposts__list {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
@@ -2892,7 +2907,8 @@ code {
   }
 
   html[data-layout] .cards-wrap .cards,
-  html[data-layout] .videos__list {
+  html[data-layout] .videos__list,
+  html[data-layout] .xposts__list {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     align-items: stretch;
