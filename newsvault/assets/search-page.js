@@ -34,7 +34,8 @@
     post: "Bài X",
     video: "Video",
     curated: "Phân tích",
-    essay: "Substack"
+    essay: "Substack",
+    indie: "Indie Hacker"
   };
 
   function make(tag, cls, parent) {
@@ -58,6 +59,7 @@
     if (item.k === "v") return T.video;
     if (item.k === "c") return T.curated;
     if (item.k === "e") return T.essay;
+    if (item.k === "i") return T.indie;
     return T.article;
   }
 
@@ -66,6 +68,7 @@
     if (item.k === "e") return `${base}sub/${item.i}/`;
     if (item.k === "v") return `${base}d/${item.d}/#v-${item.i}`;
     if (item.k === "x") return `${base}d/${item.d}/#x-${item.i}`;
+    if (item.k === "i") return `${base}d/${item.d}/#i-${item.i}`;
     return `${base}d/${item.d}/#a-${item.i}`;
   }
 
@@ -216,7 +219,14 @@
       group(
         T.type,
         "k",
-        choices("k", { a: T.article, x: T.post, v: T.video, c: T.curated, e: T.essay })
+        choices("k", {
+          a: T.article,
+          x: T.post,
+          v: T.video,
+          c: T.curated,
+          e: T.essay,
+          i: T.indie
+        })
       );
       group(T.topic, "tp", choices("tp"));
       const sourceSearch = make("input", "searchpage__sourcefind", filterBody);

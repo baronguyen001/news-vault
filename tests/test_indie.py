@@ -1,0 +1,144 @@
+"""Reading the x-pulse database's indie_posts table - the build-in-public signal stream."""
+
+from __future__ import annotations
+
+import sqlite3
+from pathlib import Path
+
+from newsvault import indie, payload
+
+_COLUMNS = (
+    "id TEXT, url TEXT, author TEXT, author_name TEXT, text TEXT, created_at TEXT, "
+    "day TEXT, likes INTEGER, retweets INTEGER, replies INTEGER, fetched_at TEXT, "
+    "summary_vi TEXT, keep INTEGER, scored_at TEXT"
+)
+
+_FIELDS = [part.strip().split(" ")[0] for part in _COLUMNS.split(",")]
+
+
+def _row(**overrides: object) -> dict[str, object]:
+    base: dict[str, object] = {
+        "id": "1",
+        "url": "https://x.com/levelsio/status/1",
+        "author": "levelsio",
+        "author_name": "Pieter Levels",
+        "text": "Shipped v2, now at $40k MRR",
+        "created_at": "2026-08-20T10:00:00+00:00",
+        "day": "2026-08-20",
+        "likes": 100,
+        "retweets": 10,
+        "replies": 5,
+        "fetched_at": "2026-08-20T12:00:00+07:00",
+        "summary_vi": "Đã ra mắt v2, hiện đạt $40k MRR.",
+        "keep": 1,
+        "scored_at": "2026-08-20T12:05:00+07:00",
+    }
+    base.update(overrides)
+    return base
+
+
+def _make_db(
+    tmp_path: Path, rows: tuple[dict[str, object], ...] = (), *, table: bool = True
+) -> Path:
+    path = tmp_path / f"x_pulse_{len(list(tmp_path.iterdir()))}.db"
+    conn = sqlite3.connect(path)
+    if table:
+        conn.execute(f"CREATE TABLE indie_posts ({_COLUMNS})")
+        for row in rows:
+            placeholders = ", ".join("?" for _ in _FIELDS)
+            conn.execute(
+                f"INSERT INTO indie_posts VALUES ({placeholders})",
+                [row[field] for field in _FIELDS],
+            )
+    else:
+        conn.execute("CREATE TABLE other (id INTEGER PRIMARY KEY)")
+    conn.commit()
+    conn.close()
+    return path
+
+
+def _connect(path: Path) -> sqlite3.Connection:
+    conn = sqlite3.connect(path)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def test_a_database_without_the_table_still_reads_as_empty(tmp_path: Path) -> None:
+    conn = _connect(_make_db(tmp_path, table=False))
+    assert indie.has_table(conn) is False
+    assert indie.load_all(conn) == []
+
+
+def test_load_all_reads_a_kept_row(tmp_path: Path) -> None:
+    conn = _connect(_make_db(tmp_path, rows=(_row(),)))
+    posts = indie.load_all(conn)
+    assert len(posts) == 1
+    post = posts[0]
+    assert post.author == "levelsio"
+    assert post.text_vi == "Đã ra mắt v2, hiện đạt $40k MRR."
+    assert post.day == "2026-08-20"
+    assert post.likes == 100
+
+
+def test_load_all_excludes_dropped_rows(tmp_path: Path) -> None:
+    rows = (_row(id="kept", keep=1), _row(id="dropped", keep=0, summary_vi=""))
+    conn = _connect(_make_db(tmp_path, rows=rows))
+    assert [post.id for post in indie.load_all(conn)] == ["kept"]
+
+
+def test_load_all_excludes_unscored_rows(tmp_path: Path) -> None:
+    """`keep IS NULL` (not yet scored) must not render as "kept"."""
+    rows = (_row(id="pending", keep=None, summary_vi=None, scored_at=None),)
+    conn = _connect(_make_db(tmp_path, rows=rows))
+    assert indie.load_all(conn) == []
+
+
+def test_load_all_strips_leading_at_sign(tmp_path: Path) -> None:
+    conn = _connect(_make_db(tmp_path, rows=(_row(author="@levelsio"),)))
+    assert indie.load_all(conn)[0].author == "levelsio"
+
+
+def test_group_by_day_preserves_order(tmp_path: Path) -> None:
+    rows = (
+        _row(id="a", created_at="2026-08-20T08:00:00+00:00"),
+        _row(id="b", created_at="2026-08-20T09:00:00+00:00"),
+    )
+    conn = _connect(_make_db(tmp_path, rows=rows))
+    grouped = indie.group_by_day(indie.load_all(conn))
+    assert [post.id for post in grouped["2026-08-20"]] == ["b", "a"]
+
+
+def test_available_days_are_sorted_without_duplicates(tmp_path: Path) -> None:
+    rows = (
+        _row(id="a", day="2026-08-20"),
+        _row(id="b", day="2026-08-19"),
+        _row(id="c", day="2026-08-20"),
+    )
+    conn = _connect(_make_db(tmp_path, rows=rows))
+    assert indie.available_days(conn) == ["2026-08-19", "2026-08-20"]
+
+
+def test_compact_indie_omits_scoring_fields(tmp_path: Path) -> None:
+    conn = _connect(_make_db(tmp_path, rows=(_row(),)))
+    post = indie.load_all(conn)[0]
+    compact = payload.compact_indie(post)
+    assert compact["vi"] == "Đã ra mắt v2, hiện đạt $40k MRR."
+    assert compact["au"] == "levelsio"
+    assert "keep" not in compact
+    assert "scored_at" not in compact
+
+
+def test_indie_index_items_use_indie_kind() -> None:
+    post = indie.IndiePost(
+        id="1",
+        url="https://x.com/levelsio/status/1",
+        author="levelsio",
+        author_name="Pieter Levels",
+        text_vi="Đã ra mắt v2, hiện đạt $40k MRR.",
+        day="2026-08-20",
+        published_iso="2026-08-20T10:00:00+00:00",
+        likes=100,
+    )
+    entries = payload.indie_index_items([post])
+    assert entries[0]["k"] == "i"
+    assert entries[0]["sk"] == "x"

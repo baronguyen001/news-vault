@@ -21,6 +21,7 @@ from pathlib import Path
 
 from newsvault import __version__, charts, crypto, db, feeds, payload, quality, render
 from newsvault import curated as curated_db
+from newsvault import indie as indie_db
 from newsvault import posts as posts_db
 from newsvault import reports as reports_db
 from newsvault import substack as substack_db
@@ -38,6 +39,7 @@ from newsvault.cluster import cluster_articles
 from newsvault.curated import CuratedItem
 from newsvault.entities import Entity, EntityIndex, build_entity_index
 from newsvault.exports import day_markdown, write_markdown
+from newsvault.indie import IndiePost
 from newsvault.model import Article
 from newsvault.posts import Post
 from newsvault.sources import PAID
@@ -95,6 +97,7 @@ class BuildReport:
     reports_included: int = 0
     posts_included: int = 0
     substack_pages: int = 0
+    indie_included: int = 0
     brief_source: dict[str, str] = field(default_factory=dict)
     provider_issues: list[str] = field(default_factory=list)
     bytes_written: int = 0
@@ -106,7 +109,8 @@ class BuildReport:
             f"{self.entity_pages} trang thực thể, {self.week_pages} trang tuần, "
             f"{self.index_shards} shard tìm kiếm, {self.videos_included} video, "
             f"{self.curated_pages} bài phân tích sâu, {self.reports_included} báo cáo, "
-            f"{self.posts_included} bài X, {self.substack_pages} bài Substack"
+            f"{self.posts_included} bài X, {self.substack_pages} bài Substack, "
+            f"{self.indie_included} bài indie"
         )
         # Brief tụt xuống bản fallback (xếp theo điểm, không qua LLM) là một sự cố CHẤT
         # LƯỢNG chứ không phải lỗi build — trước đây `brief_source` được ghi lại nhưng
@@ -457,6 +461,29 @@ def _load_posts(options: BuildOptions) -> dict[str, list[Post]]:
         conn.close()
 
 
+def _load_indie(options: BuildOptions) -> list[IndiePost]:
+    """Every kept, translated indie-hacker post, or nothing at all on any problem.
+
+    Reuses `x_db_path`, not a new option: `indie_posts` is a table in the same x_pulse.db
+    as `x_feed`, just written by a separate scraper (`xpulse/indie.py`) that never touches
+    `sources.tsv`. Same degrade-gracefully contract as `_load_posts`.
+    """
+    if not options.x_db_path:
+        return []
+    try:
+        conn = indie_db.connect(options.x_db_path)
+    except (FileNotFoundError, sqlite3.Error) as err:
+        logger.warning("x-pulse database unavailable (%s); building without indie posts", err)
+        return []
+    try:
+        return indie_db.load_all(conn)
+    except sqlite3.Error as err:
+        logger.warning("indie_posts table unreadable (%s); building without indie posts", err)
+        return []
+    finally:
+        conn.close()
+
+
 def _load_substack(options: BuildOptions) -> list[Essay]:
     """Every summarised Substack essay, or nothing at all on any problem.
 
@@ -560,6 +587,8 @@ def build_site(options: BuildOptions) -> BuildReport:
     posts_by_day = _load_posts(options)
     substack_items = _load_substack(options)
     substack_by_day = substack_db.group_by_day(substack_items)
+    indie_items = _load_indie(options)
+    indie_by_day = indie_db.group_by_day(indie_items)
 
     conn = db.connect(options.db_path)
     try:
@@ -569,7 +598,8 @@ def build_site(options: BuildOptions) -> BuildReport:
             extra_days=set(videos_by_day)
             | set(curated_by_day)
             | set(posts_by_day)
-            | set(substack_by_day),
+            | set(substack_by_day)
+            | set(indie_by_day),
         )
         if not target_days:
             logger.warning("nothing to build")
@@ -584,6 +614,7 @@ def build_site(options: BuildOptions) -> BuildReport:
             | set(curated_by_day)
             | set(posts_by_day)
             | set(substack_by_day)
+            | set(indie_by_day)
         )
         counts = db.counts_by_day(conn)
         for day, day_videos in videos_by_day.items():
@@ -594,6 +625,8 @@ def build_site(options: BuildOptions) -> BuildReport:
             counts[day] = counts.get(day, 0) + len(day_posts)
         for day, day_substack in substack_by_day.items():
             counts[day] = counts.get(day, 0) + len(day_substack)
+        for day, day_indie in indie_by_day.items():
+            counts[day] = counts.get(day, 0) + len(day_indie)
 
         # One wide load covers the built days plus the baseline window behind them.
         history_start = _shift(min(target_days), -HISTORY_DAYS)
@@ -622,12 +655,14 @@ def build_site(options: BuildOptions) -> BuildReport:
             day_reports = reports_by_day.get(day, [])
             day_posts = posts_by_day.get(day, [])
             day_substack = substack_by_day.get(day, [])
+            day_indie = indie_by_day.get(day, [])
             if (
                 not articles
                 and not day_videos
                 and not day_curated
                 and not day_posts
                 and not day_substack
+                and not day_indie
             ):
                 continue
 
@@ -654,18 +689,21 @@ def build_site(options: BuildOptions) -> BuildReport:
                 reports=day_reports,
                 posts=day_posts,
                 substack=day_substack,
+                indie=day_indie,
             )
 
             key = f"day:{day}"
             fresh[key] = _digest(data, with_shell=True)
             report.videos_included += len(day_videos)
             report.posts_included += len(day_posts)
+            report.indie_included += len(day_indie)
             month_items = index_by_month.setdefault(day[:7], [])
             month_items.extend(payload.index_items(day, articles))
             month_items.extend(payload.video_index_items(day_videos))
             month_items.extend(payload.curated_index_items(day_curated))
             month_items.extend(payload.post_index_items(day_posts))
             month_items.extend(payload.substack_index_items(day_substack))
+            month_items.extend(payload.indie_index_items(day_indie))
             weeks.setdefault(_iso_week(day)[0], []).append(day)
 
             if state.get(key) == fresh[key] and (out_dir / "d" / day / "data.enc").exists():

@@ -23,6 +23,7 @@
     deepTitle: "Phân tích sâu",
     reportsTitle: "Báo cáo phân tích",
     substackTitle: "Từ Substack",
+    indieTitle: "Indie Hacker",
     hideShorts: (n) => `Ẩn ${n} Short`,
     showShorts: (n) => `Hiện ${n} Short`,
     categoriesTitle: "Chuyên mục",
@@ -486,6 +487,7 @@
     renderReports(app);
     renderSubstack(app);
     renderPosts(app);
+    renderIndie(app);
     renderVideos(app);
     const wrap = make("div", "cards-wrap", app);
     const countEl = make("div", "result-count sr-only", wrap);
@@ -687,6 +689,25 @@
     // The fold's summary already names the section; the section's own <h2> would be a
     // second copy of the same words one line below it.
     const heading = section.querySelector(".xposts__title");
+    if (heading) section.removeChild(heading);
+    body.appendChild(section);
+  }
+
+  /**
+   * The day's indie-hacker / build-in-public posts.
+   *
+   * Same placement logic as `renderPosts`, one row below it: both are short, unranked
+   * scanning surfaces with no source-tier system behind them, so folded and closed by
+   * default like the X stream.
+   */
+  function renderIndie(parent) {
+    if (!NV.indie) return;
+    const list = payload.indie || [];
+    if (!list.length) return;
+    const body = makePanel(parent, "day-indie", `${T.indieTitle} (${list.length})`);
+    const section = NV.indie.section(list);
+    if (!section) return;
+    const heading = section.querySelector(".iposts__title");
     if (heading) section.removeChild(heading);
     body.appendChild(section);
   }
