@@ -23,7 +23,14 @@
     empty: "Chưa có bài Substack nào.",
     countOne: "1 bài",
     countMany: " bài",
-    readOn: "Đọc bài"
+    readOn: "Đọc bài",
+    search: "Tìm theo tiêu đề hoặc tác giả…",
+    allAuthors: "Tất cả tác giả",
+    sortNewest: "Mới nhất",
+    sortOldest: "Cũ nhất",
+    sortAuthor: "Theo tác giả A–Z",
+    noResults: "Không có bài phù hợp với bộ lọc.",
+    clear: "Xóa bộ lọc"
   };
 
   function make(tag, cls, parent) {
@@ -41,8 +48,45 @@
     return typeof v === "string" && v !== "";
   }
 
+  function validHttpsUrl(url) {
+    if (!isNonEmptyString(url)) return null;
+    try {
+      const parsed = new URL(url);
+      if (parsed.protocol !== "https:") return null;
+    } catch (e) {
+      return null;
+    }
+    return url;
+  }
+
+  /* Not every essay has a cover: og:image is often absent for a text-only Substack post,
+   * so this returns null (rendering nothing) rather than a broken-image box. */
+  function thumb(parent, url, alt) {
+    const src = validHttpsUrl(url);
+    if (!src) return null;
+    const img = make("img", "scard__thumb", parent);
+    img.src = src;
+    img.loading = "lazy";
+    img.decoding = "async";
+    img.referrerPolicy = "no-referrer";
+    img.alt = alt == null ? "" : String(alt);
+    img.onerror = function () {
+      if (img.parentNode) img.parentNode.removeChild(img);
+    };
+    return img;
+  }
+
   function two(n) {
     return n < 10 ? "0" + n : "" + n;
+  }
+
+  /* Same diacritic-insensitive fold video-library.js uses, so "kinh te" finds "kinh tế". */
+  function folded(value) {
+    return String(value || "")
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .toLowerCase()
+      .replace(/đ/g, "d");
   }
 
   function formatDate(iso) {
@@ -97,6 +141,8 @@
     const li = make("li", "scard");
     const a = make("a", "scard__link", li);
     a.href = href;
+
+    thumb(a, v.img, v.t);
 
     const body = make("div", "scard__body", a);
 
@@ -166,8 +212,106 @@
       text(empty, T.empty);
       return;
     }
+
+    const state = { query: "", author: "", sort: "newest" };
+
+    const controls = make("section", "sublist__controls", app);
+    controls.setAttribute("aria-label", "Lọc bài Substack");
+    const input = make("input", "sublist__search", controls);
+    input.type = "search";
+    input.placeholder = T.search;
+    input.setAttribute("aria-label", T.search);
+
+    const authorSelect = make("select", "sublist__select", controls);
+    authorSelect.setAttribute("aria-label", T.allAuthors);
+    const allOption = make("option", "", authorSelect);
+    allOption.value = "";
+    text(allOption, T.allAuthors);
+    const authors = Array.from(new Set(items.map((item) => item && item.c).filter(isNonEmptyString)))
+      .sort((a, b) => a.localeCompare(b, "vi"));
+    for (let i = 0; i < authors.length; i++) {
+      const option = make("option", "", authorSelect);
+      option.value = authors[i];
+      text(option, authors[i]);
+    }
+
+    const sortSelect = make("select", "sublist__select", controls);
+    sortSelect.setAttribute("aria-label", "Sắp xếp");
+    [["newest", T.sortNewest], ["oldest", T.sortOldest], ["author", T.sortAuthor]].forEach(
+      ([value, label]) => {
+        const option = make("option", "", sortSelect);
+        option.value = value;
+        text(option, label);
+      }
+    );
+
+    const clear = make("button", "sublist__clear", controls);
+    clear.type = "button";
+    text(clear, T.clear);
+
     const wrap = make("div", "scards-wrap", app);
-    wrap.appendChild(cardList(items, base, "sublist__items"));
+    const shownCount = make("p", "sublist__shown", wrap);
+    shownCount.setAttribute("aria-live", "polite");
+    const list = make("ul", "scards sublist__items", wrap);
+    const empty = make("p", "sublist__noresults", wrap);
+    text(empty, T.noResults);
+    empty.hidden = true;
+
+    function matches(item) {
+      if (state.author && item.c !== state.author) return false;
+      if (!state.query) return true;
+      const haystack = folded([item.t, item.c, item.lead].filter(isNonEmptyString).join(" "));
+      return haystack.indexOf(folded(state.query)) !== -1;
+    }
+
+    function sorted(list) {
+      return list.sort((a, b) => {
+        if (state.sort === "author") {
+          return String(a.c || "").localeCompare(String(b.c || ""), "vi") ||
+            String(b.p || "").localeCompare(String(a.p || ""));
+        }
+        const direction = state.sort === "oldest" ? 1 : -1;
+        return direction * String(a.p || "").localeCompare(String(b.p || ""));
+      });
+    }
+
+    function paint() {
+      const shown = sorted(items.filter(matches));
+      text(shownCount, shown.length === 1 ? T.countOne : shown.length + T.countMany);
+      text(list, "");
+      for (let i = 0; i < shown.length; i++) {
+        try {
+          list.appendChild(teaserCard(shown[i], base));
+        } catch (e) {
+          // Drop a malformed entry rather than losing the whole page.
+        }
+      }
+      empty.hidden = shown.length !== 0;
+    }
+
+    input.addEventListener("input", () => {
+      state.query = input.value.trim();
+      paint();
+    });
+    authorSelect.addEventListener("change", () => {
+      state.author = authorSelect.value;
+      paint();
+    });
+    sortSelect.addEventListener("change", () => {
+      state.sort = sortSelect.value;
+      paint();
+    });
+    clear.addEventListener("click", () => {
+      state.query = "";
+      state.author = "";
+      state.sort = "newest";
+      input.value = "";
+      authorSelect.value = "";
+      sortSelect.value = "newest";
+      paint();
+    });
+
+    paint();
   }
 
   /* ---------- article page ---------- */
@@ -348,6 +492,19 @@
       read.target = "_blank";
       read.rel = "noopener noreferrer";
       text(read, T.read);
+    }
+
+    const heroSrc = validHttpsUrl(payload.img);
+    if (heroSrc) {
+      const hero = make("img", "sub__hero", article);
+      hero.src = heroSrc;
+      hero.loading = "lazy";
+      hero.decoding = "async";
+      hero.referrerPolicy = "no-referrer";
+      hero.alt = isNonEmptyString(payload.t) ? payload.t : "";
+      hero.onerror = function () {
+        if (hero.parentNode) hero.parentNode.removeChild(hero);
+      };
     }
 
     const layout = make("div", "sub__layout", article);

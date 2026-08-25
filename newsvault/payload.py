@@ -405,6 +405,7 @@ def substack_teaser(item: Essay) -> dict[str, object]:
             "t": item.title,
             "c": item.author_name,
             "u": item.url,
+            "img": item.image_url,
             "d": item.day,
             "p": item.published_iso,
             "lead": item.lead,
@@ -429,6 +430,7 @@ def substack_payload(item: Essay) -> dict[str, object]:
             "t": item.title,
             "c": item.author_name,
             "u": item.url,
+            "img": item.image_url,
             "d": item.day,
             "p": item.published_iso,
             "w": item.words,
@@ -481,6 +483,25 @@ def substack_index_items(items: Sequence[Essay]) -> list[dict[str, object]]:
             )
         )
     return out
+
+
+def indie_index_payload(posts: Sequence[IndiePost], *, generated_at: str) -> dict[str, object]:
+    """Payload for the standalone "Indie Hacker" listing page, newest post first.
+
+    Mirrors :func:`report_index_payload`: posts already reach the archive-search shards
+    through :func:`indie_index_items` from each day's build, so this listing must not
+    create duplicate search entries - it is a second reading surface only.
+    """
+    ordered = sorted(posts, key=lambda post: (post.day, post.published_iso, post.id), reverse=True)
+    return _sorted(
+        {
+            "v": 1,
+            "kind": "indieIndex",
+            "generated_at": generated_at,
+            "total": len(ordered),
+            "items": [compact_indie(post) for post in ordered],
+        }
+    )
 
 
 def compact_indie(post: IndiePost) -> dict[str, object]:

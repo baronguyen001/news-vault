@@ -27,6 +27,10 @@
     hideShorts: (n) => `Ẩn ${n} Short`,
     showShorts: (n) => `Hiện ${n} Short`,
     categoriesTitle: "Chuyên mục",
+    sourcesOverview: (parts) => `Ngoài ra hôm nay: ${parts.join(" · ")}`,
+    overviewSubstack: (n) => (n === 1 ? "1 bài Substack" : `${n} bài Substack`),
+    overviewVideo: (n) => (n === 1 ? "1 video" : `${n} video`),
+    overviewIndie: (n) => (n === 1 ? "1 bài Indie Hacker" : `${n} bài Indie Hacker`),
     trendingTitle: "Xu hướng",
     blindspotsTitle: "Góc chưa phủ",
     searchPlaceholder: "Tìm kiếm…",
@@ -405,6 +409,7 @@
     else if (config.kind === "substackIndex") renderSubstackIndex();
     else if (config.kind === "substack") renderSubstackArticle();
     else if (config.kind === "videoIndex") renderVideoIndex();
+    else if (config.kind === "indieIndex") renderIndieIndex();
     else if (config.kind === "search") renderSearchPage();
     wireUser();
     applyHash();
@@ -478,6 +483,7 @@
     // One outer fold for all the analysis. Six separate collapsed panels still cost six
     // rows before the first headline; nested inside one row they cost none.
     const analysis = makePanel(app, "day-analysis", T.analysisPanels, "panel--outer");
+    renderSourcesOverview(analysis);
     renderCategoryGrid(analysis);
     renderDayCharts(analysis);
     renderTrending(analysis);
@@ -524,6 +530,7 @@
     mountDeepLink(nav);
     mountReportsLink(nav);
     mountSubstackLink(nav);
+    mountIndieLink(nav);
     mountVideoLibraryLink(nav);
     // Column choice is a desktop affordance; the stylesheet hides it below 1024px.
     if (NV.layout) NV.layout.mount(nav);
@@ -612,6 +619,14 @@
     const link = make("a", "topbar__link topbar__link--substack", nav);
     link.href = `${config.base || ""}sub/`;
     text(link, T.substackTitle);
+    return link;
+  }
+
+  function mountIndieLink(nav) {
+    if (!nav || config.kind === "indieIndex") return;
+    const link = make("a", "topbar__link topbar__link--indie", nav);
+    link.href = `${config.base || ""}indie/`;
+    text(link, T.indieTitle);
     return link;
   }
 
@@ -747,6 +762,15 @@
     if (NV.substack) NV.substack.renderArticle(app, payload, config);
   }
 
+  /** Listing page for every Indie Hacker post in the archive. */
+  function renderIndieIndex() {
+    const app = $("#app");
+    text(app, "");
+    app.className = "app app--ilist";
+    renderSimpleTopbar(app);
+    if (NV.indie) NV.indie.renderIndex(app, payload, config);
+  }
+
   function renderQualityPage() {
     const app = $("#app");
     text(app, "");
@@ -846,6 +870,22 @@
     });
     paint();
     return btn;
+  }
+
+  /* Counts only, no attempt at a topic breakdown: unlike Article, Essay/Video/IndiePost
+   * carry no topic/tags field, so they cannot feed the category grid, charts, trending or
+   * blindspot panels below - those all read `article.topic`/`article.tags`. This is
+   * deliberately just a one-line "there's more today" pointer, not a fourth data source
+   * for those panels. */
+  function renderSourcesOverview(parent) {
+    const counts = [
+      { n: (payload.substack || []).length, label: T.overviewSubstack },
+      { n: (payload.videos || []).length, label: T.overviewVideo },
+      { n: (payload.indie || []).length, label: T.overviewIndie },
+    ].filter((entry) => entry.n > 0);
+    if (!counts.length) return;
+    const line = make("p", "sources-overview", parent);
+    text(line, T.sourcesOverview(counts.map((entry) => entry.label(entry.n))));
   }
 
   function renderCategoryGrid(parent) {
@@ -1841,6 +1881,7 @@
     mountDeepLink(nav);
     mountReportsLink(nav);
     mountSubstackLink(nav);
+    mountIndieLink(nav);
     mountVideoLibraryLink(nav);
     if (NV.layout) NV.layout.mount(nav);
     const theme = make("button", "topbar__btn", nav);

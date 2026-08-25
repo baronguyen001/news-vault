@@ -128,6 +128,29 @@ def test_compact_indie_omits_scoring_fields(tmp_path: Path) -> None:
     assert "scored_at" not in compact
 
 
+def test_indie_index_payload_has_total_and_items(tmp_path: Path) -> None:
+    rows = (_row(id="a", url="https://x/a"), _row(id="b", url="https://x/b"))
+    conn = _connect(_make_db(tmp_path, rows=rows))
+    posts = indie.load_all(conn)
+    result = payload.indie_index_payload(posts, generated_at="2026-08-26T00:00:00+07:00")
+    assert result["kind"] == "indieIndex"
+    assert result["total"] == 2
+    assert len(result["items"]) == 2
+
+
+def test_indie_index_payload_orders_newest_first(tmp_path: Path) -> None:
+    rows = (
+        _row(id="old", url="https://x/old", created_at="2026-08-01T00:00:00+00:00", day="2026-08-01"),
+        _row(id="new", url="https://x/new", created_at="2026-08-20T00:00:00+00:00", day="2026-08-20"),
+    )
+    conn = _connect(_make_db(tmp_path, rows=rows))
+    posts = indie.load_all(conn)
+    result = payload.indie_index_payload(posts, generated_at="2026-08-26T00:00:00+07:00")
+    assert [item["au"] for item in result["items"]] == ["levelsio", "levelsio"]
+    assert result["items"][0]["d"] == "2026-08-20"
+    assert result["items"][1]["d"] == "2026-08-01"
+
+
 def test_indie_index_items_use_indie_kind() -> None:
     post = indie.IndiePost(
         id="1",

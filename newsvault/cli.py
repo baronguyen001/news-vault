@@ -141,6 +141,15 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="CẢNH BÁO: đưa tiêu đề bài vào RSS/JSON feed — feed là công khai, ai cũng đọc được.",
     )
+    build_cmd.add_argument(
+        "--finalize-today",
+        action="store_true",
+        help=(
+            "chốt Tóm tắt ngày + Chuyên mục/biểu đồ/xu hướng của HÔM NAY bằng nội dung mới "
+            "nhất — chỉ dùng ở lần chạy cuối ngày; các lần chạy khác trong ngày giữ nguyên "
+            "bản đã có (không đổi liên tục trong ngày)"
+        ),
+    )
 
     rekey_cmd = sub.add_parser("rekey", help="đổi mật khẩu: mã hoá lại toàn bộ (không gọi API)")
     _add_common(rekey_cmd)
@@ -189,6 +198,7 @@ def _options_from(args: argparse.Namespace, *, force: bool, use_brief: bool) -> 
         feed_full=getattr(args, "feed_full", False),
         export_markdown=getattr(args, "export_markdown", False),
         force=force,
+        finalize_today=getattr(args, "finalize_today", False),
     )
 
 

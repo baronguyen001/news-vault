@@ -43,6 +43,7 @@ class Essay:
     author_handle: str
     author_name: str
     url: str
+    image_url: str  # og:image the author's own post carried; "" when substack-digest found none
     day: str  # "YYYY-MM-DD"
     published_iso: str  # ISO-8601, "" when unknown
     summary: str  # verbatim
@@ -89,6 +90,20 @@ def group_by_day(items: Sequence[Essay]) -> dict[str, list[Essay]]:
     return grouped
 
 
+def _has_image_column(conn: sqlite3.Connection) -> bool:
+    """True once substack-digest has migrated `posts` to carry `image_url`.
+
+    A reader built against an older substack-digest database (before this column existed)
+    must still build - same reasoning as `has_table` above - rather than crash with
+    "no such column" until that sibling project happens to run again.
+    """
+    cursor = conn.execute(f"PRAGMA table_info({TABLE})")
+    try:
+        return any(row["name"] == "image_url" for row in cursor)
+    finally:
+        cursor.close()
+
+
 def _iter_items(conn: sqlite3.Connection) -> Iterator[Essay | None]:
     """Yield summarised essays, or None for a row with no usable title/date.
 
@@ -97,9 +112,10 @@ def _iter_items(conn: sqlite3.Connection) -> Iterator[Essay | None]:
     """
     if not has_table(conn):
         return
+    image_column = ", p.image_url" if _has_image_column(conn) else ""
     query = (
         "SELECT p.id, p.url, p.author_handle, p.title, p.published_at, p.fetched_at, "
-        "p.summary_text, f.display_name "
+        f"p.summary_text{image_column}, f.display_name "
         f"FROM {TABLE} p LEFT JOIN followed_authors f ON f.handle = p.author_handle "
         "WHERE p.summary_text IS NOT NULL AND TRIM(p.summary_text) <> '' ORDER BY p.id"
     )
@@ -127,12 +143,14 @@ def _item_from_row(row: sqlite3.Row) -> Essay | None:
     blocks = curated_blocks(summary)
     words = count_words(summary)
     display_name = (row["display_name"] or "").strip()
+    image_url = (row["image_url"] or "").strip() if "image_url" in row.keys() else ""
     return Essay(
         id=post_id,
         title=title,
         author_handle=row["author_handle"] or "",
         author_name=display_name or (row["author_handle"] or ""),
         url=row["url"] or "",
+        image_url=image_url,
         day=day,
         published_iso=_published_iso(published_at, fetched_at),
         summary=summary,

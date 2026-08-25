@@ -16,7 +16,7 @@ import logging
 import shutil
 import sqlite3
 from collections.abc import Iterable, Mapping, Sequence
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 from newsvault import __version__, charts, crypto, db, feeds, payload, quality, render
@@ -26,7 +26,7 @@ from newsvault import posts as posts_db
 from newsvault import reports as reports_db
 from newsvault import substack as substack_db
 from newsvault import videos as videos_db
-from newsvault.blindspot import blindspots
+from newsvault.blindspot import Blindspot, blindspots
 from newsvault.brief import (
     LLM_SOURCES,
     BriefResult,
@@ -45,7 +45,7 @@ from newsvault.posts import Post
 from newsvault.sources import PAID
 from newsvault.substack import Essay
 from newsvault.text import slugify
-from newsvault.trends import trending_terms
+from newsvault.trends import Trend, trending_terms
 from newsvault.videos import Video
 
 logger = logging.getLogger(__name__)
@@ -81,6 +81,12 @@ class BuildOptions:
     feed_full: bool = False
     export_markdown: bool = False
     force: bool = False
+    # False = mọi lần chạy hôm nay giữ nguyên Tóm tắt ngày + Chuyên mục/biểu đồ/xu hướng đã
+    # cache (nếu có), chỉ tính 1 lần khi chưa có cache để trang không trống. True = chốt lại
+    # bằng nội dung mới nhất — dành cho lần chạy CUỐI NGÀY duy nhất (xem run_daily.ps1).
+    # Không ảnh hưởng ngày khác hôm nay: một ngày đã đóng thì fingerprint không đổi nữa nên
+    # cache luôn khớp, cờ này chỉ có tác dụng thật sự trên đúng `_today()`.
+    finalize_today: bool = False
 
 
 @dataclass
@@ -334,6 +340,8 @@ def _brief_for(
     articles: Sequence[Article],
     options: BuildOptions,
     posts: Sequence[Post] = (),
+    *,
+    finalize: bool = True,
 ) -> BriefResult:
     """The day's five bullets, cached on disk and degrading to a deterministic fallback.
 
@@ -346,6 +354,12 @@ def _brief_for(
     14:00, trong khi 5 bài về lúc 17:00 và 19:00 chưa bao giờ được tóm tắt; bài X của ngày
     15/08 tăng 100 → 114 mà "Tóm tắt ngày" không đổi một chữ. Nói cách khác, phần trên cùng
     của trang đông cứng ở lần dựng ĐẦU TIÊN trong ngày.
+
+    Vá 16/08 lại tạo ra chuyện NGƯỢC LẠI mà user chốt 26/08 không muốn: brief đổi MỖI LẦN có
+    tin mới trong ngày, tức nhiều lần/ngày. `finalize=False` (mặc định gọi từ build_site cho
+    HÔM NAY khi không phải lần chạy chốt) tắt hẳn nhánh so vân-tay-rồi-sinh-lại bên dưới — hễ
+    đã có cache là giữ nguyên, kể cả khi tin mới đã về. `finalize=True` (ngày đã đóng, hoặc
+    đúng lần chạy `--finalize-today`) giữ nguyên hành vi 16/08.
     """
     cache = Path(options.cache_dir) / "brief" / f"{day}.json"
     fingerprint = _brief_fingerprint(articles, posts)
@@ -358,8 +372,13 @@ def _brief_for(
                 # ĐÂY là chỗ làm hệ thống tự lành. Ngày 09/08/2026 có một câu từ chối được
                 # cache kèm nhãn "aihub"; nếu chỉ chặn ở lúc GHI thì file rác đã nằm trên đĩa
                 # vẫn được đọc lại mãi mãi và phải xoá tay. Bỏ qua cache ⇒ lần dựng kế tiếp
-                # sinh lại brief thật rồi ghi đè.
+                # sinh lại brief thật rồi ghi đè. Áp dụng bất kể `finalize`: một brief rác
+                # không đáng "giữ nguyên tới cuối ngày".
                 logger.warning("brief cache của %s là câu từ chối, sinh lại", day)
+            elif bullets and not finalize:
+                return BriefResult(
+                    bullets=bullets, source=str(stored.get("source", "cache")), error=""
+                )
             elif bullets and cached_fp and cached_fp != fingerprint:
                 logger.info("brief của %s: ngày đã có thêm tin, sinh lại", day)
             elif bullets:
@@ -404,6 +423,85 @@ def _write_brief_cache(cache: Path, bullets: list[str], source: str, fingerprint
         )
     except OSError as exc:
         logger.warning("không ghi được brief cache %s: %s", cache.name, exc)
+
+
+@dataclass(frozen=True, slots=True)
+class AnalysisResult:
+    """Chuyên mục + biểu đồ + xu hướng + điểm mù của một ngày — cùng nguyên tắc chốt-cuối-
+    ngày với `BriefResult`/`_brief_for`, xem `_analysis_for`."""
+
+    categories: list[dict[str, object]]
+    charts: dict[str, str]
+    trending: list[Trend]
+    blindspots: list[Blindspot]
+
+
+def _analysis_for(
+    day: str,
+    articles: Sequence[Article],
+    history: Mapping[str, Sequence[Article]],
+    options: BuildOptions,
+    *,
+    finalize: bool = True,
+) -> AnalysisResult:
+    """Chuyên mục/biểu đồ/xu hướng/điểm mù của một ngày, cache trên đĩa theo đúng nguyên
+    tắc `_brief_for`: `finalize=False` (hôm nay, không phải lần chạy chốt) giữ nguyên bản
+    đã cache dù tin trong ngày đã đổi; `finalize=True` (ngày đã đóng, hoặc đúng lần chạy
+    `--finalize-today`) tính lại nếu vân tay đổi. Trước đợt vá này bốn khối này KHÔNG hề
+    cache — tính lại từ `articles` mỗi lần build chạm ngày đó, tức đổi nhiều lần/ngày y hệt
+    brief trước 16/08.
+
+    Vân tay chỉ tính trên `articles`: `_categories`/`_day_charts`/`trending_terms`/
+    `blindspots` đều chỉ đọc `articles` (`history` là các ngày TRƯỚC `day`, đã đóng nên
+    không đổi giữa các lần build trong ngày) — dùng lại `_brief_fingerprint` với `posts=()`
+    thay vì viết một hàm băm thứ hai gần như y hệt.
+    """
+    cache = Path(options.cache_dir) / "analysis" / f"{day}.json"
+    fingerprint = _brief_fingerprint(articles, ())
+    if cache.exists():
+        try:
+            stored = json.loads(cache.read_text(encoding="utf-8"))
+            cached_fp = str(stored.get("fp", ""))
+            if cached_fp and (not finalize or cached_fp == fingerprint):
+                return AnalysisResult(
+                    categories=list(stored.get("categories", [])),
+                    charts=dict(stored.get("charts", {})),
+                    trending=[Trend(**t) for t in stored.get("trending", [])],
+                    blindspots=[Blindspot(**b) for b in stored.get("blindspots", [])],
+                )
+        except (OSError, ValueError, TypeError):
+            logger.warning("analysis cache unreadable for %s", day)
+
+    result = AnalysisResult(
+        categories=_categories(articles),
+        charts=_day_charts(articles),
+        trending=trending_terms(articles, history),
+        blindspots=blindspots(articles, history),
+    )
+    _write_analysis_cache(cache, result, fingerprint)
+    return result
+
+
+def _write_analysis_cache(cache: Path, result: AnalysisResult, fingerprint: str) -> None:
+    """Ghi cache chuyên mục/biểu đồ/xu hướng. Lỗi ghi KHÔNG được làm chết build, cùng lý do
+    `_write_brief_cache`."""
+    try:
+        cache.parent.mkdir(parents=True, exist_ok=True)
+        cache.write_text(
+            json.dumps(
+                {
+                    "categories": result.categories,
+                    "charts": result.charts,
+                    "trending": [asdict(t) for t in result.trending],
+                    "blindspots": [asdict(b) for b in result.blindspots],
+                    "fp": fingerprint,
+                },
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
+        )
+    except OSError as exc:
+        logger.warning("không ghi được analysis cache %s: %s", cache.name, exc)
 
 
 # --------------------------------------------------------------------------------------
@@ -666,23 +764,30 @@ def build_site(options: BuildOptions) -> BuildReport:
             ):
                 continue
 
-            brief = _brief_for(day, articles, options, posts=day_posts)
+            # Chốt-cuối-ngày chỉ có tác dụng thật sự trên HÔM NAY: một ngày đã đóng không
+            # nhận thêm tin nữa nên vân tay của nó không đổi giữa các lần build, và
+            # `_brief_for`/`_analysis_for` đều trả cache y hệt bất kể `finalize`. Coi
+            # finalize=True cho những ngày đó tránh phải suy nghĩ về hai đường code cho
+            # cùng một kết quả.
+            finalize = options.finalize_today or day != _today()
+            brief = _brief_for(day, articles, options, posts=day_posts, finalize=finalize)
             report.brief_source[day] = brief.source
             issue = brief_provider_issue()
             if issue is not None and issue not in report.provider_issues:
                 report.provider_issues.append(issue)
 
             history = {k: v for k, v in by_day.items() if k < day}
+            analysis = _analysis_for(day, articles, history, options, finalize=finalize)
             data = payload.day_payload(
                 day,
                 articles,
                 clusters=cluster_articles(articles),
                 entity_map=entity_map,
-                trending=trending_terms(articles, history),
-                blindspots=blindspots(articles, history),
+                trending=analysis.trending,
+                blindspots=analysis.blindspots,
                 brief=brief.bullets,
-                categories=_categories(articles),
-                charts=_day_charts(articles),
+                categories=analysis.categories,
+                charts=analysis.charts,
                 generated_at=_day_anchor(day),
                 videos=day_videos,
                 curated=day_curated,
@@ -766,6 +871,7 @@ def build_site(options: BuildOptions) -> BuildReport:
         report.substack_pages = _write_substack_pages(
             out_dir, substack_items, options, meta, salt, state, fresh
         )
+        _write_indie_index(out_dir, indie_items, options, meta, salt, state, fresh)
         _write_video_library(
             out_dir,
             library_videos,
@@ -1277,6 +1383,53 @@ def _write_reports_index(
             kind="reportsIndex",
             base="../",
             title=f"Báo cáo phân tích — {options.site}",
+            config=config,
+            meta=meta,
+        ),
+    )
+    crypto.write_encrypted(target / "data.enc", data, options.password, salt=salt)
+
+
+def _write_indie_index(
+    out_dir: Path,
+    posts: Sequence[IndiePost],
+    options: BuildOptions,
+    meta: render.SiteMeta,
+    salt: bytes,
+    state: Mapping[str, str],
+    fresh: dict[str, str],
+) -> None:
+    """Write the standalone "Indie Hacker" listing page.
+
+    Mirrors `_write_reports_index`: the posts already reach each day page and the search
+    shards, so this is only a second reading surface - one encrypted listing page, no
+    per-item pages (a post has no dedicated reading page, same as a report links out to its
+    own source instead of getting one).
+    """
+    newest = max((post.day for post in posts), default=_today())
+    data = payload.indie_index_payload(posts, generated_at=_day_anchor(newest))
+    key = "indie:index"
+    fresh[key] = _digest(data, with_shell=True)
+    target = out_dir / "indie"
+    if state.get(key) == fresh[key] and (target / "data.enc").exists():
+        return
+    config = {
+        "kind": "indieIndex",
+        "base": "../",
+        "version": __version__,
+        "kdfIterations": crypto.DEFAULT_ITERATIONS,
+        "site": options.site,
+        "siteUrl": options.site_url,
+        "dataUrl": "data.enc",
+        "manifestUrl": "../manifest.json",
+        "indexBase": "../idx/",
+    }
+    render.write_page(
+        target / "index.html",
+        render.render_page(
+            kind="indieIndex",
+            base="../",
+            title=f"Indie Hacker — {options.site}",
             config=config,
             meta=meta,
         ),

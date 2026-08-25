@@ -39,10 +39,16 @@ def _make_db(
     tmp_path: Path,
     *,
     posts_table: bool = True,
+    image_column: bool = True,
     authors: tuple[dict[str, object], ...] = (),
     rows: tuple[dict[str, object], ...] = (),
 ) -> Path:
-    """Create a temporary substack-digest database."""
+    """Create a temporary substack-digest database.
+
+    `image_column=False` mimics a database from before this column existed, so the
+    `_has_image_column` fallback path (news-vault must still build against it) gets real
+    coverage rather than only ever seeing the current schema.
+    """
     path = tmp_path / f"substack-{len(list(tmp_path.glob('substack-*.db')))}.db"
     conn = sqlite3.connect(path)
     conn.execute(
@@ -54,8 +60,9 @@ def _make_db(
             (author["handle"], author.get("display_name", "")),
         )
     if posts_table:
+        image_col_sql = ",\n                image_url TEXT NULL" if image_column else ""
         conn.execute(
-            """
+            f"""
             CREATE TABLE posts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 url TEXT UNIQUE NOT NULL,
@@ -65,7 +72,7 @@ def _make_db(
                 fetched_at TEXT,
                 body_text TEXT,
                 summary_text TEXT NULL,
-                summarized_at TEXT NULL
+                summarized_at TEXT NULL{image_col_sql}
             )
             """
         )
@@ -77,22 +84,15 @@ def _make_db(
                 "published_at": "2026-08-09T09:26:20+00:00",
                 "fetched_at": "2026-08-09T10:00:00+00:00",
                 "summary_text": SUMMARY,
+                "image_url": "",
             }
             values.update(row)
+            columns = ["url", "author_handle", "title", "published_at", "fetched_at", "summary_text"]
+            if image_column:
+                columns.append("image_url")
             conn.execute(
-                """
-                INSERT INTO posts
-                (url, author_handle, title, published_at, fetched_at, summary_text)
-                VALUES (?, ?, ?, ?, ?, ?)
-                """,
-                (
-                    values["url"],
-                    values["author_handle"],
-                    values["title"],
-                    values["published_at"],
-                    values["fetched_at"],
-                    values["summary_text"],
-                ),
+                f"INSERT INTO posts ({', '.join(columns)}) VALUES ({', '.join('?' for _ in columns)})",
+                tuple(values[column] for column in columns),
             )
     else:
         conn.execute("CREATE TABLE other (id INTEGER PRIMARY KEY)")
@@ -237,6 +237,7 @@ def test_group_by_day_preserves_order(tmp_path: Path) -> None:
         author_handle="author",
         author_name="author",
         url="https://x/p/second",
+        image_url="",
         day=first.day,
         published_iso=first.published_iso,
         summary="second",
@@ -248,6 +249,25 @@ def test_group_by_day_preserves_order(tmp_path: Path) -> None:
     )
     grouped = substack.group_by_day([first, second])
     assert [item.id for item in grouped[first.day]] == [first.id, "999"]
+
+
+def test_load_all_reads_image_url(tmp_path: Path) -> None:
+    item = _one_item(tmp_path, image_url="https://substackcdn.com/image/cover.jpg")
+    assert item.image_url == "https://substackcdn.com/image/cover.jpg"
+
+
+def test_load_all_defaults_image_url_to_empty_string(tmp_path: Path) -> None:
+    item = _one_item(tmp_path)
+    assert item.image_url == ""
+
+
+def test_load_all_tolerates_a_database_without_the_image_column(tmp_path: Path) -> None:
+    """A reader built against an older substack-digest database - before `image_url`
+    existed - must still build rather than crash with "no such column"."""
+    path = _make_db(tmp_path, image_column=False, rows=({"url": "https://x/p/only"},))
+    conn = _connect(path)
+    item = substack.load_all(conn)[0]
+    assert item.image_url == ""
 
 
 def test_available_days_are_sorted_without_duplicates(tmp_path: Path) -> None:
@@ -270,12 +290,22 @@ def test_substack_teaser_omits_blocks(tmp_path: Path) -> None:
     assert "bl" not in teaser
 
 
+def test_substack_teaser_carries_the_cover_image(tmp_path: Path) -> None:
+    item = _one_item(tmp_path, image_url="https://substackcdn.com/image/cover.jpg")
+    assert substack_teaser(item)["img"] == "https://substackcdn.com/image/cover.jpg"
+
+
 def test_substack_payload_has_expected_shape(tmp_path: Path) -> None:
     payload = substack_payload(_one_item(tmp_path))
     assert payload["kind"] == "substack"
     assert isinstance(payload["toc"], list)
     assert isinstance(payload["bl"], list)
     assert all(set(block) == {"k", "r"} for block in payload["bl"])
+
+
+def test_substack_payload_carries_the_cover_image(tmp_path: Path) -> None:
+    item = _one_item(tmp_path, image_url="https://substackcdn.com/image/cover.jpg")
+    assert substack_payload(item)["img"] == "https://substackcdn.com/image/cover.jpg"
 
 
 def test_substack_index_payload_has_total_and_items(tmp_path: Path) -> None:

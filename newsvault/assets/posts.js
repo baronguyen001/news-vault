@@ -29,7 +29,6 @@
     open: "Xem bài gốc",
     details: "Xem chi tiết",
     points: "Ý chính",
-    fold: "Xem tóm tắt",
     alsoBy: "cùng đưa tin:",
     impactLabel: "Tác động dự kiến — suy luận, không phải tin",
     confidence: "độ chắc chắn:"
@@ -178,19 +177,12 @@
       li.classList.add("xpost--compact");
     }
 
-    let bodyParent = li;
-    if (!imageUrl) {
-      const fold = make("details", "xpost__fold", li);
-      const foldSummary = make("summary", "", fold);
-      text(foldSummary, T.fold);
-      bodyParent = fold;
-    }
-    const body = make("div", "xpost__body", bodyParent);
+    const body = make("div", "xpost__body", li);
     blocksInto(body, p.bl);
 
     if (p.ia && typeof p.ia === "object") {
-      const analysis = make("section", "xpost__impact", li);
-      const label = make("p", "xpost__impact-label", analysis);
+      const analysis = make("details", "xpost__impact", li);
+      const label = make("summary", "xpost__impact-label", analysis);
       text(label, T.impactLabel);
 
       if (typeof p.ia.ch === "string" && p.ia.ch !== "") {

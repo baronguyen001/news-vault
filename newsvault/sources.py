@@ -47,7 +47,7 @@ REPORT_SOURCE_KEYS: frozenset[str] = frozenset(
         "hoquoctuan", "semianalysis", "stratechery", "lowy", "warontherocks",
         "foreignaffairs", "projectsyndicate", "mitsloan", "bankless", "coinmetrics",
         "chainalysis", "vitalik", "nyfed", "fedfeds", "ecbblog", "econbrowser",
-        "ieeespectrum",
+        "ieeespectrum", "marginalrevolution", "aspistrategist",
     }
 )
 

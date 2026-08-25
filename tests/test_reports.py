@@ -83,8 +83,10 @@ def _row(*, with_teaser: bool, value: int = 0) -> sqlite3.Row:
 
 
 def test_report_source_membership_is_authoritative() -> None:
-    assert len(REPORT_SOURCE_KEYS) == 24
+    assert len(REPORT_SOURCE_KEYS) == 26
     assert is_report("GARTNER") is True
+    assert is_report("marginalrevolution") is True
+    assert is_report("aspistrategist") is True
     assert is_report("reuters") is False
     assert is_report("") is False
 

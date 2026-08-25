@@ -13,7 +13,18 @@
 
   const T = {
     sectionTitle: "Indie Hacker",
-    open: "Xem bài gốc"
+    open: "Xem bài gốc",
+    listTitle: "Indie Hacker",
+    search: "Tìm theo nội dung hoặc tác giả…",
+    allAuthors: "Tất cả tác giả",
+    sortNewest: "Mới nhất",
+    sortOldest: "Cũ nhất",
+    sortAuthor: "Theo tác giả A–Z",
+    noResults: "Không có bài phù hợp với bộ lọc.",
+    clear: "Xóa bộ lọc",
+    empty: "Chưa có bài Indie Hacker nào.",
+    countOne: "1 bài",
+    countMany: " bài"
   };
 
   function make(tag, cls, parent) {
@@ -25,6 +36,19 @@
 
   function text(el, val) {
     el.textContent = val == null ? "" : String(val);
+  }
+
+  function isNonEmptyString(v) {
+    return typeof v === "string" && v !== "";
+  }
+
+  /* Same diacritic-insensitive fold substack.js/reports.js/video-library.js use. */
+  function folded(value) {
+    return String(value || "")
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .toLowerCase()
+      .replace(/đ/g, "d");
   }
 
   function validHttpsUrl(url) {
@@ -95,8 +119,128 @@
     return sec;
   }
 
+  /* ---------- listing page ---------- */
+
+  function renderIndex(app, data, config) {
+    const payload = data && typeof data === "object" ? data : {};
+    const items = Array.isArray(payload.items) ? payload.items : [];
+
+    const head = make("header", "ilist__head", app);
+    const h1 = make("h1", "ilist__title", head);
+    text(h1, T.listTitle);
+    const count = make("p", "ilist__count", head);
+    text(count, items.length === 1 ? T.countOne : items.length + T.countMany);
+
+    if (!items.length) {
+      const empty = make("p", "ilist__empty", app);
+      text(empty, T.empty);
+      return;
+    }
+
+    const state = { query: "", author: "", sort: "newest" };
+
+    const controls = make("section", "ilist__controls", app);
+    controls.setAttribute("aria-label", "Lọc bài Indie Hacker");
+    const input = make("input", "ilist__search", controls);
+    input.type = "search";
+    input.placeholder = T.search;
+    input.setAttribute("aria-label", T.search);
+
+    const authorSelect = make("select", "ilist__select", controls);
+    authorSelect.setAttribute("aria-label", T.allAuthors);
+    const allOption = make("option", "", authorSelect);
+    allOption.value = "";
+    text(allOption, T.allAuthors);
+    const authors = Array.from(new Set(items.map((item) => item && item.au).filter(isNonEmptyString)))
+      .sort((a, b) => a.localeCompare(b, "vi"));
+    for (let i = 0; i < authors.length; i++) {
+      const option = make("option", "", authorSelect);
+      option.value = authors[i];
+      text(option, "@" + authors[i]);
+    }
+
+    const sortSelect = make("select", "ilist__select", controls);
+    sortSelect.setAttribute("aria-label", "Sắp xếp");
+    [["newest", T.sortNewest], ["oldest", T.sortOldest], ["author", T.sortAuthor]].forEach(
+      ([value, label]) => {
+        const option = make("option", "", sortSelect);
+        option.value = value;
+        text(option, label);
+      }
+    );
+
+    const clear = make("button", "ilist__clear", controls);
+    clear.type = "button";
+    text(clear, T.clear);
+
+    const wrap = make("div", "ilist__wrap", app);
+    const shownCount = make("p", "ilist__shown", wrap);
+    shownCount.setAttribute("aria-live", "polite");
+    const list = make("ul", "iposts__list ilist__items", wrap);
+    const empty = make("p", "ilist__noresults", wrap);
+    text(empty, T.noResults);
+    empty.hidden = true;
+
+    function matches(item) {
+      if (state.author && item.au !== state.author) return false;
+      if (!state.query) return true;
+      const haystack = folded([item.vi, item.au, item.an].filter(isNonEmptyString).join(" "));
+      return haystack.indexOf(folded(state.query)) !== -1;
+    }
+
+    function sorted(list) {
+      return list.sort((a, b) => {
+        if (state.sort === "author") {
+          return String(a.au || "").localeCompare(String(b.au || ""), "vi") ||
+            String(b.p || "").localeCompare(String(a.p || ""));
+        }
+        const direction = state.sort === "oldest" ? 1 : -1;
+        return direction * String(a.p || "").localeCompare(String(b.p || ""));
+      });
+    }
+
+    function paint() {
+      const shown = sorted(items.filter(matches));
+      text(shownCount, shown.length === 1 ? T.countOne : shown.length + T.countMany);
+      text(list, "");
+      for (let i = 0; i < shown.length; i++) {
+        try {
+          list.appendChild(card(shown[i], i));
+        } catch (e) {
+          // Drop a malformed entry rather than losing the whole page.
+        }
+      }
+      empty.hidden = shown.length !== 0;
+    }
+
+    input.addEventListener("input", () => {
+      state.query = input.value.trim();
+      paint();
+    });
+    authorSelect.addEventListener("change", () => {
+      state.author = authorSelect.value;
+      paint();
+    });
+    sortSelect.addEventListener("change", () => {
+      state.sort = sortSelect.value;
+      paint();
+    });
+    clear.addEventListener("click", () => {
+      state.query = "";
+      state.author = "";
+      state.sort = "newest";
+      input.value = "";
+      authorSelect.value = "";
+      sortSelect.value = "newest";
+      paint();
+    });
+
+    paint();
+  }
+
   window.NV.indie = {
     card: card,
-    section: section
+    section: section,
+    renderIndex: renderIndex
   };
 })();

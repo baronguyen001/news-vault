@@ -16,6 +16,14 @@
 #   $a = New-ScheduledTaskTrigger -Daily -At '14:00'
 #   $b = New-ScheduledTaskTrigger -Daily -At '21:15'
 #   Set-ScheduledTask -TaskPath '\NewsVault\' -TaskName 'Daily' -Trigger @($a, $b)
+#
+# Both triggers fire the SAME action (one command line, no per-trigger arguments), so this
+# script cannot be TOLD which of the two runs it is - it infers it from the clock instead.
+# `--finalize-today` (passed to `newsvault.cli build`, see `$FinalizeCutoffHour` below) chốt
+# Tóm tắt ngày + Chuyên mục/biểu đồ/xu hướng của HÔM NAY một lần, ở lần chạy 21:15; lần
+# 14:00 và mọi retry ban ngày giữ nguyên bản đã có (không đổi liên tục trong ngày, xem
+# `newsvault/build.py`'s `_brief_for`/`_analysis_for`). Nếu giờ trigger 21:15 từng đổi, sửa
+# $FinalizeCutoffHour theo cho khớp.
 
 [CmdletBinding()]
 param(
@@ -26,8 +34,15 @@ param(
     [switch]$DryRunNotify,
     # Build only the newest day, the way this script used to. Kept for a quick manual run;
     # the nightly job must NOT use it - see the comment on $buildArgs below.
-    [switch]$TodayOnly
+    [switch]$TodayOnly,
+    # Explicit override for a manual run. Left unset (the default for both scheduled
+    # triggers), the wall-clock cutoff below decides.
+    [switch]$FinalizeToday
 )
+
+# Comfortably between the two triggers (14:00 / 21:15): a build any time before this counts
+# as an intraday run, at/after it counts as the day's finalize run.
+$FinalizeCutoffHour = 18
 
 $ErrorActionPreference = "Stop"
 
@@ -144,11 +159,14 @@ if (-not $env:NEWSVAULT_SOURCING_ONLY) {
     $tgToken = Get-EnvValue "NEWSVAULT_TELEGRAM_TOKEN"
     $tgChat = Get-EnvValue "NEWSVAULT_TELEGRAM_CHAT"
 
+    $isFinalizeRun = $FinalizeToday -or ((Get-Date).Hour -ge $FinalizeCutoffHour)
+
     $runStamp = Get-Date -Format "HH:mm"
     $runMode = "đầy đủ"
     if ($TodayOnly) { $runMode = "chỉ hôm nay" }
+    if ($isFinalizeRun) { $runMode += " · chốt cuối ngày" }
 
-    Write-Log "build start (todayOnly=$TodayOnly)"
+    Write-Log "build start (todayOnly=$TodayOnly, finalizeToday=$isFinalizeRun)"
 
     # Every day, not just the newest one. A video is filed under the day it was UPLOADED, so a
     # clip summarised tonight can belong to last Tuesday - and a build of the newest day alone
@@ -156,6 +174,7 @@ if (-not $env:NEWSVAULT_SOURCING_ONLY) {
     # day's content and skips what has not changed, so the full pass costs ~10s for 119 days.
     $buildArgs = @("-m", "newsvault.cli", "build")
     if (-not $TodayOnly) { $buildArgs += "--backfill" }
+    if ($isFinalizeRun) { $buildArgs += "--finalize-today" }
 
     # Keep the build's own summary line - it is what the Telegram message reports.
     $buildSummary = ""

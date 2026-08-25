@@ -221,6 +221,28 @@ test('category is visible and supporting detail starts collapsed', () => {
   assert.equal(card.querySelector('.xpost__points').parentNode, details);
 });
 
+test('a compact card (no image) renders its body directly, no fold toggle', () => {
+  const { posts } = load();
+  const card = posts.card(WIRE); // WIRE carries no `img`, so this is the compact path.
+  assert.equal(card.classList.contains('xpost--compact'), true);
+  assert.equal(card.querySelector('.xpost__fold'), null);
+  assert.equal(textOf(card.querySelector('.xpost__body')).length > 0, true);
+});
+
+test('the impact-analysis panel is a closed <details>, collapsed by default', () => {
+  const { posts } = load();
+  const card = posts.card(Object.assign({}, WIRE, {
+    im: undefined, // avoid colliding with the header's own .xpost__impact mark
+    ia: { ch: 'BTC', as: ['BTC'], dir: 'tăng', cf: 'trung bình', why: 'Vì lãi suất giữ nguyên.' },
+  }));
+  const panel = card.querySelector('.xpost__impact');
+  assert.equal(panel.tagName, 'DETAILS');
+  assert.equal(panel.open, undefined);
+  const label = panel.children.find((el) => el.className === 'xpost__impact-label');
+  assert.equal(label.tagName, 'SUMMARY');
+  assert.equal(label.textContent, 'Tác động dự kiến — suy luận, không phải tin');
+});
+
 test('engagement is compacted and sits in the footer', () => {
   const { posts } = load();
   const metrics = posts.card(Object.assign({}, WIRE, { lk: 1200000, rt: 3400 }))

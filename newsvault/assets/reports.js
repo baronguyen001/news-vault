@@ -9,7 +9,14 @@
     empty: "Chưa có báo cáo phân tích nào.",
     full: "Đọc bản đầy đủ →",
     countOne: "1 báo cáo",
-    countMany: " báo cáo"
+    countMany: " báo cáo",
+    search: "Tìm theo tiêu đề hoặc nguồn…",
+    allSources: "Tất cả nguồn",
+    sortNewest: "Mới nhất",
+    sortOldest: "Cũ nhất",
+    sortSource: "Theo nguồn A–Z",
+    noResults: "Không có báo cáo phù hợp với bộ lọc.",
+    clear: "Xóa bộ lọc"
   };
 
   function make(tag, cls, parent) {
@@ -21,6 +28,20 @@
 
   function text(el, val) {
     el.textContent = val == null ? "" : String(val);
+  }
+
+  function isNonEmptyString(v) {
+    return typeof v === "string" && v !== "";
+  }
+
+  /* Same diacritic-insensitive fold substack.js/video-library.js use, so "kinh te" finds
+   * "kinh tế". */
+  function folded(value) {
+    return String(value || "")
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .toLowerCase()
+      .replace(/đ/g, "d");
   }
 
   function formatDate(value) {
@@ -83,18 +104,118 @@
   function renderIndex(app, payload, config) {
     const data = payload && typeof payload === "object" ? payload : {};
     const items = Array.isArray(data.items) ? data.items : [];
+
     const header = make("header", "reports-index__head", app);
     const title = make("h1", "reports-index__title", header);
     text(title, T.section);
     const count = make("p", "reports-index__count", header);
     text(count, items.length === 1 ? T.countOne : items.length + T.countMany);
+
     if (!items.length) {
       const empty = make("p", "reports-index__empty", app);
       text(empty, T.empty);
       return;
     }
+
+    const state = { query: "", source: "", sort: "newest" };
+
+    const controls = make("section", "reports-index__controls", app);
+    controls.setAttribute("aria-label", "Lọc báo cáo phân tích");
+    const input = make("input", "reports-index__search", controls);
+    input.type = "search";
+    input.placeholder = T.search;
+    input.setAttribute("aria-label", T.search);
+
+    const sourceSelect = make("select", "reports-index__select", controls);
+    sourceSelect.setAttribute("aria-label", T.allSources);
+    const allOption = make("option", "", sourceSelect);
+    allOption.value = "";
+    text(allOption, T.allSources);
+    const sources = Array.from(new Set(items.map((item) => item && item.s).filter(isNonEmptyString)))
+      .sort((a, b) => a.localeCompare(b, "vi"));
+    for (let i = 0; i < sources.length; i++) {
+      const option = make("option", "", sourceSelect);
+      option.value = sources[i];
+      text(option, sources[i]);
+    }
+
+    const sortSelect = make("select", "reports-index__select", controls);
+    sortSelect.setAttribute("aria-label", "Sắp xếp");
+    [["newest", T.sortNewest], ["oldest", T.sortOldest], ["source", T.sortSource]].forEach(
+      ([value, label]) => {
+        const option = make("option", "", sortSelect);
+        option.value = value;
+        text(option, label);
+      }
+    );
+
+    const clear = make("button", "reports-index__clear", controls);
+    clear.type = "button";
+    text(clear, T.clear);
+
     const wrap = make("div", "cards-wrap reports-index__wrap", app);
-    wrap.appendChild(cardList(items, (config && config.base) || "../", "reports-index__list"));
+    const shownCount = make("p", "reports-index__shown", wrap);
+    shownCount.setAttribute("aria-live", "polite");
+    const list = make("ul", "cards reports__list reports-index__list", wrap);
+    const empty = make("p", "reports-index__noresults", wrap);
+    text(empty, T.noResults);
+    empty.hidden = true;
+
+    function published(item) {
+      return item.pi || item.p || "";
+    }
+
+    function matches(item) {
+      if (state.source && item.s !== state.source) return false;
+      if (!state.query) return true;
+      const haystack = folded([item.t, item.to, item.s, item.sum].filter(isNonEmptyString).join(" "));
+      return haystack.indexOf(folded(state.query)) !== -1;
+    }
+
+    function sorted(list) {
+      return list.sort((a, b) => {
+        if (state.sort === "source") {
+          return String(a.s || "").localeCompare(String(b.s || ""), "vi") ||
+            published(b).localeCompare(published(a));
+        }
+        const direction = state.sort === "oldest" ? 1 : -1;
+        return direction * published(a).localeCompare(published(b));
+      });
+    }
+
+    function paint() {
+      const shown = sorted(items.filter(matches));
+      text(shownCount, shown.length === 1 ? T.countOne : shown.length + T.countMany);
+      text(list, "");
+      for (let i = 0; i < shown.length; i++) {
+        list.appendChild(reportCard(shown[i]));
+      }
+      empty.hidden = shown.length !== 0;
+    }
+
+    input.addEventListener("input", () => {
+      state.query = input.value.trim();
+      paint();
+    });
+    sourceSelect.addEventListener("change", () => {
+      state.source = sourceSelect.value;
+      paint();
+    });
+    sortSelect.addEventListener("change", () => {
+      state.sort = sortSelect.value;
+      paint();
+    });
+    clear.addEventListener("click", () => {
+      state.query = "";
+      state.source = "";
+      state.sort = "newest";
+      input.value = "";
+      sourceSelect.value = "";
+      sortSelect.value = "newest";
+      paint();
+    });
+
+    paint();
   }
 
   window.NV.reports = {
