@@ -511,18 +511,19 @@ def compact_indie(post: IndiePost) -> dict[str, object]:
     Unlike `compact_post`, there is no tier/vertical/topic/impact here - `xpulse/indie.py`
     scores keep-or-drop only, deliberately simpler than the 5-vertical triage pipeline.
     """
-    return _sorted(
-        {
-            "au": post.author,
-            "an": post.author_name,
-            "vi": post.text_vi,
-            "u": post.url,
-            "d": post.day,
-            "p": post.published_iso,
-            "lk": post.likes,
-            "rt": post.retweets,
-        }
-    )
+    value: dict[str, object] = {
+        "au": post.author,
+        "an": post.author_name,
+        "vi": post.text_vi,
+        "u": post.url,
+        "d": post.day,
+        "p": post.published_iso,
+        "lk": post.likes,
+        "rt": post.retweets,
+    }
+    if post.image:
+        value["img"] = post.image
+    return _sorted(value)
 
 
 def indie_index_items(posts: Sequence[IndiePost]) -> list[dict[str, object]]:

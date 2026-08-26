@@ -43,6 +43,7 @@ class IndiePost:
     likes: int = 0
     retweets: int = 0
     replies: int = 0
+    image: str = ""  # media_url, only https is accepted - see posts.py's same guard
 
 
 def has_table(conn: sqlite3.Connection) -> bool:
@@ -79,12 +80,31 @@ def group_by_day(posts: Sequence[IndiePost]) -> dict[str, list[IndiePost]]:
     return grouped
 
 
+def _has_media_column(conn: sqlite3.Connection) -> bool:
+    """True once x-pulse has migrated `indie_posts` to carry `media_url`.
+
+    A reader built against an older x-pulse database (before this column existed) must
+    still build - same reasoning as :func:`newsvault.substack._has_image_column`.
+    """
+    cursor = conn.execute(f"PRAGMA table_info({TABLE})")
+    try:
+        return any(row["name"] == "media_url" for row in cursor)
+    finally:
+        cursor.close()
+
+
+def _https_url(raw: object) -> str:
+    """Keep untrusted media URLs inert unless x-pulse supplied HTTPS - same guard posts.py uses."""
+    return raw.strip() if isinstance(raw, str) and raw.strip().startswith("https://") else ""
+
+
 def _iter_posts(conn: sqlite3.Connection) -> Iterator[IndiePost | None]:
     if not has_table(conn):
         return
+    media_column = ", media_url" if _has_media_column(conn) else ""
     query = (
         f"SELECT id, url, author, author_name, text, created_at, day, likes, retweets, "
-        f"replies, summary_vi FROM {TABLE} "
+        f"replies, summary_vi{media_column} FROM {TABLE} "
         "WHERE keep = 1 AND summary_vi IS NOT NULL AND TRIM(summary_vi) <> '' ORDER BY id"
     )
     cursor = conn.execute(query)
@@ -101,6 +121,8 @@ def _post_from_row(row: sqlite3.Row) -> IndiePost | None:
     day = row["day"] or ""
     if not post_id or not text_vi or not day:
         return None
+    # row.keys(), not row itself - sqlite3.Row.__contains__ searches values, not columns.
+    image = _https_url(row["media_url"]) if "media_url" in row.keys() else ""  # noqa: SIM118
     return IndiePost(
         id=post_id,
         url=row["url"] or "",
@@ -112,6 +134,7 @@ def _post_from_row(row: sqlite3.Row) -> IndiePost | None:
         likes=int(row["likes"] or 0),
         retweets=int(row["retweets"] or 0),
         replies=int(row["replies"] or 0),
+        image=image,
     )
 
 

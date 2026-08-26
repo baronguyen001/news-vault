@@ -73,12 +73,13 @@ function findAll(root, sel) {
   );
 }
 
-function load() {
+function load(videos) {
   const document = {
     createElement: makeEl,
     createTextNode: (t) => ({ nodeType: 3, textContent: String(t) }),
   };
   const window = { document };
+  if (videos) window.NV = { videos };
   const ctx = vm.createContext({ window, document, URL });
   vm.runInContext(source, ctx, { filename: modulePath });
   return { indie: ctx.window.NV.indie };
@@ -142,6 +143,31 @@ test('clear resets the search box, author filter and results', () => {
   assert.equal(input.value, '');
   assert.equal(app.querySelectorAll('.ipost').length, 2);
   assert.equal(app.querySelector('.ilist__noresults').hidden, true);
+});
+
+test('Indie cards use the shared card grid and thumbnail builder', () => {
+  const thumbs = [];
+  const { indie } = load({
+    thumb(parent, url, alt) {
+      if (typeof url !== 'string' || !url.startsWith('https:')) return null;
+      thumbs.push({ url, alt });
+      const wrapper = makeEl('div');
+      wrapper.className = 'card__thumb';
+      parent.appendChild(wrapper);
+      return wrapper;
+    },
+  });
+  const section = indie.section([
+    { au: 'nguoia', an: 'Người A', vi: 'Ra mắt SaaS mới', u: 'https://x.com/1', img: 'https://pbs.twimg.com/x.jpg' },
+  ]);
+  const list = section.querySelector('.iposts__list');
+  const card = section.querySelector('.ipost');
+  assert.equal(section.classList.contains('cards-wrap'), true);
+  assert.equal(list.classList.contains('cards'), true);
+  assert.equal(card.classList.contains('card'), true);
+  assert.notEqual(card.querySelector('.card__thumb'), null);
+  assert.equal(thumbs.length, 1);
+  assert.equal(thumbs[0].url, 'https://pbs.twimg.com/x.jpg');
 });
 
 test('sorting oldest-first puts the earlier post first', () => {

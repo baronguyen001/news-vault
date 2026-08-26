@@ -151,6 +151,43 @@ def test_indie_index_payload_orders_newest_first(tmp_path: Path) -> None:
     assert result["items"][1]["d"] == "2026-08-01"
 
 
+def test_load_all_without_media_column_defaults_image_to_empty(tmp_path: Path) -> None:
+    """A database that predates x-pulse's `media_url` migration must still build."""
+    conn = _connect(_make_db(tmp_path, rows=(_row(),)))
+    assert indie.load_all(conn)[0].image == ""
+
+
+def test_load_all_reads_https_media_url(tmp_path: Path) -> None:
+    path = _make_db(tmp_path, rows=(_row(),))
+    conn = _connect(path)
+    conn.execute("ALTER TABLE indie_posts ADD COLUMN media_url TEXT")
+    conn.execute("UPDATE indie_posts SET media_url = ?", ("https://pbs.twimg.com/media/x.jpg",))
+    conn.commit()
+    assert indie.load_all(conn)[0].image == "https://pbs.twimg.com/media/x.jpg"
+
+
+def test_load_all_rejects_non_https_media_url(tmp_path: Path) -> None:
+    path = _make_db(tmp_path, rows=(_row(),))
+    conn = _connect(path)
+    conn.execute("ALTER TABLE indie_posts ADD COLUMN media_url TEXT")
+    conn.execute("UPDATE indie_posts SET media_url = ?", ("http://pbs.twimg.com/media/x.jpg",))
+    conn.commit()
+    assert indie.load_all(conn)[0].image == ""
+
+
+def test_compact_indie_includes_image_only_when_present() -> None:
+    with_image = indie.IndiePost(
+        id="1", url="https://x/1", author="levelsio", author_name="Pieter Levels",
+        text_vi="v2", day="2026-08-20", published_iso="", image="https://pbs.twimg.com/x.jpg",
+    )
+    without_image = indie.IndiePost(
+        id="2", url="https://x/2", author="levelsio", author_name="Pieter Levels",
+        text_vi="v3", day="2026-08-20", published_iso="",
+    )
+    assert payload.compact_indie(with_image)["img"] == "https://pbs.twimg.com/x.jpg"
+    assert "img" not in payload.compact_indie(without_image)
+
+
 def test_indie_index_items_use_indie_kind() -> None:
     post = indie.IndiePost(
         id="1",
