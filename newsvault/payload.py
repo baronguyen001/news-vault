@@ -6,6 +6,7 @@ from newsvault.blindspot import Blindspot
 from newsvault.cluster import Cluster
 from newsvault.curated import CuratedItem
 from newsvault.entities import Entity
+from newsvault.facebook import FacebookPost
 from newsvault.indie import IndiePost
 from newsvault.model import Article
 from newsvault.posts import Post
@@ -552,6 +553,65 @@ def indie_index_items(posts: Sequence[IndiePost]) -> list[dict[str, object]]:
     return out
 
 
+def compact_facebook(post: FacebookPost) -> dict[str, object]:
+    """Compact shape for one Facebook post, with its summary as safe parsed blocks."""
+    return _sorted(
+        {
+            "id": post.id,
+            "an": post.author_name,
+            "c": post.category,
+            "u": post.url,
+            "img": post.image,
+            "d": post.day,
+            "p": post.published_iso,
+            "bl": [{"k": b.kind, "r": [[run, bold] for run, bold in b.runs]} for b in post.blocks],
+        }
+    )
+
+
+def facebook_index_payload(posts: Sequence[FacebookPost], *, generated_at: str) -> dict[str, object]:
+    """Payload for the one combined Facebook listing, newest post first."""
+    ordered = sorted(posts, key=lambda post: (post.day, post.published_iso, post.id), reverse=True)
+    return _sorted(
+        {
+            "v": 1,
+            "kind": "facebookIndex",
+            "generated_at": generated_at,
+            "total": len(ordered),
+            "items": [compact_facebook(post) for post in ordered],
+        }
+    )
+
+
+def facebook_index_items(posts: Sequence[FacebookPost]) -> list[dict[str, object]]:
+    """Search-index entries, including the raw scrape for recall without displaying it."""
+    out: list[dict[str, object]] = []
+    for index, post in enumerate(posts):
+        body = " ".join(run for block in post.blocks for run, _ in block.runs)
+        searchable = fold(f"{post.author_name} {post.category} {body} {post.text}".strip())
+        out.append(
+            _sorted(
+                {
+                    "d": post.day,
+                    "i": index,
+                    "k": "f",
+                    "t": body,
+                    "f": searchable,
+                    "sn": _search_snippet(body),
+                    "s": post.author_name,
+                    "sk": "facebook",
+                    "tr": "free",
+                    "tp": post.category or "Facebook",
+                    "im": "",
+                    "sc": 0,
+                    "r": "",
+                    "tg": [],
+                }
+            )
+        )
+    return out
+
+
 def day_payload(
     day: str,
     articles: Sequence[Article],
@@ -570,6 +630,7 @@ def day_payload(
     posts: Sequence[Post] = (),
     substack: Sequence[Essay] = (),
     indie: Sequence[IndiePost] = (),
+    facebook: Sequence[FacebookPost] = (),
 ) -> dict[str, object]:
     """Build the encrypted JSON payload for a single day page."""
     compact = [compact_article(a, i, entities=entity_map) for i, a in enumerate(articles)]
@@ -618,6 +679,7 @@ def day_payload(
             "posts": [compact_post(p) for p in posts],
             "substack": [substack_teaser(item) for item in substack],
             "indie": [compact_indie(post) for post in indie],
+            "facebook": [compact_facebook(post) for post in facebook],
         }
     )
 

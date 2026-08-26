@@ -79,6 +79,12 @@ def _resolve_substack_db(explicit: str | None) -> Path | None:
     return Path(raw) if raw else None
 
 
+def _resolve_facebook_db(explicit: str | None) -> Path | None:
+    """Path to the facebook-digest database, or None without Facebook posts."""
+    raw = explicit or os.environ.get("NEWSVAULT_FACEBOOK_DB", "")
+    return Path(raw) if raw else None
+
+
 def _resolve_db(explicit: str | None) -> Path:
     """Path to the news-hunter database."""
     raw = explicit or os.environ.get("NEWSVAULT_DB", "")
@@ -102,6 +108,13 @@ def _add_common(parser: argparse.ArgumentParser) -> None:
         help=(
             "đường dẫn substack_digest.db "
             "(mặc định: NEWSVAULT_SUBSTACK_DB; bỏ trống = không có mục Substack)"
+        ),
+    )
+    parser.add_argument(
+        "--facebook-db",
+        help=(
+            "đường dẫn facebook_digest.db "
+            "(mặc định: NEWSVAULT_FACEBOOK_DB; bỏ trống = không có mục Facebook)"
         ),
     )
     parser.add_argument(
@@ -193,6 +206,7 @@ def _options_from(args: argparse.Namespace, *, force: bool, use_brief: bool) -> 
         video_db_path=_resolve_video_db(getattr(args, "video_db", None)),
         x_db_path=_resolve_x_db(getattr(args, "x_db", None)),
         substack_db_path=_resolve_substack_db(getattr(args, "substack_db", None)),
+        facebook_db_path=_resolve_facebook_db(getattr(args, "facebook_db", None)),
         cache_dir=Path(os.environ.get("NEWSVAULT_CACHE", ".cache")),
         use_brief=use_brief,
         feed_full=getattr(args, "feed_full", False),

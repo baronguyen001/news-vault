@@ -12,14 +12,13 @@ from __future__ import annotations
 
 import json
 
+from newsvault.brief import BriefResult
 from newsvault.build import (
     AnalysisResult,
-    BuildOptions,
     _analysis_for,
     _brief_fingerprint,
     _brief_for,
 )
-from newsvault.brief import BriefResult
 from tests.test_brief import _article
 from tests.test_brief_cache_selfheal import make_options, read_cache, write_cache
 

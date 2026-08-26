@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import datetime as dt
 import json
 import os
@@ -511,8 +512,6 @@ def collect(start: str, end: str) -> list[dict[str, object]]:
             systems.append(reader(start, end))
         except (FileNotFoundError, OSError, sqlite3.Error, ValueError):
             continue
-    try:
+    with contextlib.suppress(FileNotFoundError, OSError, ValueError, json.JSONDecodeError):
         systems.append(_translation())
-    except (FileNotFoundError, OSError, ValueError, json.JSONDecodeError):
-        pass
     return systems

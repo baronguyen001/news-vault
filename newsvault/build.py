@@ -21,6 +21,7 @@ from pathlib import Path
 
 from newsvault import __version__, charts, crypto, db, feeds, payload, quality, render
 from newsvault import curated as curated_db
+from newsvault import facebook as facebook_db
 from newsvault import indie as indie_db
 from newsvault import posts as posts_db
 from newsvault import reports as reports_db
@@ -39,6 +40,7 @@ from newsvault.cluster import cluster_articles
 from newsvault.curated import CuratedItem
 from newsvault.entities import Entity, EntityIndex, build_entity_index
 from newsvault.exports import day_markdown, write_markdown
+from newsvault.facebook import FacebookPost
 from newsvault.indie import IndiePost
 from newsvault.model import Article
 from newsvault.posts import Post
@@ -71,6 +73,7 @@ class BuildOptions:
     video_db_path: Path | None = None
     x_db_path: Path | None = None
     substack_db_path: Path | None = None
+    facebook_db_path: Path | None = None
     days: tuple[str, ...] = ()
     backfill: bool = False
     site: str = "Kho tin"
@@ -104,6 +107,7 @@ class BuildReport:
     posts_included: int = 0
     substack_pages: int = 0
     indie_included: int = 0
+    facebook_included: int = 0
     brief_source: dict[str, str] = field(default_factory=dict)
     provider_issues: list[str] = field(default_factory=list)
     bytes_written: int = 0
@@ -116,7 +120,7 @@ class BuildReport:
             f"{self.index_shards} shard tìm kiếm, {self.videos_included} video, "
             f"{self.curated_pages} bài phân tích sâu, {self.reports_included} báo cáo, "
             f"{self.posts_included} bài X, {self.substack_pages} bài Substack, "
-            f"{self.indie_included} bài indie"
+            f"{self.indie_included} bài indie, {self.facebook_included} bài Facebook"
         )
         # Brief tụt xuống bản fallback (xếp theo điểm, không qua LLM) là một sự cố CHẤT
         # LƯỢNG chứ không phải lỗi build — trước đây `brief_source` được ghi lại nhưng
@@ -605,6 +609,24 @@ def _load_substack(options: BuildOptions) -> list[Essay]:
         conn.close()
 
 
+def _load_facebook(options: BuildOptions) -> list[FacebookPost]:
+    """Every newsworthy Facebook summary, or nothing at all on any problem."""
+    if not options.facebook_db_path:
+        return []
+    try:
+        conn = facebook_db.connect(options.facebook_db_path)
+    except (FileNotFoundError, sqlite3.Error) as err:
+        logger.warning("facebook-digest database unavailable (%s); building without Facebook posts", err)
+        return []
+    try:
+        return facebook_db.load_all(conn)
+    except sqlite3.Error as err:
+        logger.warning("facebook-digest database unreadable (%s); building without Facebook posts", err)
+        return []
+    finally:
+        conn.close()
+
+
 def _load_video_library(options: BuildOptions) -> list[Video]:
     """Load successful and retryable videos for the channel library."""
     if not options.video_db_path:
@@ -687,6 +709,8 @@ def build_site(options: BuildOptions) -> BuildReport:
     substack_by_day = substack_db.group_by_day(substack_items)
     indie_items = _load_indie(options)
     indie_by_day = indie_db.group_by_day(indie_items)
+    facebook_items = _load_facebook(options)
+    facebook_by_day = facebook_db.group_by_day(facebook_items)
 
     conn = db.connect(options.db_path)
     try:
@@ -697,7 +721,8 @@ def build_site(options: BuildOptions) -> BuildReport:
             | set(curated_by_day)
             | set(posts_by_day)
             | set(substack_by_day)
-            | set(indie_by_day),
+            | set(indie_by_day)
+            | set(facebook_by_day),
         )
         if not target_days:
             logger.warning("nothing to build")
@@ -713,6 +738,7 @@ def build_site(options: BuildOptions) -> BuildReport:
             | set(posts_by_day)
             | set(substack_by_day)
             | set(indie_by_day)
+            | set(facebook_by_day)
         )
         counts = db.counts_by_day(conn)
         for day, day_videos in videos_by_day.items():
@@ -725,6 +751,8 @@ def build_site(options: BuildOptions) -> BuildReport:
             counts[day] = counts.get(day, 0) + len(day_substack)
         for day, day_indie in indie_by_day.items():
             counts[day] = counts.get(day, 0) + len(day_indie)
+        for day, day_facebook in facebook_by_day.items():
+            counts[day] = counts.get(day, 0) + len(day_facebook)
 
         # One wide load covers the built days plus the baseline window behind them.
         history_start = _shift(min(target_days), -HISTORY_DAYS)
@@ -754,6 +782,7 @@ def build_site(options: BuildOptions) -> BuildReport:
             day_posts = posts_by_day.get(day, [])
             day_substack = substack_by_day.get(day, [])
             day_indie = indie_by_day.get(day, [])
+            day_facebook = facebook_by_day.get(day, [])
             if (
                 not articles
                 and not day_videos
@@ -761,6 +790,7 @@ def build_site(options: BuildOptions) -> BuildReport:
                 and not day_posts
                 and not day_substack
                 and not day_indie
+                and not day_facebook
             ):
                 continue
 
@@ -795,6 +825,7 @@ def build_site(options: BuildOptions) -> BuildReport:
                 posts=day_posts,
                 substack=day_substack,
                 indie=day_indie,
+                facebook=day_facebook,
             )
 
             key = f"day:{day}"
@@ -802,6 +833,7 @@ def build_site(options: BuildOptions) -> BuildReport:
             report.videos_included += len(day_videos)
             report.posts_included += len(day_posts)
             report.indie_included += len(day_indie)
+            report.facebook_included += len(day_facebook)
             month_items = index_by_month.setdefault(day[:7], [])
             month_items.extend(payload.index_items(day, articles))
             month_items.extend(payload.video_index_items(day_videos))
@@ -809,6 +841,7 @@ def build_site(options: BuildOptions) -> BuildReport:
             month_items.extend(payload.post_index_items(day_posts))
             month_items.extend(payload.substack_index_items(day_substack))
             month_items.extend(payload.indie_index_items(day_indie))
+            month_items.extend(payload.facebook_index_items(day_facebook))
             weeks.setdefault(_iso_week(day)[0], []).append(day)
 
             if state.get(key) == fresh[key] and (out_dir / "d" / day / "data.enc").exists():
@@ -872,6 +905,7 @@ def build_site(options: BuildOptions) -> BuildReport:
             out_dir, substack_items, options, meta, salt, state, fresh
         )
         _write_indie_index(out_dir, indie_items, options, meta, salt, state, fresh)
+        _write_facebook_index(out_dir, facebook_items, options, meta, salt, state, fresh)
         _write_video_library(
             out_dir,
             library_videos,
@@ -890,6 +924,7 @@ def build_site(options: BuildOptions) -> BuildReport:
             curated_total=len(curated_items),
             reports_total=len(reports),
             substack_total=len(substack_items),
+            facebook_total=len(facebook_items),
         )
         # Cùng một biểu thức `_write_root_files` dùng để dựng `manifest.json`. Trang tìm
         # kiếm phải thấy ĐÚNG danh sách tháng đó, vì nó nạp mảnh chỉ mục theo tên tháng.
@@ -1437,6 +1472,47 @@ def _write_indie_index(
     crypto.write_encrypted(target / "data.enc", data, options.password, salt=salt)
 
 
+def _write_facebook_index(
+    out_dir: Path,
+    posts: Sequence[FacebookPost],
+    options: BuildOptions,
+    meta: render.SiteMeta,
+    salt: bytes,
+    state: Mapping[str, str],
+    fresh: dict[str, str],
+) -> None:
+    """Write the standalone Facebook listing: one page, never a page per post."""
+    newest = max((post.day for post in posts), default=_today())
+    data = payload.facebook_index_payload(posts, generated_at=_day_anchor(newest))
+    key = "facebook:index"
+    fresh[key] = _digest(data, with_shell=True)
+    target = out_dir / "facebook"
+    if state.get(key) == fresh[key] and (target / "data.enc").exists():
+        return
+    config = {
+        "kind": "facebookIndex",
+        "base": "../",
+        "version": __version__,
+        "kdfIterations": crypto.DEFAULT_ITERATIONS,
+        "site": options.site,
+        "siteUrl": options.site_url,
+        "dataUrl": "data.enc",
+        "manifestUrl": "../manifest.json",
+        "indexBase": "../idx/",
+    }
+    render.write_page(
+        target / "index.html",
+        render.render_page(
+            kind="facebookIndex",
+            base="../",
+            title=f"Facebook — {options.site}",
+            config=config,
+            meta=meta,
+        ),
+    )
+    crypto.write_encrypted(target / "data.enc", data, options.password, salt=salt)
+
+
 def _write_video_library(
     out_dir: Path,
     videos: Sequence[Video],
@@ -1491,6 +1567,7 @@ def _write_home(
     curated_total: int = 0,
     reports_total: int = 0,
     substack_total: int = 0,
+    facebook_total: int = 0,
 ) -> None:
     """Write the landing page. Its calendar reads from the plain manifest."""
     latest = all_days[-1] if all_days else ""
@@ -1510,6 +1587,7 @@ def _write_home(
         "curatedTotal": curated_total,
         "reportsTotal": reports_total,
         "substackTotal": substack_total,
+        "facebookTotal": facebook_total,
     }
     render.write_page(
         out_dir / "index.html",

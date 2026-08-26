@@ -35,7 +35,8 @@
     video: "Video",
     curated: "Phân tích",
     essay: "Substack",
-    indie: "Indie Hacker"
+    indie: "Indie Hacker",
+    facebook: "Facebook"
   };
 
   function make(tag, cls, parent) {
@@ -60,6 +61,7 @@
     if (item.k === "c") return T.curated;
     if (item.k === "e") return T.essay;
     if (item.k === "i") return T.indie;
+    if (item.k === "f") return T.facebook;
     return T.article;
   }
 
@@ -69,6 +71,7 @@
     if (item.k === "v") return `${base}d/${item.d}/#v-${item.i}`;
     if (item.k === "x") return `${base}d/${item.d}/#x-${item.i}`;
     if (item.k === "i") return `${base}d/${item.d}/#i-${item.i}`;
+    if (item.k === "f") return `${base}d/${item.d}/#f-${item.i}`;
     return `${base}d/${item.d}/#a-${item.i}`;
   }
 
@@ -225,7 +228,8 @@
           v: T.video,
           c: T.curated,
           e: T.essay,
-          i: T.indie
+          i: T.indie,
+          f: T.facebook
         })
       );
       group(T.topic, "tp", choices("tp"));

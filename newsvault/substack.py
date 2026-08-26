@@ -143,7 +143,8 @@ def _item_from_row(row: sqlite3.Row) -> Essay | None:
     blocks = curated_blocks(summary)
     words = count_words(summary)
     display_name = (row["display_name"] or "").strip()
-    image_url = (row["image_url"] or "").strip() if "image_url" in row.keys() else ""
+    columns = row.keys()
+    image_url = (row["image_url"] or "").strip() if "image_url" in columns else ""
     return Essay(
         id=post_id,
         title=title,

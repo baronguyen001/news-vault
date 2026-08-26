@@ -77,7 +77,31 @@ def _make_x_db(path: Path, day: str) -> Path:
     return path
 
 
-def _build(out: Path, db: Path, x_db: Path | None) -> build.BuildReport:
+def _make_facebook_db(path: Path, day: str) -> Path:
+    conn = sqlite3.connect(path)
+    conn.execute(
+        """
+        CREATE TABLE feed_posts (
+            id INTEGER, fingerprint TEXT, category TEXT, target_url TEXT, author_name TEXT,
+            post_url TEXT, text TEXT, image_url TEXT, summary_text TEXT, scraped_at TEXT,
+            summarized_at TEXT
+        )
+        """
+    )
+    rows = (
+        (1, "real", "AI", "https://facebook.com/ai", "Tác giả thật", "https://www.facebook.com/post/1", "Raw searchable body", "https://cdn.example.com/photo.jpg", "Tóm tắt Facebook thật.", f"{day}T19:00:00+07:00", f"{day}T19:01:00+07:00"),
+        (2, "noise", "AI", "https://facebook.com/ai", "Nhiễu", "https://www.facebook.com/post/2", "Raw noise", "", "Không có nội dung tin tức đáng chú ý.", f"{day}T18:00:00+07:00", f"{day}T18:01:00+07:00"),
+        (3, "pending", "AI", "https://facebook.com/ai", "Chưa xong", "https://www.facebook.com/post/3", "Raw pending", None, None, f"{day}T17:00:00+07:00", None),
+    )
+    conn.executemany("INSERT INTO feed_posts VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", rows)
+    conn.commit()
+    conn.close()
+    return path
+
+
+def _build(
+    out: Path, db: Path, x_db: Path | None, facebook_db: Path | None = None
+) -> build.BuildReport:
     return build.build_site(
         build.BuildOptions(
             db_path=db,
@@ -86,6 +110,7 @@ def _build(out: Path, db: Path, x_db: Path | None) -> build.BuildReport:
             backfill=True,
             use_brief=False,
             x_db_path=x_db,
+            facebook_db_path=facebook_db,
         )
     )
 
@@ -156,3 +181,29 @@ def test_a_day_with_only_x_posts_still_gets_a_page(tmp_path: Path) -> None:
     data = _decrypt(out, quiet_day)
     assert data["articles"] == []
     assert len(data["posts"]) == 2
+
+
+def test_facebook_posts_reach_the_day_payload_and_exclude_noise(tmp_path: Path) -> None:
+    db = tmp_path / "sample.db"
+    make_fixture(db)
+    day = "2026-08-04"
+    out = tmp_path / "site"
+
+    report = _build(out, db, None, _make_facebook_db(tmp_path / "facebook_digest.db", day))
+
+    assert report.facebook_included == 1
+    data = _decrypt(out, day)
+    assert len(data["facebook"]) == 1
+    assert data["facebook"][0]["an"] == "Tác giả thật"
+    assert data["facebook"][0]["img"] == "https://cdn.example.com/photo.jpg"
+
+
+def test_no_facebook_database_configured_still_builds_unchanged(tmp_path: Path) -> None:
+    db = tmp_path / "sample.db"
+    make_fixture(db)
+    out = tmp_path / "site"
+
+    report = _build(out, db, None)
+
+    assert report.facebook_included == 0
+    assert _decrypt(out, "2026-08-04")["facebook"] == []
