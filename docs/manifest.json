@@ -714,33 +714,33 @@
     {
       "d": "2026-08-26",
       "months": "2026-08",
-      "n": 24
+      "n": 49
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 1255,
+      "n": 1267,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 299,
+      "n": 303,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 246,
+      "n": 247,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 193,
+      "n": 196,
       "slug": "doanh-nghiep"
     },
     {
       "label": "thuế",
-      "n": 192,
+      "n": 194,
       "slug": "thue"
     },
     {
@@ -755,7 +755,7 @@
     },
     {
       "label": "dữ liệu",
-      "n": 137,
+      "n": 139,
       "slug": "du-lieu"
     },
     {
@@ -765,7 +765,7 @@
     },
     {
       "label": "ngân hàng",
-      "n": 129,
+      "n": 130,
       "slug": "ngan-hang"
     },
     {
@@ -775,17 +775,17 @@
     },
     {
       "label": "lãi suất",
-      "n": 102,
+      "n": 104,
       "slug": "lai-suat"
     },
     {
       "label": "lạm phát",
-      "n": 94,
+      "n": 95,
       "slug": "lam-phat"
     },
     {
       "label": "chính sách",
-      "n": 91,
+      "n": 93,
       "slug": "chinh-sach"
     },
     {
@@ -844,23 +844,23 @@
       "slug": "startup"
     },
     {
+      "label": "trừng phạt",
+      "n": 42,
+      "slug": "trung-phat"
+    },
+    {
       "label": "pháp lý",
       "n": 41,
       "slug": "phap-ly"
     },
     {
-      "label": "trừng phạt",
-      "n": 40,
-      "slug": "trung-phat"
-    },
-    {
       "label": "thuế quan",
-      "n": 39,
+      "n": 40,
       "slug": "thue-quan"
     },
     {
       "label": "bán dẫn",
-      "n": 33,
+      "n": 34,
       "slug": "ban-dan"
     },
     {
