@@ -2080,6 +2080,14 @@ code {
   font-size: 0.78rem;
 }
 
+/* Counts-only pointer to the day's Substack/video/Indie Hacker items - those carry no
+ * topic/tags, so they cannot join the category grid itself (see renderSourcesOverview). */
+.sources-overview {
+  margin: 0 0 var(--space-sm);
+  color: var(--text-dim);
+  font-size: 0.8125rem;
+}
+
 /* --- Headline-first cards ------------------------------------------------
    A card is a headline until asked otherwise. Ninety expanded summaries is a
    wall of text nobody scrolls; ninety headlines is a page you can scan. */
@@ -2787,9 +2795,13 @@ code {
   [data-layout="two"] .cards-wrap .cards,
   [data-layout="two"] .videos__list,
   [data-layout="two"] .xposts__list,
+  [data-layout="two"] .sublist__items,
+  [data-layout="two"] .ilist__items,
   [data-layout="three"] .cards-wrap .cards,
   [data-layout="three"] .videos__list,
-  [data-layout="three"] .xposts__list {
+  [data-layout="three"] .xposts__list,
+  [data-layout="three"] .sublist__items,
+  [data-layout="three"] .ilist__items {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: start;
@@ -2804,7 +2816,9 @@ code {
    * right below. */
   [data-layout="grid"] .cards-wrap .cards,
   [data-layout="grid"] .videos__list,
-  [data-layout="grid"] .xposts__list {
+  [data-layout="grid"] .xposts__list,
+  [data-layout="grid"] .sublist__items,
+  [data-layout="grid"] .ilist__items {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     align-items: start;
@@ -2812,13 +2826,19 @@ code {
 
   [data-layout="two"] .xposts__list,
   [data-layout="three"] .xposts__list,
-  [data-layout="grid"] .xposts__list {
+  [data-layout="grid"] .xposts__list,
+  [data-layout="two"] .ilist__items,
+  [data-layout="three"] .ilist__items,
+  [data-layout="grid"] .ilist__items {
     align-items: stretch;
   }
 
   [data-layout="two"] .xpost,
   [data-layout="three"] .xpost,
-  [data-layout="grid"] .xpost {
+  [data-layout="grid"] .xpost,
+  [data-layout="two"] .ipost,
+  [data-layout="three"] .ipost,
+  [data-layout="grid"] .ipost {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -2826,9 +2846,31 @@ code {
 
   [data-layout="two"] .xpost__footer,
   [data-layout="three"] .xpost__footer,
-  [data-layout="grid"] .xpost__footer {
+  [data-layout="grid"] .xpost__footer,
+  [data-layout="two"] .ipost__footer,
+  [data-layout="three"] .ipost__footer,
+  [data-layout="grid"] .ipost__footer {
     margin-top: auto;
     padding-top: var(--space-xs);
+  }
+
+  /* .sublist__items previously ran its own always-on 2/3-column grid regardless of this
+   * switch (see the removed rule below `.app--sublist`), so clicking "1 cột"/"Lưới" had no
+   * visible effect on the Substack index at all. Wired into the shared switch instead, same
+   * as .xposts__list above - "1 cột" (the default `data-layout="list"`) now genuinely means
+   * one column here too. */
+  [data-layout="two"] .sublist__items,
+  [data-layout="three"] .sublist__items,
+  [data-layout="grid"] .sublist__items {
+    align-items: stretch;
+  }
+
+  [data-layout="two"] .scard__link,
+  [data-layout="three"] .scard__link,
+  [data-layout="grid"] .scard__link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
   }
 
   /* An opened card should span the full row in every multi-column mode. */
@@ -2865,7 +2907,9 @@ code {
   /* Three columns only from 1280px upward. */
   [data-layout="three"] .cards-wrap .cards,
   [data-layout="three"] .videos__list,
-  [data-layout="three"] .xposts__list {
+  [data-layout="three"] .xposts__list,
+  [data-layout="three"] .sublist__items,
+  [data-layout="three"] .ilist__items {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
@@ -3468,6 +3512,54 @@ body.modal-open {
   padding-block: var(--space-xl);
 }
 
+/* Mirrors .vlibrary__controls/__search/__select/__clear and .sublist__controls/... rule
+ * for rule - same filter-bar shape everywhere a listing page needs search + one dimension
+ * + sort. */
+.reports-index__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-block-end: var(--space-md);
+  padding: var(--space-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.reports-index__search {
+  flex: 1 1 260px;
+  min-height: 42px;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+}
+
+.reports-index__select,
+.reports-index__clear {
+  min-height: 42px;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  cursor: pointer;
+}
+
+.reports-index__clear:hover {
+  border-color: var(--accent);
+}
+
+.reports-index__shown {
+  margin: 0 0 var(--space-sm);
+  color: var(--text-dim);
+  font-size: 0.875rem;
+}
+
+.reports-index__noresults {
+  color: var(--text-dim);
+  padding-block: var(--space-xl);
+}
+
 .report-teaser {
   list-style: none;
   border: 1px solid var(--border);
@@ -3883,10 +3975,26 @@ body.modal-open {
 }
 
 .scard__link {
-  display: block;
+  display: flex;
+  flex-direction: column;
   padding: var(--space-md);
   color: inherit;
   text-decoration: none;
+}
+
+/* Fixed track, never a negotiated size: same reasoning as .dcard__thumb - a cover image
+ * that sizes itself against its siblings is how cards end up inconsistent heights. Not
+ * every essay has a cover (og:image is often absent for a text-only post), so this only
+ * ever appears when `teaserCard()` actually built one. */
+.scard__thumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin-block-end: var(--space-sm);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  object-fit: cover;
+  background: var(--surface-2);
 }
 
 .scard__link:hover,
@@ -3989,6 +4097,13 @@ body.modal-open {
   line-clamp: 1;
 }
 
+/* Day-page mentions stay a compact one-liner, same reasoning as hiding .scard__badges
+ * above - a full cover image would make this teaser as heavy as the listing-page card it
+ * is meant to be a small pointer toward. */
+.subteaser__list .scard__thumb {
+  display: none;
+}
+
 /* ---------- listing page ---------- */
 
 .app--sublist {
@@ -4016,17 +4131,57 @@ body.modal-open {
   padding-block: var(--space-xl);
 }
 
-@media (min-width: 1024px) {
-  .sublist__items {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+/* Mirrors .vlibrary__controls/__search/__select/__clear rule for rule - same filter-bar
+ * shape as the video library, just a smaller field set (no channel sidebar - far fewer
+ * Substack authors than YouTube channels). */
+.sublist__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-block-end: var(--space-md);
+  padding: var(--space-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
 }
 
-@media (min-width: 1440px) {
-  .sublist__items {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
+.sublist__search {
+  flex: 1 1 260px;
+  min-height: 42px;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
 }
+
+.sublist__select,
+.sublist__clear {
+  min-height: 42px;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  cursor: pointer;
+}
+
+.sublist__clear:hover {
+  border-color: var(--accent);
+}
+
+.sublist__shown {
+  margin: 0 0 var(--space-sm);
+  color: var(--text-dim);
+  font-size: 0.875rem;
+}
+
+.sublist__noresults {
+  color: var(--text-dim);
+  padding-block: var(--space-xl);
+}
+
+/* Column count now follows the shared layout switch (see the [data-layout] rules above),
+ * same as .cards/.videos__list/.xposts__list - "1 cột" no longer silently stays a 2/3-col
+ * grid the way this page used to, regardless of what the switch said. */
 
 /* ---------- article page ---------- */
 
@@ -4104,6 +4259,19 @@ body.modal-open {
   content: "\2197\00A0";
 }
 
+/* The cover image the author's own post carried (og:image) - absent for a text-only post,
+ * in which case renderArticle() never creates this element at all. */
+.sub__hero {
+  display: block;
+  width: 100%;
+  max-height: 26rem;
+  margin-block-end: var(--space-xl);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  object-fit: cover;
+  background: var(--surface-2);
+}
+
 .sub__layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -4143,6 +4311,18 @@ body.modal-open {
 
 .sub__li {
   margin-block-end: var(--space-xs);
+}
+
+/* The summariser wraps 3-6 key figures/terms per section in **bold** so the reader can
+ * scan quickly - rendered as the same "what matters here" highlight `mark.kw` already uses
+ * elsewhere (see its definition above), rather than plain bold, which barely stands out
+ * against a body already full of bold section headings. */
+.sub__p strong,
+.sub__li strong {
+  background: var(--kw-mark);
+  box-shadow: inset 0 -0.4em 0 0 var(--kw-mark);
+  border-radius: var(--radius-sm);
+  padding: 0 0.125rem;
 }
 
 .sub__toc {
@@ -4356,3 +4536,105 @@ body.modal-open {
   align-items: center;
   color: var(--accent);
 }
+
+/* ---------- Indie Hacker listing page ---------- */
+
+.app--ilist {
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: var(--space-md);
+}
+
+.ilist__head {
+  margin-block: var(--space-lg) var(--space-md);
+}
+
+.ilist__title {
+  margin: 0;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.ilist__count {
+  margin: var(--space-xs) 0 0;
+  color: var(--text-dim);
+}
+
+.ilist__empty {
+  color: var(--text-dim);
+  padding-block: var(--space-xl);
+}
+
+/* Mirrors .sublist__controls/__search/__select/__clear and .reports-index__... rule for
+ * rule - same filter-bar shape everywhere a listing page needs search + one dimension +
+ * sort. */
+.ilist__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-block-end: var(--space-md);
+  padding: var(--space-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.ilist__search {
+  flex: 1 1 260px;
+  min-height: 42px;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+}
+
+.ilist__select,
+.ilist__clear {
+  min-height: 42px;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  cursor: pointer;
+}
+
+.ilist__clear:hover {
+  border-color: var(--accent);
+}
+
+.ilist__shown {
+  margin: 0 0 var(--space-sm);
+  color: var(--text-dim);
+  font-size: 0.875rem;
+}
+
+.ilist__noresults {
+  color: var(--text-dim);
+  padding-block: var(--space-xl);
+}
+
+/* ---------- Facebook posts ---------- */
+.fposts { margin-top: var(--space-lg); }
+.fposts__title { display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-md); font-size: 1.25rem; color: var(--text); }
+.fposts__count { color: var(--text-dim); font-size: .875rem; font-weight: 400; }
+.fposts__list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--space-sm); }
+.fpost { padding: var(--space-sm) var(--space-md); border: 1px solid var(--border); border-inline-start: 3px solid #1877f2; border-radius: var(--radius-md); background: var(--surface); }
+.fpost__header { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-xs) var(--space-sm); font-size: .8125rem; }
+.fpost__author { font-weight: 600; color: var(--text); }
+.fpost__category { color: var(--text-dim); }
+.fpost__body { margin: var(--space-xs) 0 0; color: var(--text); font-size: .9375rem; line-height: 1.6; white-space: pre-line; }
+.fpost__h { margin: var(--space-md) 0 var(--space-xs); font-size: 1rem; }
+.fpost__bullets { margin: var(--space-xs) 0 0; padding-inline-start: 1.25rem; line-height: 1.6; }
+.fpost__image { display: block; width: min(100%, 42rem); max-height: 32rem; margin-top: var(--space-sm); border-radius: var(--radius-sm); object-fit: cover; }
+.fpost__footer { display: flex; justify-content: flex-end; margin-top: var(--space-xs); font-size: .8125rem; }
+.fpost__link { min-height: 32px; display: inline-flex; align-items: center; color: var(--accent); }
+.app--flist { max-width: 76rem; margin-inline: auto; padding-inline: var(--space-md); }
+.flist__head { margin-block: var(--space-lg) var(--space-md); }
+.flist__title { margin: 0; font-size: clamp(1.5rem, 4vw, 2rem); }
+.flist__count, .flist__shown, .flist__empty, .flist__noresults { color: var(--text-dim); }
+.flist__count { margin: var(--space-xs) 0 0; }
+.flist__empty, .flist__noresults { padding-block: var(--space-xl); }
+.flist__controls { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-block-end: var(--space-md); padding: var(--space-md); border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); }
+.flist__search { flex: 1 1 260px; min-height: 42px; padding: .45rem .65rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg); }
+.flist__select, .flist__clear { min-height: 42px; padding: .45rem .65rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface-2); cursor: pointer; }
+.flist__clear:hover { border-color: var(--accent); }
+.flist__shown { margin: 0 0 var(--space-sm); font-size: .875rem; }

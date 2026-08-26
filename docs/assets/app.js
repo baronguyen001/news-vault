@@ -24,9 +24,15 @@
     reportsTitle: "Báo cáo phân tích",
     substackTitle: "Từ Substack",
     indieTitle: "Indie Hacker",
+    facebookTitle: "Facebook",
     hideShorts: (n) => `Ẩn ${n} Short`,
     showShorts: (n) => `Hiện ${n} Short`,
     categoriesTitle: "Chuyên mục",
+    sourcesOverview: (parts) => `Ngoài ra hôm nay: ${parts.join(" · ")}`,
+    overviewSubstack: (n) => (n === 1 ? "1 bài Substack" : `${n} bài Substack`),
+    overviewVideo: (n) => (n === 1 ? "1 video" : `${n} video`),
+    overviewIndie: (n) => (n === 1 ? "1 bài Indie Hacker" : `${n} bài Indie Hacker`),
+    overviewFacebook: (n) => (n === 1 ? "1 bài Facebook" : `${n} bài Facebook`),
     trendingTitle: "Xu hướng",
     blindspotsTitle: "Góc chưa phủ",
     searchPlaceholder: "Tìm kiếm…",
@@ -405,6 +411,8 @@
     else if (config.kind === "substackIndex") renderSubstackIndex();
     else if (config.kind === "substack") renderSubstackArticle();
     else if (config.kind === "videoIndex") renderVideoIndex();
+    else if (config.kind === "indieIndex") renderIndieIndex();
+    else if (config.kind === "facebookIndex") renderFacebookIndex();
     else if (config.kind === "search") renderSearchPage();
     wireUser();
     applyHash();
@@ -478,6 +486,7 @@
     // One outer fold for all the analysis. Six separate collapsed panels still cost six
     // rows before the first headline; nested inside one row they cost none.
     const analysis = makePanel(app, "day-analysis", T.analysisPanels, "panel--outer");
+    renderSourcesOverview(analysis);
     renderCategoryGrid(analysis);
     renderDayCharts(analysis);
     renderTrending(analysis);
@@ -488,6 +497,7 @@
     renderSubstack(app);
     renderPosts(app);
     renderIndie(app);
+    renderFacebook(app);
     renderVideos(app);
     const wrap = make("div", "cards-wrap", app);
     const countEl = make("div", "result-count sr-only", wrap);
@@ -524,6 +534,8 @@
     mountDeepLink(nav);
     mountReportsLink(nav);
     mountSubstackLink(nav);
+    mountIndieLink(nav);
+    mountFacebookLink(nav);
     mountVideoLibraryLink(nav);
     // Column choice is a desktop affordance; the stylesheet hides it below 1024px.
     if (NV.layout) NV.layout.mount(nav);
@@ -612,6 +624,22 @@
     const link = make("a", "topbar__link topbar__link--substack", nav);
     link.href = `${config.base || ""}sub/`;
     text(link, T.substackTitle);
+    return link;
+  }
+
+  function mountIndieLink(nav) {
+    if (!nav || config.kind === "indieIndex") return;
+    const link = make("a", "topbar__link topbar__link--indie", nav);
+    link.href = `${config.base || ""}indie/`;
+    text(link, T.indieTitle);
+    return link;
+  }
+
+  function mountFacebookLink(nav) {
+    if (!nav || config.kind === "facebookIndex") return;
+    const link = make("a", "topbar__link topbar__link--facebook", nav);
+    link.href = `${config.base || ""}facebook/`;
+    text(link, T.facebookTitle);
     return link;
   }
 
@@ -712,6 +740,18 @@
     body.appendChild(section);
   }
 
+  function renderFacebook(parent) {
+    if (!NV.facebook) return;
+    const list = payload.facebook || [];
+    if (!list.length) return;
+    const body = makePanel(parent, "day-facebook", `${T.facebookTitle} (${list.length})`);
+    const section = NV.facebook.section(list);
+    if (!section) return;
+    const heading = section.querySelector(".fposts__title");
+    if (heading) section.removeChild(heading);
+    body.appendChild(section);
+  }
+
   /** Listing page for every deep dive in the archive. */
   function renderCuratedIndex() {
     const app = $("#app");
@@ -745,6 +785,23 @@
     app.className = "app app--sub";
     renderSimpleTopbar(app);
     if (NV.substack) NV.substack.renderArticle(app, payload, config);
+  }
+
+  /** Listing page for every Indie Hacker post in the archive. */
+  function renderIndieIndex() {
+    const app = $("#app");
+    text(app, "");
+    app.className = "app app--ilist";
+    renderSimpleTopbar(app);
+    if (NV.indie) NV.indie.renderIndex(app, payload, config);
+  }
+
+  function renderFacebookIndex() {
+    const app = $("#app");
+    text(app, "");
+    app.className = "app app--flist";
+    renderSimpleTopbar(app);
+    if (NV.facebook) NV.facebook.renderIndex(app, payload, config);
   }
 
   function renderQualityPage() {
@@ -846,6 +903,23 @@
     });
     paint();
     return btn;
+  }
+
+  /* Counts only, no attempt at a topic breakdown: unlike Article, Essay/Video/IndiePost
+   * carry no topic/tags field, so they cannot feed the category grid, charts, trending or
+   * blindspot panels below - those all read `article.topic`/`article.tags`. This is
+   * deliberately just a one-line "there's more today" pointer, not a fourth data source
+   * for those panels. */
+  function renderSourcesOverview(parent) {
+    const counts = [
+      { n: (payload.substack || []).length, label: T.overviewSubstack },
+      { n: (payload.videos || []).length, label: T.overviewVideo },
+      { n: (payload.indie || []).length, label: T.overviewIndie },
+      { n: (payload.facebook || []).length, label: T.overviewFacebook },
+    ].filter((entry) => entry.n > 0);
+    if (!counts.length) return;
+    const line = make("p", "sources-overview", parent);
+    text(line, T.sourcesOverview(counts.map((entry) => entry.label(entry.n))));
   }
 
   function renderCategoryGrid(parent) {
@@ -1702,6 +1776,14 @@
       const count = make("span", "homenav__count", substack);
       text(count, ` (${substackTotal})`);
     }
+    const facebook = make("a", "homenav__link", nav);
+    facebook.href = `${config.base || ""}facebook/`;
+    text(facebook, T.facebookTitle);
+    const facebookTotal = Number(config.facebookTotal);
+    if (facebookTotal > 0) {
+      const count = make("span", "homenav__count", facebook);
+      text(count, ` (${facebookTotal})`);
+    }
     const videos = make("a", "homenav__link", nav);
     videos.href = `${config.base || ""}videos/`;
     text(videos, T.videoLibrary);
@@ -1841,6 +1923,8 @@
     mountDeepLink(nav);
     mountReportsLink(nav);
     mountSubstackLink(nav);
+    mountIndieLink(nav);
+    mountFacebookLink(nav);
     mountVideoLibraryLink(nav);
     if (NV.layout) NV.layout.mount(nav);
     const theme = make("button", "topbar__btn", nav);
