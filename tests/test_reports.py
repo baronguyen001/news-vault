@@ -107,7 +107,7 @@ def test_reports_of_and_group_by_day_preserve_article_order() -> None:
 
 
 def test_report_payload_keeps_teaser_flag_and_day_card_index() -> None:
-    teaser = _article(id=1, is_teaser=True)
+    teaser = _article(id=1, is_teaser=True, image_url="https://cdn.example.test/teaser.jpg")
     full = _article(id=2, url="https://example.test/full", is_teaser=False)
     index = report_index_payload([teaser, full], generated_at="2026-08-10T00:00:00+07:00")
     assert index["kind"] == "reportsIndex"
@@ -115,6 +115,7 @@ def test_report_payload_keeps_teaser_flag_and_day_card_index() -> None:
     teaser_item = next(item for item in index["items"] if item["u"] == teaser.url)
     assert teaser_item["te"] is True
     assert teaser_item["d"] == "2026-08-09"
+    assert teaser_item["img"] == "https://cdn.example.test/teaser.jpg"
 
     day = day_payload(
         "2026-08-09",
@@ -131,3 +132,4 @@ def test_report_payload_keeps_teaser_flag_and_day_card_index() -> None:
     )
     assert [item["i"] for item in day["reports"]] == [1, 0]
     assert day["reports"][0]["te"] is True
+    assert day["reports"][0]["img"] == "https://cdn.example.test/teaser.jpg"

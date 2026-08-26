@@ -51,22 +51,29 @@
 
   function teaserCard(item) {
     const report = item && typeof item === "object" ? item : {};
-    const li = make("li", "report-teaser");
-    const badge = make("span", "badge badge--deep", li);
+    const li = make("li", "card card--report-teaser report-teaser");
+    const header = make("div", "card__head", li);
+    const badge = make("span", "badge badge--deep", header);
     text(badge, T.section);
-    const title = make("h3", "report-teaser__title", li);
+    const lead = make("div", "card__lead", li);
+    if (window.NV.videos && typeof window.NV.videos.thumb === "function") {
+      window.NV.videos.thumb(lead, report.img, report.t || "");
+    }
+    const content = make("div", "report-teaser__content", lead);
+    const title = make("h3", "card__title report-teaser__title", content);
     const link = make("a", "report-teaser__link", title);
     link.href = report.u || "#";
     link.target = "_blank";
     link.rel = "noopener noreferrer";
     text(link, report.t || "");
-    const meta = make("p", "report-teaser__meta", li);
+    const meta = make("p", "card__meta report-teaser__meta", content);
     text(meta, [report.s, formatDate(report.pi || report.p || report.d)].filter(Boolean).join(" · "));
     if (report.sum) {
-      const snippet = make("p", "report-teaser__snippet", li);
+      const snippet = make("p", "report-teaser__snippet", content);
       text(snippet, report.sum);
     }
-    const cta = make("a", "report-teaser__cta", li);
+    const foot = make("div", "card__foot", li);
+    const cta = make("a", "report-teaser__cta", foot);
     cta.href = report.u || "#";
     cta.target = "_blank";
     cta.rel = "noopener noreferrer";

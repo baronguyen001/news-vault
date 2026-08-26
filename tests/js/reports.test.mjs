@@ -75,10 +75,25 @@ function findAll(root, sel) {
 
 function load() {
   const document = { createElement: makeEl };
-  const window = { document, NV: {} };
+  const thumbs = [];
+  const window = {
+    document,
+    NV: {
+      videos: {
+        thumb(parent, url, alt) {
+          if (typeof url !== 'string' || !url.startsWith('https:')) return null;
+          thumbs.push({ url, alt });
+          const wrapper = makeEl('div');
+          wrapper.className = 'card__thumb';
+          parent.appendChild(wrapper);
+          return wrapper;
+        },
+      },
+    },
+  };
   const ctx = vm.createContext({ window, document });
   vm.runInContext(source, ctx, { filename: modulePath });
-  return { reports: ctx.window.NV.reports };
+  return { reports: ctx.window.NV.reports, thumbs };
 }
 
 function renderTwo() {
@@ -149,4 +164,15 @@ test('sorting oldest-first puts the earlier report first', () => {
   sortSelect.fire('change');
   const titles = app.querySelectorAll('.report-teaser__link').map((el) => el.textContent);
   assert.deepEqual(titles, ['Kinh tế Việt Nam quý 3', 'Chip AI và chuỗi cung ứng']);
+});
+
+test('RSS teasers delegate available images to the shared thumbnail builder', () => {
+  const { reports, thumbs } = load();
+  const card = reports.teaserCard({
+    t: 'Report with an image',
+    img: 'https://cdn.example.test/report.jpg',
+  });
+  assert.equal(card.classList.contains('card'), true);
+  assert.notEqual(card.querySelector('.card__thumb'), null);
+  assert.deepEqual(thumbs, [{ url: 'https://cdn.example.test/report.jpg', alt: 'Report with an image' }]);
 });
