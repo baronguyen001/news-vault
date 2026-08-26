@@ -2,9 +2,10 @@
  *
  * Deliberately the simplest card in the archive: no tier, no vertical, no topic, no
  * impact analysis - `xpulse/indie.py` only decides keep-or-drop and translates, so there
- * is nothing else here to render. Own classes (`.iposts` / `.ipost__*`), same reasoning
- * posts.js documents for `.xposts`: a shared class plus a global selector is how one
- * section's fix once broke another's layout.
+ * is nothing else here to render. Own content classes (`.iposts` / `.ipost__*`) layered on
+ * the shared `.card`/`.cards`/`card__thumb` grid+thumbnail system (same as facebook.js and
+ * reports.js) so cards stay equal-size and respond to the 1/2/3-column and grid layout
+ * switcher like every other section.
  */
 (function () {
   "use strict";
@@ -68,12 +69,17 @@
     return "" + value;
   }
 
+  function thumb(parent, url, alt) {
+    if (!window.NV.videos || typeof window.NV.videos.thumb !== "function") return null;
+    return window.NV.videos.thumb(parent, url, alt);
+  }
+
   function card(post, index) {
     const p = post && typeof post === "object" ? post : {};
-    const li = make("li", "ipost");
+    const li = make("li", "card card--indie ipost");
     if (index >= 0) li.id = "i-" + index;
 
-    const header = make("div", "ipost__header", li);
+    const header = make("div", "card__head ipost__header", li);
     const author = make("span", "ipost__author", header);
     text(author, "@" + (typeof p.au === "string" ? p.au : ""));
     if (typeof p.an === "string" && p.an !== "") {
@@ -81,10 +87,12 @@
       text(name, p.an);
     }
 
-    const body = make("p", "ipost__body", li);
+    const lead = make("div", "card__lead", li);
+    thumb(lead, p.img, typeof p.an === "string" && p.an !== "" ? p.an : "@" + (p.au || ""));
+    const body = make("p", "ipost__body", lead);
     text(body, p.vi);
 
-    const footer = make("div", "ipost__footer", li);
+    const footer = make("div", "card__foot ipost__footer", li);
     const metrics = make("span", "ipost__metrics", footer);
     text(metrics, "♥ " + compact(p.lk) + " · ↺ " + compact(p.rt));
 
@@ -103,12 +111,12 @@
   function section(posts) {
     const list = Array.isArray(posts) ? posts : [];
     if (!list.length) return null;
-    const sec = make("section", "iposts");
+    const sec = make("section", "cards-wrap iposts");
     const h2 = make("h2", "iposts__title", sec);
     text(h2, T.sectionTitle);
     const count = make("span", "iposts__count", h2);
     text(count, "(" + list.length + ")");
-    const ul = make("ul", "iposts__list", sec);
+    const ul = make("ul", "cards iposts__list", sec);
     for (let i = 0; i < list.length; i++) {
       try {
         ul.appendChild(card(list[i], i));
@@ -173,10 +181,10 @@
     clear.type = "button";
     text(clear, T.clear);
 
-    const wrap = make("div", "ilist__wrap", app);
+    const wrap = make("div", "cards-wrap ilist__wrap", app);
     const shownCount = make("p", "ilist__shown", wrap);
     shownCount.setAttribute("aria-live", "polite");
-    const list = make("ul", "iposts__list ilist__items", wrap);
+    const list = make("ul", "cards iposts__list ilist__items", wrap);
     const empty = make("p", "ilist__noresults", wrap);
     text(empty, T.noResults);
     empty.hidden = true;
