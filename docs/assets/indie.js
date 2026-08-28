@@ -43,6 +43,18 @@
     return typeof v === "string" && v !== "";
   }
 
+  function two(n) {
+    return n < 10 ? "0" + n : "" + n;
+  }
+
+  function formatDateTime(iso) {
+    if (!isNonEmptyString(iso)) return "";
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return "";
+    return two(d.getHours()) + ":" + two(d.getMinutes()) + " " +
+           two(d.getDate()) + "/" + two(d.getMonth() + 1) + "/" + d.getFullYear();
+  }
+
   /* Same diacritic-insensitive fold substack.js/reports.js/video-library.js use. */
   function folded(value) {
     return String(value || "")
@@ -86,6 +98,10 @@
       const name = make("span", "ipost__name", header);
       text(name, p.an);
     }
+    const date = formatDateTime(p.p);
+    if (date) {
+      text(make("span", "ipost__date", header), date);
+    }
 
     const lead = make("div", "card__lead", li);
     thumb(lead, p.img, typeof p.an === "string" && p.an !== "" ? p.an : "@" + (p.au || ""));
@@ -103,6 +119,20 @@
       link.target = "_blank";
       link.rel = "noopener noreferrer";
       text(link, T.open);
+    }
+
+    if (typeof p.vi === "string" && p.vi.length > 260) {
+      const more = make("button", "card__more", footer);
+      more.type = "button";
+      more.addEventListener("click", () => {
+        if (!window.NV.modal) return;
+        window.NV.modal.open({
+          title: isNonEmptyString(p.an) ? p.an : "@" + (p.au || ""),
+          node: body,
+          onClose: () => {}
+        });
+      });
+      text(more, "Xem thêm");
     }
 
     return li;

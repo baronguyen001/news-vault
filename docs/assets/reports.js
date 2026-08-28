@@ -68,11 +68,25 @@
     text(link, report.t || "");
     const meta = make("p", "card__meta report-teaser__meta", content);
     text(meta, [report.s, formatDate(report.pi || report.p || report.d)].filter(Boolean).join(" · "));
-    if (report.sum) {
-      const snippet = make("p", "report-teaser__snippet", content);
-      text(snippet, report.sum);
-    }
     const foot = make("div", "card__foot", li);
+    if (report.sum) {
+      const body = make("div", "card__body", content);
+      const snippet = make("p", "report-teaser__snippet", body);
+      text(snippet, report.sum);
+      body.hidden = true;
+      const more = make("button", "card__more", foot);
+      more.type = "button";
+      more.addEventListener("click", () => {
+        if (!window.NV.modal) return;
+        body.hidden = false;
+        window.NV.modal.open({
+          title: report.t || "",
+          node: body,
+          onClose: () => { body.hidden = true; }
+        });
+      });
+      text(more, "Xem thêm");
+    }
     const cta = make("a", "report-teaser__cta", foot);
     cta.href = report.u || "#";
     cta.target = "_blank";
