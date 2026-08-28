@@ -76,7 +76,7 @@
 
   function card(post, index) {
     const p = post && typeof post === "object" ? post : {};
-    const li = make("li", "card card--indie ipost");
+    const li = make("li", "card card--indie card--closed ipost");
     if (index >= 0) li.id = "i-" + index;
 
     const header = make("div", "card__head ipost__header", li);

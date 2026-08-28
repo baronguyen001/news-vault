@@ -51,7 +51,7 @@
 
   function teaserCard(item) {
     const report = item && typeof item === "object" ? item : {};
-    const li = make("li", "card card--report-teaser report-teaser");
+    const li = make("li", "card card--report-teaser card--closed report-teaser");
     const header = make("div", "card__head", li);
     const badge = make("span", "badge badge--deep", header);
     text(badge, T.section);

@@ -124,9 +124,44 @@
     return url;
   }
 
+  function appendEmptyThumbIcon(wrapper) {
+    const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    icon.setAttribute("viewBox", "0 0 24 24");
+    icon.setAttribute("aria-hidden", "true");
+    icon.setAttribute("focusable", "false");
+    const frame = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    frame.setAttribute("x", "3");
+    frame.setAttribute("y", "4");
+    frame.setAttribute("width", "18");
+    frame.setAttribute("height", "16");
+    frame.setAttribute("rx", "2");
+    const mountain = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    mountain.setAttribute("d", "m4 17 5-5 4 4 3-3 4 4");
+    const sun = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    sun.setAttribute("cx", "16");
+    sun.setAttribute("cy", "9");
+    sun.setAttribute("r", "1.5");
+    icon.appendChild(frame);
+    icon.appendChild(mountain);
+    icon.appendChild(sun);
+    wrapper.appendChild(icon);
+  }
+
+  function emptyThumb(parent, cls) {
+    const wrapper = make("div", "card__thumb card__thumb--empty" + (cls ? " " + cls : ""), parent);
+    appendEmptyThumbIcon(wrapper);
+    return wrapper;
+  }
+
+  function showEmptyThumb(wrapper) {
+    while (wrapper.firstChild) wrapper.removeChild(wrapper.firstChild);
+    wrapper.classList.add("card__thumb--empty");
+    appendEmptyThumbIcon(wrapper);
+  }
+
   function thumb(parent, url, alt, cls, fallbackUrl) {
     const primary = validHttpsUrl(url);
-    if (!primary) return null;
+    if (!primary) return emptyThumb(parent, cls);
 
     const fallback = validHttpsUrl(fallbackUrl);
     const wrapper = make("div", "card__thumb" + (cls ? " " + cls : ""), parent);
@@ -144,9 +179,7 @@
         img.src = fallback;
         return;
       }
-      if (wrapper && wrapper.parentNode) {
-        wrapper.parentNode.removeChild(wrapper);
-      }
+      showEmptyThumb(wrapper);
     };
     return wrapper;
   }

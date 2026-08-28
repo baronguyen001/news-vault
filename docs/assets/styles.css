@@ -2671,6 +2671,26 @@ code {
   object-fit: cover;
 }
 
+/* Keep card geometry stable when a source has no usable thumbnail or its image fails
+ * to load. `currentColor` and the theme variables make this work in both colour modes. */
+.card__thumb--empty {
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--surface-2), color-mix(in srgb, var(--surface-2) 72%, var(--border)));
+  color: var(--text-dim);
+}
+
+.card__thumb--empty svg {
+  width: clamp(2rem, 22%, 3.5rem);
+  height: clamp(2rem, 22%, 3.5rem);
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+}
+
 /* === Badges === */
 .badge--video {
   background-color: var(--accent);
@@ -2797,11 +2817,13 @@ code {
   [data-layout="two"] .xposts__list,
   [data-layout="two"] .sublist__items,
   [data-layout="two"] .ilist__items,
+  [data-layout="two"] .deeplist__items,
   [data-layout="three"] .cards-wrap .cards,
   [data-layout="three"] .videos__list,
   [data-layout="three"] .xposts__list,
   [data-layout="three"] .sublist__items,
-  [data-layout="three"] .ilist__items {
+  [data-layout="three"] .ilist__items,
+  [data-layout="three"] .deeplist__items {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: start;
@@ -2818,7 +2840,8 @@ code {
   [data-layout="grid"] .videos__list,
   [data-layout="grid"] .xposts__list,
   [data-layout="grid"] .sublist__items,
-  [data-layout="grid"] .ilist__items {
+  [data-layout="grid"] .ilist__items,
+  [data-layout="grid"] .deeplist__items {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     align-items: start;
@@ -2861,7 +2884,10 @@ code {
    * one column here too. */
   [data-layout="two"] .sublist__items,
   [data-layout="three"] .sublist__items,
-  [data-layout="grid"] .sublist__items {
+  [data-layout="grid"] .sublist__items,
+  [data-layout="two"] .deeplist__items,
+  [data-layout="three"] .deeplist__items,
+  [data-layout="grid"] .deeplist__items {
     align-items: stretch;
   }
 
@@ -2871,6 +2897,13 @@ code {
     display: flex;
     flex-direction: column;
     height: 100%;
+  }
+
+  /* Narrow cards need their thumbnail above the copy; keep this tied to the user-selected
+   * multi-column modes rather than an unrelated viewport-only breakpoint. */
+  [data-layout="three"] .deeplist__items .dcard__link,
+  [data-layout="grid"] .deeplist__items .dcard__link {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   /* An opened card should span the full row in every multi-column mode. */
@@ -2909,7 +2942,8 @@ code {
   [data-layout="three"] .videos__list,
   [data-layout="three"] .xposts__list,
   [data-layout="three"] .sublist__items,
-  [data-layout="three"] .ilist__items {
+  [data-layout="three"] .ilist__items,
+  [data-layout="three"] .deeplist__items {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
@@ -3601,23 +3635,6 @@ body.modal-open {
   min-height: 32px;
   color: var(--accent);
   font-weight: 600;
-}
-
-@media (min-width: 1024px) {
-  .deeplist__items {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1440px) {
-  .deeplist__items {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  /* Three across leaves no room for a side-by-side thumbnail. */
-  .deeplist__items .dcard__link {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }
 
 /* ---------- article page ---------- */
@@ -4623,3 +4640,14 @@ body.modal-open {
 .flist__select, .flist__clear { min-height: 42px; padding: .45rem .65rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface-2); cursor: pointer; }
 .flist__clear:hover { border-color: var(--accent); }
 .flist__shown { margin: 0 0 var(--space-sm); font-size: .875rem; }
+
+@media (min-width: 1280px) {
+  .app--ilist,
+  .app--reports,
+  .app--deeplist,
+  .app--flist,
+  .app--sublist {
+    max-width: 2000px;
+    padding-inline: clamp(var(--space-lg), 2vw, var(--space-xl));
+  }
+}

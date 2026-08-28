@@ -38,6 +38,7 @@ function makeEl(tag) {
     addEventListener(type, fn) { (this.listeners[type] = this.listeners[type] || []).push(fn); },
     click() { (this.listeners.click || []).forEach((fn) => fn({ preventDefault() {} })); },
     querySelector(sel) { return find(this, sel); },
+    get firstChild() { return this.children[0] || null; },
     get classList() {
       const self = this;
       return {
@@ -72,7 +73,11 @@ function find(root, sel) {
 }
 
 function load() {
-  const document = { createElement: makeEl, createTextNode: (t) => ({ nodeType: 3, textContent: String(t) }) };
+  const document = {
+    createElement: makeEl,
+    createElementNS: (_namespace, tag) => makeEl(tag),
+    createTextNode: (t) => ({ nodeType: 3, textContent: String(t) }),
+  };
   const window = { document };
   const ctx = vm.createContext({ window, document, URL });
   vm.runInContext(source, ctx, { filename: modulePath });
@@ -137,11 +142,13 @@ test('thumb sets image loading attributes', () => {
   assert.equal(img.referrerPolicy, 'no-referrer');
 });
 
-test('a non-https primary URL is rejected', () => {
+test('a non-https primary URL renders a placeholder', () => {
   const { videos, document } = load();
   const parent = document.createElement('div');
-  assert.equal(videos.thumb(parent, 'http://example.com/a.jpg', 'x', ''), null);
-  assert.equal(parent.children.length, 0);
+  const wrapper = videos.thumb(parent, 'http://example.com/a.jpg', 'x', 'custom-thumb');
+  assert.equal(wrapper.classList.contains('card__thumb--empty'), true);
+  assert.equal(wrapper.classList.contains('custom-thumb'), true);
+  assert.equal(parent.children.length, 1);
 });
 
 test('a non-https fallback is ignored', () => {
@@ -150,7 +157,8 @@ test('a non-https fallback is ignored', () => {
   const wrapper = videos.thumb(parent, SHORT.th, 'x', '', 'http://example.com/fallback.jpg');
   const img = wrapper.children[0];
   img.onerror();
-  assert.equal(parent.children.length, 0);
+  assert.equal(parent.children.length, 1);
+  assert.equal(wrapper.classList.contains('card__thumb--empty'), true);
   assert.notEqual(img.src, 'http://example.com/fallback.jpg');
 });
 
@@ -164,23 +172,26 @@ test('the first Short image error uses the fallback', () => {
   assert.equal(parent.children.length, 1);
 });
 
-test('the second image error removes the wrapper', () => {
+test('the second image error replaces the image with a placeholder', () => {
   const { videos, document } = load();
   const parent = document.createElement('div');
   const wrapper = videos.thumb(parent, SHORT.th, 'x', '', SHORT.thf);
   const img = wrapper.children[0];
   img.onerror();
   img.onerror();
-  assert.equal(parent.children.length, 0);
-  assert.equal(wrapper.parentNode, null);
+  assert.equal(parent.children.length, 1);
+  assert.equal(wrapper.parentNode, parent);
+  assert.equal(wrapper.classList.contains('card__thumb--empty'), true);
+  assert.equal(wrapper.children[0].tagName, 'SVG');
 });
 
-test('a missing fallback removes the image on its first error', () => {
+test('a missing fallback uses a placeholder on its first error', () => {
   const { videos, document } = load();
   const parent = document.createElement('div');
   const wrapper = videos.thumb(parent, LONG.th, 'x', '', LONG.thf);
   wrapper.children[0].onerror();
-  assert.equal(parent.children.length, 0);
+  assert.equal(parent.children.length, 1);
+  assert.equal(wrapper.classList.contains('card__thumb--empty'), true);
 });
 
 test('the fallback is tried at most once', () => {
@@ -192,7 +203,8 @@ test('the fallback is tried at most once', () => {
   const fallback = img.src;
   img.onerror();
   assert.equal(img.src, fallback);
-  assert.equal(parent.children.length, 0);
+  assert.equal(parent.children.length, 1);
+  assert.equal(wrapper.classList.contains('card__thumb--empty'), true);
 });
 
 test('a missing bl array does not throw', () => {

@@ -41,6 +41,7 @@ function makeEl(tag) {
       return Object.prototype.hasOwnProperty.call(this.attrs, k) ? this.attrs[k] : null;
     },
     querySelector(sel) { return find(this, sel); },
+    get firstChild() { return this.children[0] || null; },
     get classList() {
       const self = this;
       return {
@@ -74,6 +75,7 @@ function find(root, sel) {
 function load() {
   const document = {
     createElement: makeEl,
+    createElementNS: (_namespace, tag) => makeEl(tag),
     createTextNode: (t) => ({ nodeType: 3, textContent: String(t), parentNode: null }),
   };
   const window = { document };
@@ -138,6 +140,15 @@ test('malformed entries are tolerated without losing the section', () => {
   const section = curated.daySection([ITEM, null, 42]);
   assert.notEqual(section, null);
   assert.notEqual(section.querySelector('.dcard__title'), null);
+});
+
+test('a missing thumbnail renders a placeholder in its normal card track', () => {
+  const { curated } = load();
+  const card = curated.teaserCard(ITEM, '../../');
+  const thumb = card.querySelector('.dcard__thumb');
+  assert.notEqual(thumb, null);
+  assert.equal(thumb.classList.contains('card__thumb--empty'), true);
+  assert.equal(thumb.children[0].tagName, 'SVG');
 });
 
 test('model-written text lands as text, never markup', () => {
