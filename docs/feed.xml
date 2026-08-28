@@ -2,9 +2,16 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>https://baronguyen001.github.io/news-vault</id>
   <title>Kho tin</title>
-  <updated>2026-08-27T23:59:59+07:00</updated>
+  <updated>2026-08-28T23:59:59+07:00</updated>
   <link href="https://baronguyen001.github.io/news-vault"/>
   <entry>
+  <id>urn:news-vault:day:2026-08-28</id>
+  <title>28/08/2026 — 67 tin</title>
+  <updated>2026-08-28T00:00:00+07:00</updated>
+  <link href="https://baronguyen001.github.io/news-vault/d/2026-08-28/"/>
+  <summary>Chính trị/Chính sách 21 · Công nghệ/AI 6 · Kinh tế/Tài chính 6 · Xung đột/Chiến tranh 6 · Pháp luật/Nghị định 5 · Chứng khoán 1 · Văn hóa/Xã hội 1</summary>
+</entry>
+<entry>
   <id>urn:news-vault:day:2026-08-27</id>
   <title>27/08/2026 — 177 tin</title>
   <updated>2026-08-27T00:00:00+07:00</updated>
@@ -415,13 +422,6 @@
   <title>30/06/2026 — 3 tin</title>
   <updated>2026-06-30T00:00:00+07:00</updated>
   <link href="https://baronguyen001.github.io/news-vault/d/2026-06-30/"/>
-  <summary></summary>
-</entry>
-<entry>
-  <id>urn:news-vault:day:2026-06-29</id>
-  <title>29/06/2026 — 5 tin</title>
-  <updated>2026-06-29T00:00:00+07:00</updated>
-  <link href="https://baronguyen001.github.io/news-vault/d/2026-06-29/"/>
   <summary></summary>
 </entry>
 </feed>
