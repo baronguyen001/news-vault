@@ -40,6 +40,8 @@ class FacebookPost:
     summary: str
     text: str
     blocks: tuple[Block, ...]
+    topic: str = ""
+    relevance: float | None = None
 
 
 def has_table(conn: sqlite3.Connection) -> bool:
@@ -72,11 +74,26 @@ def group_by_day(posts: Sequence[FacebookPost]) -> dict[str, list[FacebookPost]]
     return grouped
 
 
+def _optional_column(conn: sqlite3.Connection, candidates: tuple[str, ...]) -> str:
+    """Return the first known optional metadata column present in the source schema."""
+    cursor = conn.execute(f"PRAGMA table_info({TABLE})")
+    try:
+        columns = {str(row["name"]) for row in cursor}
+    finally:
+        cursor.close()
+    return next((name for name in candidates if name in columns), "")
+
+
 def _iter_posts(conn: sqlite3.Connection) -> Iterator[FacebookPost | None]:
     if not has_table(conn):
         return
+    topic_column = _optional_column(conn, ("topic", "topic_label"))
+    relevance_column = _optional_column(conn, ("relevance", "relevance_score", "score"))
+    topic_select = f", {topic_column} AS nv_topic" if topic_column else ""
+    relevance_select = f", {relevance_column} AS nv_relevance" if relevance_column else ""
     query = (
         f"SELECT id, category, author_name, post_url, text, image_url, summary_text, scraped_at "
+        f"{topic_select}{relevance_select} "
         f"FROM {TABLE} "
         "WHERE summary_text IS NOT NULL AND TRIM(summary_text) <> '' "
         "AND TRIM(summary_text) <> ? ORDER BY id"
@@ -107,7 +124,23 @@ def _post_from_row(row: sqlite3.Row) -> FacebookPost | None:
         summary=summary,
         text=(row["text"] or "").strip(),
         blocks=curated_blocks(summary),
+        topic=_row_text(row, "nv_topic"),
+        relevance=_row_number(row, "nv_relevance"),
     )
+
+
+def _row_text(row: sqlite3.Row, name: str) -> str:
+    columns = set(row.keys())
+    return (row[name] or "").strip() if name in columns else ""
+
+
+def _row_number(row: sqlite3.Row, name: str) -> float | None:
+    if name not in set(row.keys()) or row[name] is None:
+        return None
+    try:
+        return float(row[name])
+    except (TypeError, ValueError):
+        return None
 
 
 def _https_url(raw: object) -> str:

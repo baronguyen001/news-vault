@@ -9,7 +9,7 @@ const CACHE_NAME = "nv-cache-v1";
 // deletes every "nv-" cache that is not one of the current names, so a returning
 // reader gets the new stylesheet instead of last week's from cache.
 const SHELL_CACHE = "nv-shell-v10";
-const RUNTIME_CACHE = "nv-runtime-v1";
+const RUNTIME_CACHE = "nv-runtime-v2";
 const MAX_RUNTIME = 400;
 
 // Shell assets to pre-cache
@@ -106,21 +106,19 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // .enc payloads and .webp images: cache-first with runtime cap
+  // .enc payloads and .webp images: stale-while-revalidate with runtime cap
   if (path.endsWith(".enc") || path.endsWith(".webp")) {
     event.respondWith(
       caches.open(RUNTIME_CACHE).then((cache) => {
         return cache.match(request).then((cached) => {
-          if (cached) {
-            return cached;
-          }
-          return fetch(request).then((response) => {
+          const fetchPromise = fetch(request).then((response) => {
             if (response.status === 200 && response.type !== "opaque") {
               const cacheClone = response.clone();
               cache.put(request, cacheClone).then(() => evictIfNeeded(cache));
             }
             return response;
-          });
+          }).catch(() => cached);
+          return cached || fetchPromise;
         });
       })
     );

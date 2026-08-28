@@ -86,12 +86,45 @@
     return window.NV.videos.thumb(parent, url, alt);
   }
 
+  function decorateCard(card, header, item) {
+    const app = window.NV && window.NV.app;
+    if (!app) return;
+    if (typeof app.applyTopicClass === "function") app.applyTopicClass(card, item);
+    if (typeof app.renderScoreTopicBadges === "function") app.renderScoreTopicBadges(header, item);
+  }
+
+  function fallbackBlocks(textValue) {
+    return String(textValue || "").split(/\r?\n\s*\r?\n|\r?\n/)
+      .map((value) => value.trim()).filter(Boolean)
+      .map((value) => ({ k: "p", r: [[value, false]] }));
+  }
+
+  function postBlocks(post) {
+    if (Array.isArray(post.blocks)) return post.blocks;
+    if (Array.isArray(post.bl)) return post.bl;
+    return fallbackBlocks(post.vi);
+  }
+
+  function blocksInto(parent, blocks) {
+    const app = window.NV && window.NV.app;
+    if (app && typeof app.blocksInto === "function") {
+      app.blocksInto(parent, blocks, { paragraphClass: "ipost__paragraph" });
+    }
+  }
+
+  function blockText(blocks) {
+    return blocks.map((block) => (block && Array.isArray(block.r) ? block.r : []))
+      .map((runs) => runs.map((run) => Array.isArray(run) ? run[0] : "").join(""))
+      .join("\n");
+  }
+
   function card(post, index) {
     const p = post && typeof post === "object" ? post : {};
     const li = make("li", "card card--indie card--closed ipost");
     if (index >= 0) li.id = "i-" + index;
 
     const header = make("div", "card__head ipost__header", li);
+    decorateCard(li, header, p);
     const author = make("span", "ipost__author", header);
     text(author, "@" + (typeof p.au === "string" ? p.au : ""));
     if (typeof p.an === "string" && p.an !== "") {
@@ -105,8 +138,9 @@
 
     const lead = make("div", "card__lead", li);
     thumb(lead, p.img, typeof p.an === "string" && p.an !== "" ? p.an : "@" + (p.au || ""));
-    const body = make("p", "ipost__body", lead);
-    text(body, p.vi);
+    const body = make("div", "ipost__body", lead);
+    const blocks = postBlocks(p);
+    blocksInto(body, blocks);
 
     const footer = make("div", "card__foot ipost__footer", li);
     const metrics = make("span", "ipost__metrics", footer);
@@ -121,7 +155,7 @@
       text(link, T.open);
     }
 
-    if (typeof p.vi === "string" && p.vi.length > 260) {
+    if (blockText(blocks).length > 260) {
       const more = make("button", "card__more", footer);
       more.type = "button";
       more.addEventListener("click", () => {
@@ -222,7 +256,8 @@
     function matches(item) {
       if (state.author && item.au !== state.author) return false;
       if (!state.query) return true;
-      const haystack = folded([item.vi, item.au, item.an].filter(isNonEmptyString).join(" "));
+      const haystack = folded([blockText(postBlocks(item)), item.au, item.an]
+        .filter(isNonEmptyString).join(" "));
       return haystack.indexOf(folded(state.query)) !== -1;
     }
 

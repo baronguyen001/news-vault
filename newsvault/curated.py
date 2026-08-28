@@ -97,6 +97,8 @@ class CuratedItem:
     lead: str  # first paragraph, for the teaser card on the day page
     words: int
     minutes: int
+    topic: str = ""
+    relevance: float | None = None
 
 
 def has_table(conn: sqlite3.Connection) -> bool:
@@ -177,14 +179,29 @@ def group_by_day(items: Sequence[CuratedItem]) -> dict[str, list[CuratedItem]]:
     return grouped
 
 
+def _optional_column(conn: sqlite3.Connection, candidates: tuple[str, ...]) -> str:
+    """Return the first known optional metadata column present in the source schema."""
+    cursor = conn.execute(f"PRAGMA table_info({TABLE})")
+    try:
+        columns = {str(row["name"]) for row in cursor}
+    finally:
+        cursor.close()
+    return next((name for name in candidates if name in columns), "")
+
+
 def _iter_items(conn: sqlite3.Connection) -> Iterator[CuratedItem | None]:
     """Yield published analyses, or None for a row with no usable date."""
     if not has_table(conn):
         return
     # telegram_sent is deliberately NOT part of the condition: whether the reader's phone
     # got the message says nothing about whether the analysis is worth publishing here.
+    topic_column = _optional_column(conn, ("topic", "topic_label"))
+    relevance_column = _optional_column(conn, ("relevance", "relevance_score", "score"))
+    topic_select = f", {topic_column} AS nv_topic" if topic_column else ""
+    relevance_select = f", {relevance_column} AS nv_relevance" if relevance_column else ""
     query = (
-        f"SELECT id, url, title, channel, summary, processed_at FROM {TABLE} "
+        f"SELECT id, url, title, channel, summary, processed_at{topic_select}{relevance_select} "
+        f"FROM {TABLE} "
         "WHERE success = 1 AND TRIM(summary) <> '' ORDER BY id"
     )
     cursor = conn.execute(query)
@@ -226,7 +243,23 @@ def _item_from_row(row: sqlite3.Row) -> CuratedItem | None:
         lead=lead_text(blocks),
         words=words,
         minutes=reading_minutes(words),
+        topic=_row_text(row, "nv_topic"),
+        relevance=_row_number(row, "nv_relevance"),
     )
+
+
+def _row_text(row: sqlite3.Row, name: str) -> str:
+    columns = set(row.keys())
+    return (row[name] or "").strip() if name in columns else ""
+
+
+def _row_number(row: sqlite3.Row, name: str) -> float | None:
+    if name not in set(row.keys()) or row[name] is None:
+        return None
+    try:
+        return float(row[name])
+    except (TypeError, ValueError):
+        return None
 
 
 def _resolve_day(processed_at: str) -> str:

@@ -30,6 +30,36 @@ def _search_snippet(value: str, limit: int = 160) -> str:
     return f"{cut or value[: limit - 1]}…"
 
 
+def _metadata_value(item: object, *names: str) -> object | None:
+    """First non-blank optional metadata attribute, without assuming a migrated source."""
+    for name in names:
+        try:
+            value = getattr(item, name)
+        except AttributeError:
+            continue
+        if value is not None and (not isinstance(value, str) or value.strip()):
+            return value
+    return None
+
+
+def _optional_metadata(item: object) -> dict[str, object]:
+    """Compact topic/score fields only when the source actually supplied metadata."""
+    value: dict[str, object] = {}
+    topic = _metadata_value(item, "topic", "topic_label")
+    relevance = _metadata_value(item, "relevance", "relevance_score", "score")
+    if topic is not None:
+        value["tp"] = topic
+    if relevance is not None:
+        value["sc"] = relevance
+    return value
+
+
+def _metadata_or(item: object, *, topic: object, score: object) -> tuple[object, object]:
+    """Use source metadata when present, retaining the established index placeholders otherwise."""
+    optional = _optional_metadata(item)
+    return optional.get("tp", topic), optional.get("sc", score)
+
+
 def _count_values(values: Iterable[str]) -> dict[str, int]:
     counts: dict[str, int] = {}
     for value in values:
@@ -177,7 +207,9 @@ def video_library_payload(videos: Sequence[Video], *, generated_at: str) -> dict
     exposing failed or pending rows would require a live service and would make the
     archive's data model misleading.
     """
-    ordered = sorted(videos, key=lambda video: (video.day, video.processed_at, video.id), reverse=True)
+    ordered = sorted(
+        videos, key=lambda video: (video.day, video.processed_at, video.id), reverse=True
+    )
     channels = _count_values(video.channel or "Kênh chưa rõ" for video in ordered)
     return _sorted(
         {
@@ -198,21 +230,21 @@ def curated_teaser(item: CuratedItem) -> dict[str, object]:
     would triple its payload for text the reader has to open a dedicated page to read
     anyway, so the card links out and only the reading page ships the blocks.
     """
-    return _sorted(
-        {
-            "id": item.id,
-            "t": item.title,
-            "c": item.channel,
-            "u": item.url,
-            "th": item.thumbnail,
-            "d": item.day,
-            "p": item.processed_at,
-            "lead": item.lead,
-            "w": item.words,
-            "m": item.minutes,
-            "ns": len(item.sections),
-        }
-    )
+    value: dict[str, object] = {
+        "id": item.id,
+        "t": item.title,
+        "c": item.channel,
+        "u": item.url,
+        "th": item.thumbnail,
+        "d": item.day,
+        "p": item.processed_at,
+        "lead": item.lead,
+        "w": item.words,
+        "m": item.minutes,
+        "ns": len(item.sections),
+    }
+    value.update(_optional_metadata(item))
+    return _sorted(value)
 
 
 def curated_payload(item: CuratedItem) -> dict[str, object]:
@@ -221,24 +253,24 @@ def curated_payload(item: CuratedItem) -> dict[str, object]:
     Like a video summary, the body travels as pre-parsed blocks and never as markup, so no
     text a language model produced can reach the browser as HTML.
     """
-    return _sorted(
-        {
-            "v": 1,
-            "kind": "curated",
-            "id": item.id,
-            "t": item.title,
-            "c": item.channel,
-            "u": item.url,
-            "th": item.thumbnail,
-            "d": item.day,
-            "p": item.processed_at,
-            "pub": item.published_iso,
-            "w": item.words,
-            "m": item.minutes,
-            "toc": [{"a": s.anchor, "l": s.label} for s in item.sections],
-            "bl": [{"k": b.kind, "r": [[run, bold] for run, bold in b.runs]} for b in item.blocks],
-        }
-    )
+    value: dict[str, object] = {
+        "v": 1,
+        "kind": "curated",
+        "id": item.id,
+        "t": item.title,
+        "c": item.channel,
+        "u": item.url,
+        "th": item.thumbnail,
+        "d": item.day,
+        "p": item.processed_at,
+        "pub": item.published_iso,
+        "w": item.words,
+        "m": item.minutes,
+        "toc": [{"a": s.anchor, "l": s.label} for s in item.sections],
+        "bl": [{"k": b.kind, "r": [[run, bold] for run, bold in b.runs]} for b in item.blocks],
+    }
+    value.update(_optional_metadata(item))
+    return _sorted(value)
 
 
 def curated_index_payload(items: Sequence[CuratedItem], *, generated_at: str) -> dict[str, object]:
@@ -260,6 +292,7 @@ def curated_index_items(items: Sequence[CuratedItem]) -> list[dict[str, object]]
     for item in items:
         body = " ".join(run for block in item.blocks for run, _ in block.runs)
         searchable = fold(f"{item.title} {item.channel} {body}".strip())
+        topic, score = _metadata_or(item, topic="Phân tích sâu", score=0)
         out.append(
             _sorted(
                 {
@@ -274,9 +307,9 @@ def curated_index_items(items: Sequence[CuratedItem]) -> list[dict[str, object]]
                     "s": item.channel,
                     "sk": "youtube",
                     "tr": "free",
-                    "tp": "Phân tích sâu",
+                    "tp": topic,
                     "im": "",
-                    "sc": 0,
+                    "sc": score,
                     "r": "",
                     "tg": [],
                 }
@@ -400,21 +433,21 @@ def substack_teaser(item: Essay) -> dict[str, object]:
     long essays does not triple its payload for text the reader opens a dedicated page for
     anyway.
     """
-    return _sorted(
-        {
-            "id": item.id,
-            "t": item.title,
-            "c": item.author_name,
-            "u": item.url,
-            "img": item.image_url,
-            "d": item.day,
-            "p": item.published_iso,
-            "lead": item.lead,
-            "w": item.words,
-            "m": item.minutes,
-            "ns": len(item.sections),
-        }
-    )
+    value: dict[str, object] = {
+        "id": item.id,
+        "t": item.title,
+        "c": item.author_name,
+        "u": item.url,
+        "img": item.image_url,
+        "d": item.day,
+        "p": item.published_iso,
+        "lead": item.lead,
+        "w": item.words,
+        "m": item.minutes,
+        "ns": len(item.sections),
+    }
+    value.update(_optional_metadata(item))
+    return _sorted(value)
 
 
 def substack_payload(item: Essay) -> dict[str, object]:
@@ -423,23 +456,23 @@ def substack_payload(item: Essay) -> dict[str, object]:
     Like a curated analysis, the body travels as pre-parsed blocks and never as markup, so
     no text a language model produced can reach the browser as HTML.
     """
-    return _sorted(
-        {
-            "v": 1,
-            "kind": "substack",
-            "id": item.id,
-            "t": item.title,
-            "c": item.author_name,
-            "u": item.url,
-            "img": item.image_url,
-            "d": item.day,
-            "p": item.published_iso,
-            "w": item.words,
-            "m": item.minutes,
-            "toc": [{"a": s.anchor, "l": s.label} for s in item.sections],
-            "bl": [{"k": b.kind, "r": [[run, bold] for run, bold in b.runs]} for b in item.blocks],
-        }
-    )
+    value: dict[str, object] = {
+        "v": 1,
+        "kind": "substack",
+        "id": item.id,
+        "t": item.title,
+        "c": item.author_name,
+        "u": item.url,
+        "img": item.image_url,
+        "d": item.day,
+        "p": item.published_iso,
+        "w": item.words,
+        "m": item.minutes,
+        "toc": [{"a": s.anchor, "l": s.label} for s in item.sections],
+        "bl": [{"k": b.kind, "r": [[run, bold] for run, bold in b.runs]} for b in item.blocks],
+    }
+    value.update(_optional_metadata(item))
+    return _sorted(value)
 
 
 def substack_index_payload(items: Sequence[Essay], *, generated_at: str) -> dict[str, object]:
@@ -461,6 +494,7 @@ def substack_index_items(items: Sequence[Essay]) -> list[dict[str, object]]:
     for item in items:
         body = " ".join(run for block in item.blocks for run, _ in block.runs)
         searchable = fold(f"{item.title} {item.author_name} {body}".strip())
+        topic, score = _metadata_or(item, topic="Substack", score=0)
         out.append(
             _sorted(
                 {
@@ -475,9 +509,9 @@ def substack_index_items(items: Sequence[Essay]) -> list[dict[str, object]]:
                     "s": item.author_name,
                     "sk": "substack",
                     "tr": "free",
-                    "tp": "Substack",
+                    "tp": topic,
                     "im": "",
-                    "sc": 0,
+                    "sc": score,
                     "r": "",
                     "tg": [],
                 }
@@ -523,6 +557,7 @@ def compact_indie(post: IndiePost) -> dict[str, object]:
     }
     if post.image:
         value["img"] = post.image
+    value.update(_optional_metadata(post))
     return _sorted(value)
 
 
@@ -531,6 +566,7 @@ def indie_index_items(posts: Sequence[IndiePost]) -> list[dict[str, object]]:
     out: list[dict[str, object]] = []
     for index, post in enumerate(posts):
         searchable = fold(f"{post.author_name} {post.author} {post.text_vi}".strip())
+        topic, score = _metadata_or(post, topic="Indie Hacker", score=0)
         out.append(
             _sorted(
                 {
@@ -543,9 +579,9 @@ def indie_index_items(posts: Sequence[IndiePost]) -> list[dict[str, object]]:
                     "s": f"@{post.author}",
                     "sk": "x",
                     "tr": "free",
-                    "tp": "Indie Hacker",
+                    "tp": topic,
                     "im": "",
-                    "sc": 0,
+                    "sc": score,
                     "r": "",
                     "tg": [],
                 }
@@ -556,21 +592,23 @@ def indie_index_items(posts: Sequence[IndiePost]) -> list[dict[str, object]]:
 
 def compact_facebook(post: FacebookPost) -> dict[str, object]:
     """Compact shape for one Facebook post, with its summary as safe parsed blocks."""
-    return _sorted(
-        {
-            "id": post.id,
-            "an": post.author_name,
-            "c": post.category,
-            "u": post.url,
-            "img": post.image,
-            "d": post.day,
-            "p": post.published_iso,
-            "bl": [{"k": b.kind, "r": [[run, bold] for run, bold in b.runs]} for b in post.blocks],
-        }
-    )
+    value: dict[str, object] = {
+        "id": post.id,
+        "an": post.author_name,
+        "c": post.category,
+        "u": post.url,
+        "img": post.image,
+        "d": post.day,
+        "p": post.published_iso,
+        "bl": [{"k": b.kind, "r": [[run, bold] for run, bold in b.runs]} for b in post.blocks],
+    }
+    value.update(_optional_metadata(post))
+    return _sorted(value)
 
 
-def facebook_index_payload(posts: Sequence[FacebookPost], *, generated_at: str) -> dict[str, object]:
+def facebook_index_payload(
+    posts: Sequence[FacebookPost], *, generated_at: str
+) -> dict[str, object]:
     """Payload for the one combined Facebook listing, newest post first."""
     ordered = sorted(posts, key=lambda post: (post.day, post.published_iso, post.id), reverse=True)
     return _sorted(
@@ -590,6 +628,7 @@ def facebook_index_items(posts: Sequence[FacebookPost]) -> list[dict[str, object
     for index, post in enumerate(posts):
         body = " ".join(run for block in post.blocks for run, _ in block.runs)
         searchable = fold(f"{post.author_name} {post.category} {body} {post.text}".strip())
+        topic, score = _metadata_or(post, topic=post.category or "Facebook", score=0)
         out.append(
             _sorted(
                 {
@@ -602,9 +641,9 @@ def facebook_index_items(posts: Sequence[FacebookPost]) -> list[dict[str, object
                     "s": post.author_name,
                     "sk": "facebook",
                     "tr": "free",
-                    "tp": post.category or "Facebook",
+                    "tp": topic,
                     "im": "",
-                    "sc": 0,
+                    "sc": score,
                     "r": "",
                     "tg": [],
                 }

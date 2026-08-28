@@ -80,6 +80,18 @@ def test_load_all_reads_a_kept_row(tmp_path: Path) -> None:
     assert post.likes == 100
 
 
+def test_load_all_uses_optional_topic_and_relevance_columns(tmp_path: Path) -> None:
+    conn = _connect(_make_db(tmp_path, rows=(_row(),)))
+    conn.execute("ALTER TABLE indie_posts ADD COLUMN topic TEXT")
+    conn.execute("ALTER TABLE indie_posts ADD COLUMN relevance REAL")
+    conn.execute("UPDATE indie_posts SET topic = ?, relevance = ?", ("Công nghệ", 82))
+    conn.commit()
+    post = indie.load_all(conn)[0]
+    assert (post.topic, post.relevance) == ("Công nghệ", 82.0)
+    assert payload.compact_indie(post)["sc"] == 82.0
+    assert payload.indie_index_items([post])[0]["tp"] == "Công nghệ"
+
+
 def test_load_all_excludes_dropped_rows(tmp_path: Path) -> None:
     rows = (_row(id="kept", keep=1), _row(id="dropped", keep=0, summary_vi=""))
     conn = _connect(_make_db(tmp_path, rows=rows))

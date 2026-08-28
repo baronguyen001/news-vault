@@ -90,6 +90,18 @@ def test_load_all_uses_only_https_images_and_scraped_timestamp(tmp_path: Path) -
     assert posts[1].image == ""
 
 
+def test_load_all_uses_optional_topic_and_relevance_columns(tmp_path: Path) -> None:
+    conn = _connect(_make_db(tmp_path, (_row(),)))
+    conn.execute("ALTER TABLE feed_posts ADD COLUMN topic TEXT")
+    conn.execute("ALTER TABLE feed_posts ADD COLUMN relevance REAL")
+    conn.execute("UPDATE feed_posts SET topic = ?, relevance = ?", ("Công nghệ", 82))
+    conn.commit()
+    post = facebook.load_all(conn)[0]
+    assert (post.topic, post.relevance) == ("Công nghệ", 82.0)
+    assert payload.compact_facebook(post)["sc"] == 82.0
+    assert payload.facebook_index_items([post])[0]["tp"] == "Công nghệ"
+
+
 def test_grouping_available_days_and_order_follow_scraped_at(tmp_path: Path) -> None:
     rows = (
         _row(id=1, scraped_at="2026-08-25T08:00:00+07:00"),

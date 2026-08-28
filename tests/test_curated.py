@@ -182,6 +182,18 @@ def test_load_all_drops_empty_id(tmp_path: Path) -> None:
     assert [item.id for item in curated.load_all(conn)] == ["kept"]
 
 
+def test_load_all_uses_optional_topic_and_relevance_columns(tmp_path: Path) -> None:
+    conn = _connect(_make_db(tmp_path, rows=({"id": "metadata"},)))
+    conn.execute("ALTER TABLE curated_videos ADD COLUMN topic TEXT")
+    conn.execute("ALTER TABLE curated_videos ADD COLUMN relevance REAL")
+    conn.execute("UPDATE curated_videos SET topic = ?, relevance = ?", ("Công nghệ", 82))
+    conn.commit()
+    item = curated.load_all(conn)[0]
+    assert (item.topic, item.relevance) == ("Công nghệ", 82.0)
+    assert curated_payload(item)["sc"] == 82.0
+    assert curated_index_items([item])[0]["tp"] == "Công nghệ"
+
+
 def test_resolve_day_parses_timestamp() -> None:
     assert curated._resolve_day("2026-08-09T09:26:20.321740") == "2026-08-09"
 

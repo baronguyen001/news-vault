@@ -78,8 +78,26 @@ function load(videos) {
     createElement: makeEl,
     createTextNode: (t) => ({ nodeType: 3, textContent: String(t) }),
   };
-  const window = { document };
-  if (videos) window.NV = { videos };
+  const window = {
+    document,
+    NV: {
+      app: {
+        blocksInto(parent, blocks, options) {
+          const list = Array.isArray(blocks) ? blocks : [];
+          for (const block of list) {
+            const kind = block && (block.k || block.kind) === 'h' ? 'h4' : 'p';
+            const cls = kind === 'h4' ? options.headingClass : options.paragraphClass;
+            const el = makeEl(kind);
+            el.className = cls || '';
+            el.textContent = ((block && block.r) || [])
+              .map((run) => Array.isArray(run) ? run[0] : '').join('');
+            parent.appendChild(el);
+          }
+        },
+      },
+    },
+  };
+  if (videos) window.NV.videos = videos;
   const ctx = vm.createContext({ window, document, URL });
   vm.runInContext(source, ctx, { filename: modulePath });
   return { indie: ctx.window.NV.indie };
@@ -109,7 +127,7 @@ test('the search box filters by post text', () => {
   const input = app.querySelector('.ilist__search');
   input.value = 'MRR';
   input.fire('input');
-  const bodies = app.querySelectorAll('.ipost__body').map((el) => el.textContent);
+  const bodies = app.querySelectorAll('.ipost__paragraph').map((el) => el.textContent);
   assert.deepEqual(bodies, ['Chạm mốc MRR 5k USD']);
 });
 
@@ -118,7 +136,7 @@ test('the author select filters to exactly that author', () => {
   const select = app.querySelector('.ilist__select');
   select.value = 'nguoia';
   select.fire('change');
-  const bodies = app.querySelectorAll('.ipost__body').map((el) => el.textContent);
+  const bodies = app.querySelectorAll('.ipost__paragraph').map((el) => el.textContent);
   assert.deepEqual(bodies, ['Ra mắt SaaS mới cho freelancer']);
 });
 
@@ -170,12 +188,21 @@ test('Indie cards use the shared card grid and thumbnail builder', () => {
   assert.equal(thumbs[0].url, 'https://pbs.twimg.com/x.jpg');
 });
 
+test('legacy Indie text splits into real paragraphs', () => {
+  const { indie } = load();
+  const card = indie.card({ au: 'maker', vi: 'Đoạn một.\n\nĐoạn hai.' }, 0);
+  assert.deepEqual(
+    card.querySelectorAll('.ipost__paragraph').map((el) => el.textContent),
+    ['Đoạn một.', 'Đoạn hai.'],
+  );
+});
+
 test('sorting oldest-first puts the earlier post first', () => {
   const { app } = renderTwo();
   const selects = app.querySelectorAll('.ilist__select');
   const sortSelect = selects[1]; // author select is created first, sort select second
   sortSelect.value = 'oldest';
   sortSelect.fire('change');
-  const bodies = app.querySelectorAll('.ipost__body').map((el) => el.textContent);
+  const bodies = app.querySelectorAll('.ipost__paragraph').map((el) => el.textContent);
   assert.deepEqual(bodies, ['Ra mắt SaaS mới cho freelancer', 'Chạm mốc MRR 5k USD']);
 });

@@ -261,6 +261,19 @@ def test_load_all_defaults_image_url_to_empty_string(tmp_path: Path) -> None:
     assert item.image_url == ""
 
 
+def test_load_all_uses_optional_topic_and_relevance_columns(tmp_path: Path) -> None:
+    path = _make_db(tmp_path, rows=({"url": "https://x/p/metadata"},))
+    conn = _connect(path)
+    conn.execute("ALTER TABLE posts ADD COLUMN topic TEXT")
+    conn.execute("ALTER TABLE posts ADD COLUMN relevance REAL")
+    conn.execute("UPDATE posts SET topic = ?, relevance = ?", ("Công nghệ", 82))
+    conn.commit()
+    item = substack.load_all(conn)[0]
+    assert (item.topic, item.relevance) == ("Công nghệ", 82.0)
+    assert substack_payload(item)["sc"] == 82.0
+    assert substack_index_items([item])[0]["tp"] == "Công nghệ"
+
+
 def test_load_all_tolerates_a_database_without_the_image_column(tmp_path: Path) -> None:
     """A reader built against an older substack-digest database - before `image_url`
     existed - must still build rather than crash with "no such column"."""

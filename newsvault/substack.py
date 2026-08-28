@@ -52,6 +52,8 @@ class Essay:
     lead: str  # first paragraph, for the teaser card on the day page
     words: int
     minutes: int
+    topic: str = ""
+    relevance: float | None = None
 
 
 def has_table(conn: sqlite3.Connection) -> bool:
@@ -104,6 +106,16 @@ def _has_image_column(conn: sqlite3.Connection) -> bool:
         cursor.close()
 
 
+def _optional_column(conn: sqlite3.Connection, candidates: tuple[str, ...]) -> str:
+    """Return the first known optional metadata column present in the source schema."""
+    cursor = conn.execute(f"PRAGMA table_info({TABLE})")
+    try:
+        columns = {str(row["name"]) for row in cursor}
+    finally:
+        cursor.close()
+    return next((name for name in candidates if name in columns), "")
+
+
 def _iter_items(conn: sqlite3.Connection) -> Iterator[Essay | None]:
     """Yield summarised essays, or None for a row with no usable title/date.
 
@@ -113,9 +125,13 @@ def _iter_items(conn: sqlite3.Connection) -> Iterator[Essay | None]:
     if not has_table(conn):
         return
     image_column = ", p.image_url" if _has_image_column(conn) else ""
+    topic_column = _optional_column(conn, ("topic", "topic_label"))
+    relevance_column = _optional_column(conn, ("relevance", "relevance_score", "score"))
+    topic_select = f", p.{topic_column} AS nv_topic" if topic_column else ""
+    relevance_select = f", p.{relevance_column} AS nv_relevance" if relevance_column else ""
     query = (
         "SELECT p.id, p.url, p.author_handle, p.title, p.published_at, p.fetched_at, "
-        f"p.summary_text{image_column}, f.display_name "
+        f"p.summary_text{image_column}{topic_select}{relevance_select}, f.display_name "
         f"FROM {TABLE} p LEFT JOIN followed_authors f ON f.handle = p.author_handle "
         "WHERE p.summary_text IS NOT NULL AND TRIM(p.summary_text) <> '' ORDER BY p.id"
     )
@@ -160,7 +176,23 @@ def _item_from_row(row: sqlite3.Row) -> Essay | None:
         lead=lead_text(blocks),
         words=words,
         minutes=reading_minutes(words),
+        topic=_row_text(row, "nv_topic"),
+        relevance=_row_number(row, "nv_relevance"),
     )
+
+
+def _row_text(row: sqlite3.Row, name: str) -> str:
+    columns = set(row.keys())
+    return (row[name] or "").strip() if name in columns else ""
+
+
+def _row_number(row: sqlite3.Row, name: str) -> float | None:
+    if name not in set(row.keys()) or row[name] is None:
+        return None
+    try:
+        return float(row[name])
+    except (TypeError, ValueError):
+        return None
 
 
 def _resolve_day(published_at: str, fetched_at: str) -> str:

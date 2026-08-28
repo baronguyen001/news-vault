@@ -132,6 +132,13 @@
     return parts.join(" · ");
   }
 
+  function decorateCard(card, badges, item) {
+    const app = window.NV && window.NV.app;
+    if (!app) return;
+    if (typeof app.applyTopicClass === "function") app.applyTopicClass(card, item);
+    if (typeof app.renderScoreTopicBadges === "function") app.renderScoreTopicBadges(badges, item);
+  }
+
   /* One teaser card. `base` is the page's relative root, so the same builder serves the
    * listing page (base "../") and a day page (base "../../"). */
   function teaserCard(item, base) {
@@ -149,6 +156,7 @@
     const badges = make("div", "scard__badges", body);
     const badge = make("span", "badge badge--sub", badges);
     text(badge, T.section);
+    decorateCard(li, badges, v);
 
     const h3 = make("h3", "scard__title", body);
     text(h3, v.t);
@@ -470,6 +478,7 @@
     const badges = make("div", "sub__badges", header);
     const badge = make("span", "badge badge--sub", badges);
     text(badge, T.section);
+    decorateCard(article, badges, payload);
 
     const h1 = make("h1", "sub__title", header);
     text(h1, payload.t);

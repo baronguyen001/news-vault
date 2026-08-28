@@ -44,6 +44,8 @@ class IndiePost:
     retweets: int = 0
     replies: int = 0
     image: str = ""  # media_url, only https is accepted - see posts.py's same guard
+    topic: str = ""
+    relevance: float | None = None
 
 
 def has_table(conn: sqlite3.Connection) -> bool:
@@ -93,6 +95,16 @@ def _has_media_column(conn: sqlite3.Connection) -> bool:
         cursor.close()
 
 
+def _optional_column(conn: sqlite3.Connection, candidates: tuple[str, ...]) -> str:
+    """Return the first known optional metadata column present in the source schema."""
+    cursor = conn.execute(f"PRAGMA table_info({TABLE})")
+    try:
+        columns = {str(row["name"]) for row in cursor}
+    finally:
+        cursor.close()
+    return next((name for name in candidates if name in columns), "")
+
+
 def _https_url(raw: object) -> str:
     """Keep untrusted media URLs inert unless x-pulse supplied HTTPS - same guard posts.py uses."""
     return raw.strip() if isinstance(raw, str) and raw.strip().startswith("https://") else ""
@@ -102,9 +114,13 @@ def _iter_posts(conn: sqlite3.Connection) -> Iterator[IndiePost | None]:
     if not has_table(conn):
         return
     media_column = ", media_url" if _has_media_column(conn) else ""
+    topic_column = _optional_column(conn, ("topic", "topic_label"))
+    relevance_column = _optional_column(conn, ("relevance", "relevance_score", "score"))
+    topic_select = f", {topic_column} AS nv_topic" if topic_column else ""
+    relevance_select = f", {relevance_column} AS nv_relevance" if relevance_column else ""
     query = (
         f"SELECT id, url, author, author_name, text, created_at, day, likes, retweets, "
-        f"replies, summary_vi{media_column} FROM {TABLE} "
+        f"replies, summary_vi{media_column}{topic_select}{relevance_select} FROM {TABLE} "
         "WHERE keep = 1 AND summary_vi IS NOT NULL AND TRIM(summary_vi) <> '' ORDER BY id"
     )
     cursor = conn.execute(query)
@@ -135,7 +151,23 @@ def _post_from_row(row: sqlite3.Row) -> IndiePost | None:
         retweets=int(row["retweets"] or 0),
         replies=int(row["replies"] or 0),
         image=image,
+        topic=_row_text(row, "nv_topic"),
+        relevance=_row_number(row, "nv_relevance"),
     )
+
+
+def _row_text(row: sqlite3.Row, name: str) -> str:
+    columns = set(row.keys())
+    return (row[name] or "").strip() if name in columns else ""
+
+
+def _row_number(row: sqlite3.Row, name: str) -> float | None:
+    if name not in set(row.keys()) or row[name] is None:
+        return None
+    try:
+        return float(row[name])
+    except (TypeError, ValueError):
+        return None
 
 
 def _published_iso(created_at: str) -> str:

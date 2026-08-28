@@ -188,6 +188,90 @@
     return map[im] || "tb";
   }
 
+  function hasDisplayValue(value) {
+    return value !== null && value !== undefined && String(value).trim() !== "";
+  }
+
+  /** Add the stable topic class that drives the shared card and topic-chip colour. */
+  function applyTopicClass(card, item) {
+    if (!card || !item || !NV.topics || typeof NV.topics.className !== "function") return;
+    const topicClass = NV.topics.className(item.tp);
+    if (topicClass) card.classList.add(topicClass);
+  }
+
+  /** Render only metadata that is genuinely present; old source payloads have none. */
+  function renderScoreTopicBadges(parent, item) {
+    if (!parent || !item) return;
+    if (hasDisplayValue(item.sc)) {
+      const score = make("span", "badge badge--score", parent);
+      text(score, item.sc);
+    }
+    if (hasDisplayValue(item.tp)) {
+      const topic = make("span", "badge badge--topic", parent);
+      text(topic, item.tp);
+    }
+    if (hasDisplayValue(item.im) && item.im !== "không xác định") {
+      const impact = make("span", `badge badge--impact impact-${impactClass(item.im)}`, parent);
+      text(impact, item.im);
+    }
+  }
+
+  function blockKind(block) {
+    if (!block || typeof block !== "object") return "";
+    const kind = block.k || block.kind;
+    return kind === "h" || kind === "b" || kind === "p" ? kind : "p";
+  }
+
+  function blockRuns(block) {
+    return block && Array.isArray(block.r) ? block.r : [];
+  }
+
+  function runsText(runs) {
+    if (!Array.isArray(runs)) return "";
+    return runs.map((run) => Array.isArray(run) && run.length ? run[0] : "").join("");
+  }
+
+  /**
+   * Safely render the compact Block wire shape used by every non-article source.
+   * `renderText` lets article analysis retain search/key-term highlighting when a block
+   * has no bold runs; otherwise the original strong/plain run structure is preserved.
+   */
+  function blocksInto(parent, blocks, options) {
+    if (!parent || !Array.isArray(blocks)) return;
+    const opts = options || {};
+    let list = null;
+    for (const block of blocks) {
+      const kind = blockKind(block);
+      const runs = blockRuns(block);
+      if (!runs.length) continue;
+      if (kind === "b") {
+        if (!list) list = make("ul", opts.listClass || "", parent);
+        appendBlockRuns(make("li", opts.listItemClass || "", list), runs, opts.renderText);
+        continue;
+      }
+      list = null;
+      const heading = kind === "h";
+      appendBlockRuns(
+        make(heading ? (opts.headingTag || "h4") : "p", heading ? (opts.headingClass || "") : (opts.paragraphClass || ""), parent),
+        runs,
+        opts.renderText
+      );
+    }
+  }
+
+  function appendBlockRuns(parent, runs, renderText) {
+    const plain = runsText(runs);
+    if (typeof renderText === "function" && !runs.some((run) => Array.isArray(run) && run[1])) {
+      renderText(parent, plain);
+      return;
+    }
+    for (const run of runs) {
+      if (!Array.isArray(run) || !hasDisplayValue(run[0])) continue;
+      if (run[1]) text(make("strong", "", parent), run[0]);
+      else parent.appendChild(document.createTextNode(String(run[0])));
+    }
+  }
+
   /** Show a temporary toast message. */
   function toast(msg) {
     const t = make("div", "toast", document.body);
@@ -1241,10 +1325,7 @@
     const li = make("li", "card");
     li.id = `a-${a.i}`;
     // The topic drives a hue on both the card and its chip; NV.topics decides which.
-    if (NV.topics) {
-      const topicClass = NV.topics.className(a.tp);
-      if (topicClass) li.classList.add(topicClass);
-    }
+    applyTopicClass(li, a);
     if (NV.user && NV.user.isRead(a.u)) li.classList.add("card--read");
     if (NV.user && NV.user.isSaved(a.u)) li.classList.add("card--saved");
     li.appendChild(renderCardHeader(a));
@@ -1275,7 +1356,7 @@
     renderSummary(body, a, parsed);
     renderKeyPoints(body, a, parsed);
     renderTags(body, a);
-    if (hasAnalysis(a)) body.appendChild(renderAnalysis(a, parsed));
+    if (hasAnalysis(a)) body.appendChild(renderAnalysisBlocks(a, parsed));
     const ci = clusterInfo[a.i];
     if (ci && ci.isLead && ci.cluster.members.length > 1) {
       body.appendChild(renderCluster(ci.cluster));
@@ -1305,7 +1386,7 @@
   }
 
   function hasAnalysis(a) {
-    return !!(a.an && Object.values(a.an).some((v) => v && String(v).trim()));
+    return analysisBlocks(a).length > 0;
   }
 
   /* A mouse user reading a three-column grid loses their place when a card grows under the
@@ -1346,19 +1427,10 @@
 
   function renderCardHeader(a) {
     const header = make("div", "card__header", null);
-    const score = make("span", "badge badge--score", header);
-    text(score, a.sc ?? 0);
+    renderScoreTopicBadges(header, a);
     if (a.tr === "paid") {
       const paid = make("span", "badge badge--paid", header);
       text(paid, T.paid);
-    }
-    if (a.tp) {
-      const topic = make("span", "badge badge--topic", header);
-      text(topic, a.tp);
-    }
-    if (a.im && a.im !== "không xác định") {
-      const imp = make("span", `badge badge--impact impact-${impactClass(a.im)}`, header);
-      text(imp, a.im);
     }
     if (hasAnalysis(a)) {
       const an = make("span", "badge badge--analysis", header);
@@ -1437,24 +1509,36 @@
     }
   }
 
-  function renderAnalysis(a, parsed) {
-    const details = make("details", "card__analysis");
-    const summary = make("summary", "card__analysis__title", details);
-    text(summary, T.analysisTitle);
-    const body = make("div", "card__analysis__body", details);
+  function analysisBlocks(a) {
+    const analysis = a && (a.an !== undefined ? a.an : a.analysis);
+    if (Array.isArray(analysis)) {
+      return analysis.filter((block) => runsText(blockRuns(block)).trim());
+    }
+    if (!analysis || typeof analysis !== "object") return [];
     const sections = [
       { key: "boi_canh", label: T.context },
       { key: "nguyen_nhan", label: T.cause },
       { key: "muc_dich", label: T.purpose },
       { key: "lien_he", label: T.connection }
     ];
-    for (const sec of sections) {
-      const val = a.an[sec.key];
-      const h = make("h4", "card__analysis__section", body);
-      text(h, sec.label);
-      const p = make("p", "", body);
-      setHighlighted(p, val || "", parsed, a.ents);
+    if (!sections.some((section) => hasDisplayValue(analysis[section.key]))) return [];
+    const blocks = [];
+    for (const section of sections) {
+      blocks.push({ k: "h", r: [[section.label, false]] });
+      blocks.push({ k: "p", r: [[analysis[section.key] || "", false]] });
     }
+    return blocks;
+  }
+
+  function renderAnalysisBlocks(a, parsed) {
+    const details = make("details", "card__analysis");
+    const summary = make("summary", "card__analysis__title", details);
+    text(summary, T.analysisTitle);
+    const body = make("div", "card__analysis__body", details);
+    blocksInto(body, analysisBlocks(a), {
+      headingClass: "card__analysis__section",
+      renderText: (el, value) => setHighlighted(el, value, parsed, a.ents)
+    });
     return details;
   }
 
@@ -2315,7 +2399,12 @@
     refresh: refresh,
     setQuery: setQuery,
     unlock: unlock,
-    articleCard: (article) => renderCard(article, { raw: article, u: article.u, i: article.i }, null)
+    articleCard: (article) => renderCard(article, { raw: article, u: article.u, i: article.i }, null),
+    applyTopicClass: applyTopicClass,
+    renderScoreTopicBadges: renderScoreTopicBadges,
+    blocksInto: blocksInto,
+    analysisBlocks: analysisBlocks,
+    renderAnalysisBlocks: renderAnalysisBlocks
   };
 
   document.addEventListener("DOMContentLoaded", boot);
