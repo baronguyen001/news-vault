@@ -499,11 +499,16 @@
     renderIndie(app);
     renderFacebook(app);
     renderVideos(app);
+    // Indie and Facebook intentionally reuse card classes for shared styling; use these ids for day results.
     const wrap = make("div", "cards-wrap", app);
+    wrap.id = "day-results";
     const countEl = make("div", "result-count sr-only", wrap);
+    countEl.id = "day-results-count";
     countEl.setAttribute("aria-live", "polite");
-    make("ul", "cards", wrap);
+    const list = make("ul", "cards", wrap);
+    list.id = "day-results-list";
     const empty = make("div", "empty", wrap);
+    empty.id = "day-results-empty";
     empty.hidden = true;
     // Populate the list now. applyHash() only refreshes when a #q= hash is present,
     // so without this the first paint leaves an empty container.
@@ -1194,9 +1199,9 @@
   }
 
   function renderResults(results, parsed) {
-    const list = $("#app .cards-wrap .cards");
-    const empty = $("#app .cards-wrap .empty");
-    const countEl = $("#app .cards-wrap .result-count");
+    const list = $("#day-results-list");
+    const empty = $("#day-results-empty");
+    const countEl = $("#day-results-count");
     if (!list) return;
     // The list is about to be wiped. A dialog is holding one card's body, and it would
     // survive the wipe with its content orphaned, so it closes first.
@@ -1550,7 +1555,7 @@
   function observeCards() {
     if (!NV.user || !NV.read) return;
     if (readHandle) readHandle.disconnect();
-    readHandle = NV.read.observe($$(".cards-wrap .card"), {
+    readHandle = NV.read.observe($$("#day-results-list .card"), {
       onRead: (url, card) => {
         NV.user.markRead(url);
         card.classList.add("card--read");
@@ -1564,9 +1569,9 @@
     const full = (input ? input.value : currentText || "").trim();
     if (!full.startsWith("!")) return;
     const query = full.slice(1).trim();
-    const list = $("#app .cards-wrap .cards");
-    const empty = $("#app .cards-wrap .empty");
-    const countEl = $("#app .cards-wrap .result-count");
+    const list = $("#day-results-list");
+    const empty = $("#day-results-empty");
+    const countEl = $("#day-results-count");
     if (list) text(list, T.loadingVault + "…");
     try {
       if (!manifest) await loadManifest();
@@ -1619,7 +1624,7 @@
   }
 
   function renderArchiveResults(results, parsed, forceAll) {
-    const list = $("#app .cards-wrap .cards");
+    const list = $("#day-results-list");
     if (!list) return;
     text(list, "");
     const header = make("li", "archive__header", list);
@@ -2042,7 +2047,7 @@
 
   /** Mark the card for `url` read in place. Cheap enough to run per card; no reflow of the list. */
   function dimReadCard(url) {
-    for (const card of $$(".cards-wrap .card")) {
+    for (const card of $$("#day-results-list .card")) {
       const link = card.querySelector(".card__link");
       if (link && link.href === url) {
         card.classList.add("card--read");
@@ -2059,7 +2064,7 @@
   }
 
   function getVisibleArticles() {
-    const cards = $$(".cards-wrap .card");
+    const cards = $$("#day-results-list .card");
     return cards.map((c) => {
       const id = c.id.replace("a-", "");
       if (config.kind === "day") {
@@ -2160,7 +2165,7 @@
   }
 
   function moveSelection(dir) {
-    const cards = $$(".cards-wrap .card");
+    const cards = $$("#day-results-list .card");
     if (!cards.length) return;
     if (selectedCardIndex >= 0) cards[selectedCardIndex].classList.remove("card--selected");
     selectedCardIndex += dir;
@@ -2172,7 +2177,7 @@
   }
 
   function openSelectedArticle() {
-    const cards = $$(".cards-wrap .card");
+    const cards = $$("#day-results-list .card");
     if (selectedCardIndex < 0 || selectedCardIndex >= cards.length) return;
     const link = cards[selectedCardIndex].querySelector(".card__link");
     if (link) {
@@ -2183,14 +2188,14 @@
 
   /** Expand or collapse the card the keyboard cursor is on. */
   function expandSelected() {
-    const cards = $$(".cards-wrap .card");
+    const cards = $$("#day-results-list .card");
     if (selectedCardIndex < 0 || selectedCardIndex >= cards.length) return;
     const card = cards[selectedCardIndex];
     setCardOpen(card, card.classList.contains("card--closed"));
   }
 
   function toggleSelectedSave() {
-    const cards = $$(".cards-wrap .card");
+    const cards = $$("#day-results-list .card");
     if (selectedCardIndex < 0 || selectedCardIndex >= cards.length) return;
     const link = cards[selectedCardIndex].querySelector(".card__link");
     if (!link || !NV.user) return;
