@@ -725,77 +725,82 @@
       "d": "2026-08-28",
       "months": "2026-08",
       "n": 107
+    },
+    {
+      "d": "2026-08-29",
+      "months": "2026-08",
+      "n": 105
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 1355,
+      "n": 1396,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 320,
+      "n": 326,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 271,
+      "n": 276,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 212,
+      "n": 220,
       "slug": "doanh-nghiep"
     },
     {
       "label": "thuế",
-      "n": 200,
+      "n": 206,
       "slug": "thue"
     },
     {
       "label": "chính phủ",
-      "n": 173,
+      "n": 177,
       "slug": "chinh-phu"
     },
     {
       "label": "công nghệ",
-      "n": 159,
+      "n": 163,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 149,
+      "n": 153,
       "slug": "du-lieu"
     },
     {
       "label": "chip",
-      "n": 146,
+      "n": 152,
       "slug": "chip"
     },
     {
       "label": "ngân hàng",
-      "n": 138,
+      "n": 139,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 132,
+      "n": 133,
       "slug": "quoc-hoi"
     },
     {
       "label": "lãi suất",
-      "n": 111,
+      "n": 114,
       "slug": "lai-suat"
     },
     {
       "label": "chính sách",
-      "n": 98,
+      "n": 100,
       "slug": "chinh-sach"
     },
     {
       "label": "lạm phát",
-      "n": 97,
+      "n": 99,
       "slug": "lam-phat"
     },
     {
@@ -805,12 +810,12 @@
     },
     {
       "label": "trung ương",
-      "n": 90,
+      "n": 92,
       "slug": "trung-uong"
     },
     {
       "label": "xuất khẩu",
-      "n": 89,
+      "n": 92,
       "slug": "xuat-khau"
     },
     {
@@ -820,32 +825,32 @@
     },
     {
       "label": "nghị quyết",
-      "n": 75,
+      "n": 79,
       "slug": "nghi-quyet"
     },
     {
       "label": "chứng khoán",
-      "n": 67,
+      "n": 68,
       "slug": "chung-khoan"
     },
     {
       "label": "chiến tranh",
-      "n": 61,
+      "n": 63,
       "slug": "chien-tranh"
     },
     {
       "label": "năng lượng",
-      "n": 60,
+      "n": 61,
       "slug": "nang-luong"
     },
     {
       "label": "nghị định",
-      "n": 60,
+      "n": 61,
       "slug": "nghi-dinh"
     },
     {
       "label": "nhập khẩu",
-      "n": 49,
+      "n": 51,
       "slug": "nhap-khau"
     },
     {
@@ -855,32 +860,32 @@
     },
     {
       "label": "trừng phạt",
-      "n": 45,
+      "n": 46,
       "slug": "trung-phat"
     },
     {
       "label": "pháp lý",
-      "n": 43,
+      "n": 44,
       "slug": "phap-ly"
     },
     {
       "label": "thuế quan",
-      "n": 41,
+      "n": 44,
       "slug": "thue-quan"
     },
     {
       "label": "bán dẫn",
-      "n": 36,
+      "n": 37,
       "slug": "ban-dan"
     },
     {
       "label": "bảo hiểm",
-      "n": 26,
+      "n": 27,
       "slug": "bao-hiem"
     },
     {
       "label": "hành chính",
-      "n": 26,
+      "n": 27,
       "slug": "hanh-chinh"
     },
     {
@@ -895,7 +900,7 @@
     },
     {
       "label": "bộ chính trị",
-      "n": 20,
+      "n": 21,
       "slug": "bo-chinh-tri"
     },
     {
@@ -925,7 +930,7 @@
     },
     {
       "label": "khởi nghiệp",
-      "n": 9,
+      "n": 10,
       "slug": "khoi-nghiep"
     },
     {
@@ -937,6 +942,11 @@
       "label": "kinh tế",
       "n": 7,
       "slug": "kinh-te"
+    },
+    {
+      "label": "chỉ thị",
+      "n": 6,
+      "slug": "chi-thi"
     },
     {
       "label": "dầu mỏ",
@@ -972,11 +982,6 @@
       "label": "Việt Nam",
       "n": 6,
       "slug": "viet-nam"
-    },
-    {
-      "label": "chỉ thị",
-      "n": 5,
-      "slug": "chi-thi"
     },
     {
       "label": "Trung Đông",
@@ -1164,7 +1169,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-08-28T23:59:59+07:00",
+  "generated_at": "2026-08-29T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
