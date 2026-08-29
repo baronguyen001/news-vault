@@ -729,7 +729,7 @@
     {
       "d": "2026-08-29",
       "months": "2026-08",
-      "n": 193
+      "n": 214
     }
   ],
   "entities": [
@@ -740,17 +740,17 @@
     },
     {
       "label": "đầu tư",
-      "n": 333,
+      "n": 332,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 282,
+      "n": 284,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 225,
+      "n": 226,
       "slug": "doanh-nghiep"
     },
     {
@@ -760,12 +760,12 @@
     },
     {
       "label": "chính phủ",
-      "n": 180,
+      "n": 179,
       "slug": "chinh-phu"
     },
     {
       "label": "công nghệ",
-      "n": 164,
+      "n": 163,
       "slug": "cong-nghe"
     },
     {
@@ -800,12 +800,12 @@
     },
     {
       "label": "lạm phát",
-      "n": 99,
+      "n": 100,
       "slug": "lam-phat"
     },
     {
       "label": "đảng",
-      "n": 95,
+      "n": 96,
       "slug": "dang"
     },
     {
@@ -919,11 +919,6 @@
       "slug": "xe-dien"
     },
     {
-      "label": "khởi nghiệp",
-      "n": 12,
-      "slug": "khoi-nghiep"
-    },
-    {
       "label": "thông tư",
       "n": 12,
       "slug": "thong-tu"
@@ -932,6 +927,11 @@
       "label": "chuyển đổi số",
       "n": 11,
       "slug": "chuyen-doi-so"
+    },
+    {
+      "label": "khởi nghiệp",
+      "n": 10,
+      "slug": "khoi-nghiep"
     },
     {
       "label": "chỉ thị",
