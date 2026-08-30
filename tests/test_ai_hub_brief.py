@@ -217,11 +217,7 @@ def test_clean_bullets_rejects_a_non_list() -> None:
 # --- the label the build reads ------------------------------------------------------------
 
 
-def test_only_the_hub_counts_as_a_real_brief() -> None:
-    """`build` cache theo tap nay va canh bao voi bat cu gi nam ngoai.
-
-    Truoc day tap co ca "gemini"; tu 2026-08-12 chi con "aihub". Neu ai them lai mot
-    nguon vao day thi phai sua ca `_brief_for` va `BuildReport.summary()` cho khop.
-    """
-    assert frozenset({"aihub"}) == LLM_SOURCES
+def test_current_and_legacy_llm_sources_count_as_real_briefs() -> None:
+    """The build must not report cached Gemini briefs as deterministic fallbacks."""
+    assert frozenset({"aihub", "gemini"}) == LLM_SOURCES
     assert "fallback" not in LLM_SOURCES

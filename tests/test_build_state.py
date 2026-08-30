@@ -160,14 +160,13 @@ def test_summary_stays_quiet_when_every_brief_came_from_the_hub() -> None:
     assert "fallback" not in report.summary()
 
 
-def test_summary_flags_a_brief_that_came_from_the_retired_gemini_label() -> None:
-    """Nhan "gemini" gio la RAC (cache cu). Phai bi coi la fallback de duoc sinh lai,
-    chu khong duoc lang le tinh la brief that."""
+def test_summary_stays_quiet_when_a_brief_came_from_legacy_gemini() -> None:
+    """Cached Gemini briefs were real LLM output, not deterministic fallbacks."""
     from newsvault.build import BuildReport
 
     report = BuildReport()
     report.brief_source = {"2026-08-08": "gemini"}
-    assert "fallback" in report.summary()
+    assert "fallback" not in report.summary()
 
 
 def test_summary_reports_a_provider_issue() -> None:

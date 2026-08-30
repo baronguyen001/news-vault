@@ -31,13 +31,13 @@ _brief_provider_issue: str | None = None
 @dataclass(frozen=True, slots=True)
 class BriefResult:
     bullets: tuple[str, ...]
-    source: str  # 'aihub' | 'fallback'
+    source: str  # 'aihub' | legacy 'gemini' | 'fallback'
     error: str  # '' on success
 
 
 # Sources that mean "a language model actually wrote this". Anything else is the
 # score-ordered fallback, which is a quality incident worth reporting, not a real brief.
-LLM_SOURCES: frozenset[str] = frozenset({"aihub"})
+LLM_SOURCES: frozenset[str] = frozenset({"aihub", "gemini"})
 
 
 def reset_provider_state() -> None:
