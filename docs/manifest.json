@@ -745,208 +745,328 @@
   "entities": [
     {
       "label": "AI",
-      "n": 1107,
+      "n": 1520,
       "slug": "ai"
     },
     {
-      "label": "luật",
-      "n": 226,
-      "slug": "luat"
-    },
-    {
       "label": "đầu tư",
-      "n": 199,
+      "n": 345,
       "slug": "dau-tu"
     },
     {
+      "label": "luật",
+      "n": 294,
+      "slug": "luat"
+    },
+    {
       "label": "doanh nghiệp",
-      "n": 171,
+      "n": 244,
       "slug": "doanh-nghiep"
     },
     {
       "label": "thuế",
-      "n": 149,
+      "n": 218,
       "slug": "thue"
     },
     {
-      "label": "dữ liệu",
-      "n": 134,
-      "slug": "du-lieu"
-    },
-    {
       "label": "chính phủ",
-      "n": 133,
+      "n": 186,
       "slug": "chinh-phu"
     },
     {
-      "label": "quốc hội",
-      "n": 126,
-      "slug": "quoc-hoi"
-    },
-    {
-      "label": "chip",
-      "n": 117,
-      "slug": "chip"
-    },
-    {
       "label": "công nghệ",
-      "n": 105,
+      "n": 175,
       "slug": "cong-nghe"
     },
     {
+      "label": "dữ liệu",
+      "n": 171,
+      "slug": "du-lieu"
+    },
+    {
+      "label": "chip",
+      "n": 161,
+      "slug": "chip"
+    },
+    {
       "label": "ngân hàng",
-      "n": 85,
+      "n": 146,
       "slug": "ngan-hang"
     },
     {
+      "label": "quốc hội",
+      "n": 143,
+      "slug": "quoc-hoi"
+    },
+    {
       "label": "lãi suất",
-      "n": 75,
+      "n": 120,
       "slug": "lai-suat"
     },
     {
-      "label": "xuất khẩu",
-      "n": 70,
-      "slug": "xuat-khau"
-    },
-    {
-      "label": "nghị quyết",
-      "n": 63,
-      "slug": "nghi-quyet"
+      "label": "chính sách",
+      "n": 113,
+      "slug": "chinh-sach"
     },
     {
       "label": "lạm phát",
-      "n": 60,
+      "n": 103,
       "slug": "lam-phat"
     },
     {
       "label": "đảng",
-      "n": 58,
+      "n": 99,
       "slug": "dang"
     },
     {
-      "label": "chính sách",
-      "n": 56,
-      "slug": "chinh-sach"
+      "label": "trung ương",
+      "n": 99,
+      "slug": "trung-uong"
     },
     {
-      "label": "nghị định",
-      "n": 55,
-      "slug": "nghi-dinh"
+      "label": "xuất khẩu",
+      "n": 99,
+      "slug": "xuat-khau"
+    },
+    {
+      "label": "nghị quyết",
+      "n": 91,
+      "slug": "nghi-quyet"
     },
     {
       "label": "xung đột",
-      "n": 52,
+      "n": 85,
       "slug": "xung-dot"
     },
     {
       "label": "chiến tranh",
-      "n": 47,
+      "n": 69,
       "slug": "chien-tranh"
     },
     {
-      "label": "trừng phạt",
-      "n": 41,
-      "slug": "trung-phat"
-    },
-    {
-      "label": "năng lượng",
-      "n": 39,
-      "slug": "nang-luong"
-    },
-    {
-      "label": "trung ương",
-      "n": 39,
-      "slug": "trung-uong"
-    },
-    {
-      "label": "thuế quan",
-      "n": 37,
-      "slug": "thue-quan"
-    },
-    {
-      "label": "nhập khẩu",
-      "n": 36,
-      "slug": "nhap-khau"
-    },
-    {
-      "label": "bán dẫn",
-      "n": 26,
-      "slug": "ban-dan"
-    },
-    {
-      "label": "startup",
-      "n": 26,
-      "slug": "startup"
-    },
-    {
-      "label": "pháp lý",
-      "n": 25,
-      "slug": "phap-ly"
-    },
-    {
       "label": "chứng khoán",
-      "n": 19,
+      "n": 68,
       "slug": "chung-khoan"
     },
     {
+      "label": "nghị định",
+      "n": 67,
+      "slug": "nghi-dinh"
+    },
+    {
+      "label": "năng lượng",
+      "n": 65,
+      "slug": "nang-luong"
+    },
+    {
+      "label": "nhập khẩu",
+      "n": 57,
+      "slug": "nhap-khau"
+    },
+    {
+      "label": "trừng phạt",
+      "n": 51,
+      "slug": "trung-phat"
+    },
+    {
+      "label": "thuế quan",
+      "n": 50,
+      "slug": "thue-quan"
+    },
+    {
+      "label": "pháp lý",
+      "n": 49,
+      "slug": "phap-ly"
+    },
+    {
+      "label": "startup",
+      "n": 46,
+      "slug": "startup"
+    },
+    {
+      "label": "bán dẫn",
+      "n": 39,
+      "slug": "ban-dan"
+    },
+    {
+      "label": "bảo hiểm",
+      "n": 29,
+      "slug": "bao-hiem"
+    },
+    {
       "label": "bất động sản",
-      "n": 17,
+      "n": 27,
       "slug": "bat-dong-san"
     },
     {
       "label": "hành chính",
-      "n": 15,
+      "n": 27,
       "slug": "hanh-chinh"
     },
     {
-      "label": "xe điện",
-      "n": 14,
-      "slug": "xe-dien"
-    },
-    {
-      "label": "bảo hiểm",
-      "n": 13,
-      "slug": "bao-hiem"
-    },
-    {
       "label": "bộ chính trị",
-      "n": 11,
+      "n": 24,
       "slug": "bo-chinh-tri"
     },
     {
-      "label": "khởi nghiệp",
-      "n": 11,
-      "slug": "khoi-nghiep"
-    },
-    {
-      "label": "FDI",
-      "n": 10,
-      "slug": "fdi"
-    },
-    {
       "label": "cải cách",
-      "n": 9,
+      "n": 24,
       "slug": "cai-cach"
     },
     {
+      "label": "trí tuệ nhân tạo",
+      "n": 21,
+      "slug": "tri-tue-nhan-tao"
+    },
+    {
+      "label": "FDI",
+      "n": 19,
+      "slug": "fdi"
+    },
+    {
+      "label": "xe điện",
+      "n": 18,
+      "slug": "xe-dien"
+    },
+    {
       "label": "thông tư",
-      "n": 9,
+      "n": 14,
       "slug": "thong-tu"
     },
     {
-      "label": "chỉ thị",
-      "n": 6,
-      "slug": "chi-thi"
+      "label": "khởi nghiệp",
+      "n": 12,
+      "slug": "khoi-nghiep"
     },
     {
       "label": "chuyển đổi số",
-      "n": 5,
+      "n": 11,
       "slug": "chuyen-doi-so"
     },
     {
+      "label": "chỉ thị",
+      "n": 7,
+      "slug": "chi-thi"
+    },
+    {
+      "label": "Địa chính trị",
+      "n": 7,
+      "slug": "dia-chinh-tri"
+    },
+    {
+      "label": "kinh tế",
+      "n": 7,
+      "slug": "kinh-te"
+    },
+    {
+      "label": "dầu mỏ",
+      "n": 6,
+      "slug": "dau-mo"
+    },
+    {
       "label": "điện toán đám mây",
-      "n": 4,
+      "n": 6,
       "slug": "dien-toan-dam-may"
+    },
+    {
+      "label": "Hàn Quốc",
+      "n": 6,
+      "slug": "han-quoc"
+    },
+    {
+      "label": "Iran",
+      "n": 6,
+      "slug": "iran"
+    },
+    {
+      "label": "kinh tế vĩ mô",
+      "n": 6,
+      "slug": "kinh-te-vi-mo"
+    },
+    {
+      "label": "Mỹ",
+      "n": 6,
+      "slug": "my"
+    },
+    {
+      "label": "Việt Nam",
+      "n": 6,
+      "slug": "viet-nam"
+    },
+    {
+      "label": "Trung Đông",
+      "n": 5,
+      "slug": "trung-dong"
+    },
+    {
+      "label": "Trung Quốc",
+      "n": 5,
+      "slug": "trung-quoc"
+    },
+    {
+      "label": "Ấn Độ",
+      "n": 4,
+      "slug": "an-do"
+    },
+    {
+      "label": "Argentina",
+      "n": 4,
+      "slug": "argentina"
+    },
+    {
+      "label": "Bóng đá",
+      "n": 4,
+      "slug": "bong-da"
+    },
+    {
+      "label": "châu Âu",
+      "n": 4,
+      "slug": "chau-au"
+    },
+    {
+      "label": "Chính trị",
+      "n": 4,
+      "slug": "chinh-tri"
+    },
+    {
+      "label": "Nhật Bản",
+      "n": 4,
+      "slug": "nhat-ban"
+    },
+    {
+      "label": "tăng trưởng kinh tế",
+      "n": 4,
+      "slug": "tang-truong-kinh-te"
+    },
+    {
+      "label": "Tây Ban Nha",
+      "n": 4,
+      "slug": "tay-ban-nha"
+    },
+    {
+      "label": "Tô Lâm",
+      "n": 4,
+      "slug": "to-lam"
+    },
+    {
+      "label": "World Cup 2026",
+      "n": 4,
+      "slug": "world-cup-2026"
+    },
+    {
+      "label": "Âm nhạc",
+      "n": 3,
+      "slug": "am-nhac"
+    },
+    {
+      "label": "Bảo vệ dữ liệu cá nhân",
+      "n": 3,
+      "slug": "bao-ve-du-lieu-ca-nhan"
+    },
+    {
+      "label": "biến đổi khí hậu",
+      "n": 3,
+      "slug": "bien-doi-khi-hau"
     },
     {
       "label": "blockchain",
@@ -954,9 +1074,114 @@
       "slug": "blockchain"
     },
     {
-      "label": "trí tuệ nhân tạo",
+      "label": "Đổi mới sáng tạo",
       "n": 3,
-      "slug": "tri-tue-nhan-tao"
+      "slug": "doi-moi-sang-tao"
+    },
+    {
+      "label": "Donald Trump",
+      "n": 3,
+      "slug": "donald-trump"
+    },
+    {
+      "label": "Du lịch",
+      "n": 3,
+      "slug": "du-lich"
+    },
+    {
+      "label": "eo biển Hormuz",
+      "n": 3,
+      "slug": "eo-bien-hormuz"
+    },
+    {
+      "label": "giá dầu",
+      "n": 3,
+      "slug": "gia-dau"
+    },
+    {
+      "label": "giá vàng",
+      "n": 3,
+      "slug": "gia-vang"
+    },
+    {
+      "label": "hạ tầng",
+      "n": 3,
+      "slug": "ha-tang"
+    },
+    {
+      "label": "Hong Kong",
+      "n": 3,
+      "slug": "hong-kong"
+    },
+    {
+      "label": "Lai Châu",
+      "n": 3,
+      "slug": "lai-chau"
+    },
+    {
+      "label": "lợi nhuận",
+      "n": 3,
+      "slug": "loi-nhuan"
+    },
+    {
+      "label": "lũ quét",
+      "n": 3,
+      "slug": "lu-quet"
+    },
+    {
+      "label": "nắng nóng",
+      "n": 3,
+      "slug": "nang-nong"
+    },
+    {
+      "label": "Nga",
+      "n": 3,
+      "slug": "nga"
+    },
+    {
+      "label": "Ninh Bình",
+      "n": 3,
+      "slug": "ninh-binh"
+    },
+    {
+      "label": "Phát triển kinh tế",
+      "n": 3,
+      "slug": "phat-trien-kinh-te"
+    },
+    {
+      "label": "Quảng Trị",
+      "n": 3,
+      "slug": "quang-tri"
+    },
+    {
+      "label": "thị trường chứng khoán",
+      "n": 3,
+      "slug": "thi-truong-chung-khoan"
+    },
+    {
+      "label": "thị trường tài chính",
+      "n": 3,
+      "slug": "thi-truong-tai-chinh"
+    },
+    {
+      "label": "thiên tai",
+      "n": 3,
+      "slug": "thien-tai"
+    },
+    {
+      "label": "Ukraine",
+      "n": 3,
+      "slug": "ukraine"
+    },
+    {
+      "label": "Vietstock",
+      "n": 3,
+      "slug": "vietstock"
+    },
+    {
+      "label": "Xây dựng Đảng",
+      "n": 3,
+      "slug": "xay-dung-dang"
     }
   ],
   "generated_at": "2026-08-31T23:59:59+07:00",
@@ -1250,5 +1475,46 @@
   ],
   "v": 1,
   "version": "0.11.3",
-  "weeks": []
+  "weeks": [
+    {
+      "e": "2026-07-19",
+      "s": "2026-07-13",
+      "w": "2026-W29"
+    },
+    {
+      "e": "2026-07-26",
+      "s": "2026-07-20",
+      "w": "2026-W30"
+    },
+    {
+      "e": "2026-08-02",
+      "s": "2026-07-27",
+      "w": "2026-W31"
+    },
+    {
+      "e": "2026-08-09",
+      "s": "2026-08-03",
+      "w": "2026-W32"
+    },
+    {
+      "e": "2026-08-16",
+      "s": "2026-08-10",
+      "w": "2026-W33"
+    },
+    {
+      "e": "2026-08-23",
+      "s": "2026-08-17",
+      "w": "2026-W34"
+    },
+    {
+      "e": "2026-08-30",
+      "s": "2026-08-24",
+      "w": "2026-W35"
+    },
+    {
+      "e": "2026-09-06",
+      "s": "2026-08-31",
+      "w": "2026-W36"
+    }
+  ]
 }
