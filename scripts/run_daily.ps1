@@ -261,12 +261,28 @@ if (-not $env:NEWSVAULT_SOURCING_ONLY) {
     git add -- docs
     git -c user.name="baronguyen001" -c user.email="265752715+baronguyen001@users.noreply.github.com" `
         commit -m "docs: nhat bao $stamp" | ForEach-Object { Write-Log $_ }
-    git push origin main | ForEach-Object { Write-Log $_ }
-    if ($LASTEXITCODE -ne 0) {
-        Write-Log "PUSH FAILED exit=$LASTEXITCODE"
-        Send-Telegram (Format-RunMessage -Outcome "pushfail" -ExitCode $LASTEXITCODE `
+    # GitHub occasionally resets an SSH connection while a larger generated update is
+    # being sent. Retry a small, bounded number of times: the commit is already local,
+    # and `git push` is safe to repeat. Authentication or non-fast-forward failures still
+    # surface promptly instead of masking a real publishing problem.
+    $pushExit = 1
+    $pushAttempts = 3
+    for ($attempt = 1; $attempt -le $pushAttempts; $attempt++) {
+        if ($attempt -gt 1) {
+            $delay = 5 * ($attempt - 1)
+            Write-Log "push thu lai $attempt/$pushAttempts sau ${delay}s"
+            Start-Sleep -Seconds $delay
+        }
+        git push origin main 2>&1 | ForEach-Object { Write-Log $_ }
+        $pushExit = $LASTEXITCODE
+        if ($pushExit -eq 0) { break }
+        Write-Log "push that bai lan $attempt/$pushAttempts (exit $pushExit)"
+    }
+    if ($pushExit -ne 0) {
+        Write-Log "PUSH FAILED exit=$pushExit"
+        Send-Telegram (Format-RunMessage -Outcome "pushfail" -ExitCode $pushExit `
             -Stamp $runStamp -Mode $runMode)
-        exit $LASTEXITCODE
+        exit $pushExit
     }
     Write-Log "published"
 
