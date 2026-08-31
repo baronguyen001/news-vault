@@ -273,8 +273,14 @@ if (-not $env:NEWSVAULT_SOURCING_ONLY) {
             Write-Log "push thu lai $attempt/$pushAttempts sau ${delay}s"
             Start-Sleep -Seconds $delay
         }
+        # See the build invocation above: redirecting stderr from a native command can
+        # otherwise turn a failed push into a terminating PowerShell error before the
+        # retry loop gets its exit code.
+        $previousEAP = $ErrorActionPreference
+        $ErrorActionPreference = "Continue"
         git push origin main 2>&1 | ForEach-Object { Write-Log $_ }
         $pushExit = $LASTEXITCODE
+        $ErrorActionPreference = $previousEAP
         if ($pushExit -eq 0) { break }
         Write-Log "push that bai lan $attempt/$pushAttempts (exit $pushExit)"
     }
