@@ -729,38 +729,43 @@
     {
       "d": "2026-08-29",
       "months": "2026-08",
-      "n": 230
+      "n": 233
     },
     {
       "d": "2026-08-30",
       "months": "2026-08",
-      "n": 162
+      "n": 180
+    },
+    {
+      "d": "2026-08-31",
+      "months": "2026-08",
+      "n": 77
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 1480,
+      "n": 1506,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 339,
+      "n": 342,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 292,
+      "n": 294,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 237,
+      "n": 238,
       "slug": "doanh-nghiep"
     },
     {
       "label": "thuế",
-      "n": 213,
+      "n": 215,
       "slug": "thue"
     },
     {
@@ -770,37 +775,37 @@
     },
     {
       "label": "công nghệ",
-      "n": 171,
+      "n": 172,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 166,
+      "n": 168,
       "slug": "du-lieu"
     },
     {
       "label": "chip",
-      "n": 159,
+      "n": 161,
       "slug": "chip"
     },
     {
       "label": "ngân hàng",
-      "n": 144,
+      "n": 146,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 140,
+      "n": 142,
       "slug": "quoc-hoi"
     },
     {
       "label": "lãi suất",
-      "n": 119,
+      "n": 120,
       "slug": "lai-suat"
     },
     {
       "label": "chính sách",
-      "n": 108,
+      "n": 110,
       "slug": "chinh-sach"
     },
     {
@@ -810,8 +815,13 @@
     },
     {
       "label": "đảng",
-      "n": 98,
+      "n": 99,
       "slug": "dang"
+    },
+    {
+      "label": "trung ương",
+      "n": 99,
+      "slug": "trung-uong"
     },
     {
       "label": "xuất khẩu",
@@ -819,18 +829,13 @@
       "slug": "xuat-khau"
     },
     {
-      "label": "trung ương",
-      "n": 97,
-      "slug": "trung-uong"
-    },
-    {
       "label": "nghị quyết",
-      "n": 87,
+      "n": 91,
       "slug": "nghi-quyet"
     },
     {
       "label": "xung đột",
-      "n": 84,
+      "n": 85,
       "slug": "xung-dot"
     },
     {
@@ -845,18 +850,23 @@
     },
     {
       "label": "nghị định",
-      "n": 65,
+      "n": 67,
       "slug": "nghi-dinh"
     },
     {
       "label": "năng lượng",
-      "n": 64,
+      "n": 65,
       "slug": "nang-luong"
     },
     {
       "label": "nhập khẩu",
-      "n": 56,
+      "n": 57,
       "slug": "nhap-khau"
+    },
+    {
+      "label": "trừng phạt",
+      "n": 50,
+      "slug": "trung-phat"
     },
     {
       "label": "pháp lý",
@@ -864,9 +874,9 @@
       "slug": "phap-ly"
     },
     {
-      "label": "trừng phạt",
-      "n": 49,
-      "slug": "trung-phat"
+      "label": "thuế quan",
+      "n": 47,
+      "slug": "thue-quan"
     },
     {
       "label": "startup",
@@ -874,18 +884,13 @@
       "slug": "startup"
     },
     {
-      "label": "thuế quan",
-      "n": 46,
-      "slug": "thue-quan"
-    },
-    {
       "label": "bán dẫn",
-      "n": 38,
+      "n": 39,
       "slug": "ban-dan"
     },
     {
       "label": "bảo hiểm",
-      "n": 27,
+      "n": 28,
       "slug": "bao-hiem"
     },
     {
@@ -899,14 +904,14 @@
       "slug": "hanh-chinh"
     },
     {
+      "label": "bộ chính trị",
+      "n": 24,
+      "slug": "bo-chinh-tri"
+    },
+    {
       "label": "cải cách",
       "n": 24,
       "slug": "cai-cach"
-    },
-    {
-      "label": "bộ chính trị",
-      "n": 23,
-      "slug": "bo-chinh-tri"
     },
     {
       "label": "trí tuệ nhân tạo",
@@ -925,7 +930,7 @@
     },
     {
       "label": "thông tư",
-      "n": 13,
+      "n": 14,
       "slug": "thong-tu"
     },
     {
@@ -1064,6 +1069,11 @@
       "slug": "bien-doi-khi-hau"
     },
     {
+      "label": "blockchain",
+      "n": 3,
+      "slug": "blockchain"
+    },
+    {
       "label": "Đổi mới sáng tạo",
       "n": 3,
       "slug": "doi-moi-sang-tao"
@@ -1174,7 +1184,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-08-30T23:59:59+07:00",
+  "generated_at": "2026-08-31T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
@@ -1188,6 +1198,26 @@
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
   "substack": [
+    "261",
+    "272",
+    "266",
+    "263",
+    "256",
+    "273",
+    "267",
+    "274",
+    "259",
+    "254",
+    "262",
+    "255",
+    "258",
+    "257",
+    "270",
+    "264",
+    "269",
+    "271",
+    "260",
+    "268",
     "245",
     "251",
     "247",
@@ -1196,6 +1226,7 @@
     "252",
     "241",
     "242",
+    "265",
     "249",
     "248",
     "244",
@@ -1479,6 +1510,11 @@
       "e": "2026-08-30",
       "s": "2026-08-24",
       "w": "2026-W35"
+    },
+    {
+      "e": "2026-09-06",
+      "s": "2026-08-31",
+      "w": "2026-W36"
     }
   ]
 }
