@@ -1,4 +1,4 @@
-/* Analyst reports: normal articles remain full cards; RSS-only rows stay compact. */
+/* Analyst reports use one compact card regardless of whether a source gave us a full body. */
 (function () {
   "use strict";
 
@@ -12,8 +12,13 @@
     countMany: " báo cáo",
     search: "Tìm theo tiêu đề hoặc nguồn…",
     allSources: "Tất cả nguồn",
-    sortNewest: "Mới nhất",
-    sortOldest: "Cũ nhất",
+    archiveCount: (n) => n === 1 ? "1 báo cáo toàn kho" : n + " báo cáo toàn kho",
+    dayCount: (n, day) => n + " báo cáo ngày " + day,
+    archiveLink: "Xem toàn kho",
+    sortReceivedNewest: "Mới vào kho",
+    sortReceivedOldest: "Cũ vào kho",
+    sortPublishedNewest: "Xuất bản mới nhất",
+    sortPublishedOldest: "Xuất bản cũ nhất",
     sortSource: "Theo nguồn A–Z",
     noResults: "Không có báo cáo phù hợp với bộ lọc.",
     clear: "Xóa bộ lọc"
@@ -49,58 +54,67 @@
     return value.slice(8, 10) + "/" + value.slice(5, 7) + "/" + value.slice(0, 4);
   }
 
-  function teaserCard(item) {
+  function hasAnalysis(report) {
+    return !!(report && report.an && typeof report.an === "object" && Object.keys(report.an).length);
+  }
+
+  function reportCard(item) {
     const report = item && typeof item === "object" ? item : {};
-    const li = make("li", "card card--report-teaser card--closed report-teaser");
+    const li = make("li", "card card--report report-card");
     const header = make("div", "card__head", li);
     const badge = make("span", "badge badge--deep", header);
     text(badge, T.section);
+    if (hasAnalysis(report)) {
+      const analysis = make("span", "badge badge--analysis", header);
+      text(analysis, "Có phân tích sâu");
+    }
     const lead = make("div", "card__lead", li);
     if (window.NV.videos && typeof window.NV.videos.thumb === "function") {
       window.NV.videos.thumb(lead, report.img, report.t || "");
     }
-    const content = make("div", "report-teaser__content", lead);
-    const title = make("h3", "card__title report-teaser__title", content);
-    const link = make("a", "report-teaser__link", title);
+    const content = make("div", "report-card__content", lead);
+    const title = make("h3", "card__title report-card__title", content);
+    const link = make("a", "report-card__link", title);
     link.href = report.u || "#";
     link.target = "_blank";
     link.rel = "noopener noreferrer";
     text(link, report.t || "");
-    const meta = make("p", "card__meta report-teaser__meta", content);
-    text(meta, [report.s, formatDate(report.pi || report.p || report.d)].filter(Boolean).join(" · "));
-    const foot = make("div", "card__foot", li);
+    const meta = make("p", "card__meta report-card__meta", content);
+    text(meta, [report.s, formatDate(report.pi || report.fi || report.d)].filter(Boolean).join(" · "));
     if (report.sum) {
-      const body = make("div", "card__body", content);
-      const snippet = make("p", "report-teaser__snippet", body);
-      text(snippet, report.sum);
-      body.hidden = true;
+      const preview = make("p", "report-card__summary", content);
+      text(preview, report.sum);
+    }
+    const detail = make("div", "card__body report-card__detail", li);
+    if (report.sum) {
+      const fullSummary = make("p", "report-card__full-summary", detail);
+      text(fullSummary, report.sum);
+    }
+    if (hasAnalysis(report) && window.NV.app && typeof window.NV.app.renderAnalysisBlocks === "function") {
+      detail.appendChild(window.NV.app.renderAnalysisBlocks(report, null));
+    }
+    detail.hidden = true;
+    const foot = make("div", "card__foot", li);
+    if (detail.childNodes.length) {
       const more = make("button", "card__more", foot);
       more.type = "button";
       more.addEventListener("click", () => {
         if (!window.NV.modal) return;
-        body.hidden = false;
+        detail.hidden = false;
         window.NV.modal.open({
           title: report.t || "",
-          node: body,
-          onClose: () => { body.hidden = true; }
+          node: detail,
+          onClose: () => { detail.hidden = true; }
         });
       });
       text(more, "Xem thêm");
     }
-    const cta = make("a", "report-teaser__cta", foot);
+    const cta = make("a", "report-card__cta", foot);
     cta.href = report.u || "#";
     cta.target = "_blank";
     cta.rel = "noopener noreferrer";
     text(cta, T.full);
     return li;
-  }
-
-  function reportCard(item) {
-    if (item && item.te) return teaserCard(item);
-    if (window.NV.app && typeof window.NV.app.articleCard === "function") {
-      return window.NV.app.articleCard(item || {});
-    }
-    return teaserCard(item);
   }
 
   function cardList(items, base, cls) {
@@ -112,12 +126,17 @@
     return ul;
   }
 
-  function daySection(items, base) {
+  function daySection(items, base, day) {
     const list = Array.isArray(items) ? items : [];
     if (!list.length) return null;
     const section = make("section", "reports");
     const title = make("h2", "reports__title", section);
     text(title, T.section);
+    const context = make("p", "reports__context", section);
+    text(context, T.dayCount(list.length, formatDate(day || list[0].d || "")) + " · ");
+    const archive = make("a", "reports__archive-link", context);
+    archive.href = (base || "../../") + "r/";
+    text(archive, T.archiveLink);
     section.appendChild(cardList(list, base, "reports__day-list"));
     return section;
   }
@@ -130,7 +149,7 @@
     const title = make("h1", "reports-index__title", header);
     text(title, T.section);
     const count = make("p", "reports-index__count", header);
-    text(count, items.length === 1 ? T.countOne : items.length + T.countMany);
+    text(count, T.archiveCount(items.length));
 
     if (!items.length) {
       const empty = make("p", "reports-index__empty", app);
@@ -138,7 +157,7 @@
       return;
     }
 
-    const state = { query: "", source: "", sort: "newest" };
+    const state = { query: "", source: "", sort: "received-newest" };
 
     const controls = make("section", "reports-index__controls", app);
     controls.setAttribute("aria-label", "Lọc báo cáo phân tích");
@@ -162,7 +181,7 @@
 
     const sortSelect = make("select", "reports-index__select", controls);
     sortSelect.setAttribute("aria-label", "Sắp xếp");
-    [["newest", T.sortNewest], ["oldest", T.sortOldest], ["source", T.sortSource]].forEach(
+    [["received-newest", T.sortReceivedNewest], ["received-oldest", T.sortReceivedOldest], ["published-newest", T.sortPublishedNewest], ["published-oldest", T.sortPublishedOldest], ["source", T.sortSource]].forEach(
       ([value, label]) => {
         const option = make("option", "", sortSelect);
         option.value = value;
@@ -182,8 +201,18 @@
     text(empty, T.noResults);
     empty.hidden = true;
 
-    function published(item) {
-      return item.pi || item.p || "";
+    function time(item, key) {
+      const value = Date.parse(String(item && item[key] || ""));
+      return Number.isFinite(value) ? value : null;
+    }
+
+    function compareTime(a, b, key, direction) {
+      const aTime = time(a, key);
+      const bTime = time(b, key);
+      if (aTime !== null && bTime !== null && aTime !== bTime) return direction * (aTime - bTime);
+      if (aTime !== null && bTime === null) return -1;
+      if (aTime === null && bTime !== null) return 1;
+      return Number(a.i || 0) - Number(b.i || 0);
     }
 
     function matches(item) {
@@ -197,10 +226,12 @@
       return list.sort((a, b) => {
         if (state.sort === "source") {
           return String(a.s || "").localeCompare(String(b.s || ""), "vi") ||
-            published(b).localeCompare(published(a));
+            compareTime(a, b, "fi", -1);
         }
-        const direction = state.sort === "oldest" ? 1 : -1;
-        return direction * published(a).localeCompare(published(b));
+        if (state.sort === "received-oldest") return compareTime(a, b, "fi", 1);
+        if (state.sort === "published-newest") return compareTime(a, b, "pi", -1) || compareTime(a, b, "fi", -1);
+        if (state.sort === "published-oldest") return compareTime(a, b, "pi", 1) || compareTime(a, b, "fi", 1);
+        return compareTime(a, b, "fi", -1);
       });
     }
 
@@ -229,10 +260,10 @@
     clear.addEventListener("click", () => {
       state.query = "";
       state.source = "";
-      state.sort = "newest";
+      state.sort = "received-newest";
       input.value = "";
       sourceSelect.value = "";
-      sortSelect.value = "newest";
+      sortSelect.value = "received-newest";
       paint();
     });
 
@@ -242,7 +273,7 @@
   window.NV.reports = {
     daySection: daySection,
     renderIndex: renderIndex,
-    teaserCard: teaserCard,
+    reportCard: reportCard,
     cardList: cardList
   };
 })();

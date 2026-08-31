@@ -758,7 +758,7 @@
     const list = payload.reports || [];
     if (!list.length) return;
     const body = makePanel(parent, "day-reports", `${T.reportsTitle} (${list.length})`, "", true);
-    const section = NV.reports.daySection(list, config.base || "../../");
+    const section = NV.reports.daySection(list, config.base || "../../", payload.day || "");
     if (!section) return;
     const heading = section.querySelector(".reports__title");
     if (heading) section.removeChild(heading);

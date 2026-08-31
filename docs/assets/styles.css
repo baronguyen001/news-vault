@@ -3557,6 +3557,17 @@ body.modal-open {
   grid-template-columns: minmax(0, 1fr);
 }
 
+/* A day report is read as a small feature: showing its image across the card before
+ * the headline gives the summary enough width.  The shared card layout switches to
+ * a side-by-side thumbnail at 520px, which made this one-column section feel cramped. */
+.reports__day-list .card__lead {
+  flex-direction: column;
+}
+
+.reports__day-list .card__lead .card__thumb {
+  width: 100%;
+}
+
 .reports-index__head {
   margin-block: var(--space-lg) var(--space-md);
 }

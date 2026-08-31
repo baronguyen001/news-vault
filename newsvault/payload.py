@@ -123,6 +123,10 @@ def compact_article(
         "rel": article.relevance,
         "p": article.published_at or "",
         "pi": article.published_iso or "",
+        # The source publication date is often absent or occasionally malformed.  Keep the
+        # collection timestamp as a separate canonical key so archive listings can sort by
+        # "when it entered the vault" without guessing from a source-controlled string.
+        "fi": article.fetched_at or "",
         "sum": excerpt(summary, 1200),
         "kp": list(article.key_points),
         "tg": list(article.tags),
@@ -319,17 +323,13 @@ def curated_index_items(items: Sequence[CuratedItem]) -> list[dict[str, object]]
 
 
 def report_index_payload(reports: Sequence[Article], *, generated_at: str) -> dict[str, object]:
-    """Payload for the analyst-report listing, newest report first.
+    """Payload for the analyst-report listing, newest collected report first.
 
     Reports reuse the normal compact-article shape so full reports can render with the
     normal article card. They already enter the archive-search shards through
     :func:`index_items`, therefore this listing must not create duplicate search entries.
     """
-    ordered = sorted(
-        reports,
-        key=lambda article: (article.day, article.published_iso, article.id),
-        reverse=True,
-    )
+    ordered = sorted(reports, key=lambda article: (article.fetched_at, article.id), reverse=True)
     return _sorted(
         {
             "v": 1,

@@ -100,8 +100,8 @@ function renderTwo() {
   const { reports } = load();
   const app = makeEl('div');
   const items = [
-    { t: 'Kinh tế Việt Nam quý 3', s: 'McKinsey Insights', p: '2026-08-10', pi: '2026-08-10T00:00:00+00:00', sum: 'Tóm tắt A' },
-    { t: 'Chip AI và chuỗi cung ứng', s: 'SemiAnalysis', p: '2026-08-20', pi: '2026-08-20T00:00:00+00:00', sum: 'Tóm tắt B' },
+    { t: 'Kinh tế Việt Nam quý 3', s: 'McKinsey Insights', p: '2026-08-10', pi: '2026-08-10T00:00:00+00:00', fi: '2026-08-10T10:00:00+00:00', sum: 'Tóm tắt A' },
+    { t: 'Chip AI và chuỗi cung ứng', s: 'SemiAnalysis', p: '2026-08-20', pi: '2026-08-20T00:00:00+00:00', fi: '2026-08-20T10:00:00+00:00', sum: 'Tóm tắt B' },
   ];
   reports.renderIndex(app, { items }, { base: '../' });
   return { app };
@@ -120,7 +120,7 @@ test('the search box filters by title, diacritic-insensitively', () => {
   const input = app.querySelector('.reports-index__search');
   input.value = 'kinh te';
   input.fire('input');
-  const titles = app.querySelectorAll('.report-teaser__link').map((el) => el.textContent);
+  const titles = app.querySelectorAll('.report-card__link').map((el) => el.textContent);
   assert.deepEqual(titles, ['Kinh tế Việt Nam quý 3']);
 });
 
@@ -129,7 +129,7 @@ test('the source select filters to exactly that source', () => {
   const select = app.querySelector('.reports-index__select');
   select.value = 'SemiAnalysis';
   select.fire('change');
-  const titles = app.querySelectorAll('.report-teaser__link').map((el) => el.textContent);
+  const titles = app.querySelectorAll('.report-card__link').map((el) => el.textContent);
   assert.deepEqual(titles, ['Chip AI và chuỗi cung ứng']);
 });
 
@@ -139,7 +139,7 @@ test('a query matching nothing shows the empty-results message', () => {
   input.value = 'khong-ton-tai-xyz';
   input.fire('input');
   assert.equal(app.querySelector('.reports-index__noresults').hidden, false);
-  assert.equal(app.querySelectorAll('.report-teaser').length, 0);
+  assert.equal(app.querySelectorAll('.report-card').length, 0);
 });
 
 test('clear resets the search box, source filter and results', () => {
@@ -147,28 +147,28 @@ test('clear resets the search box, source filter and results', () => {
   const input = app.querySelector('.reports-index__search');
   input.value = 'khong-ton-tai-xyz';
   input.fire('input');
-  assert.equal(app.querySelectorAll('.report-teaser').length, 0);
+  assert.equal(app.querySelectorAll('.report-card').length, 0);
 
   app.querySelector('.reports-index__clear').fire('click');
 
   assert.equal(input.value, '');
-  assert.equal(app.querySelectorAll('.report-teaser').length, 2);
+  assert.equal(app.querySelectorAll('.report-card').length, 2);
   assert.equal(app.querySelector('.reports-index__noresults').hidden, true);
 });
 
-test('sorting oldest-first puts the earlier report first', () => {
+test('sorting collection time oldest-first puts the earlier report first', () => {
   const { app } = renderTwo();
   const sortSelects = app.querySelectorAll('.reports-index__select');
   const sortSelect = sortSelects[1]; // source select is created first, sort select second
-  sortSelect.value = 'oldest';
+  sortSelect.value = 'received-oldest';
   sortSelect.fire('change');
-  const titles = app.querySelectorAll('.report-teaser__link').map((el) => el.textContent);
+  const titles = app.querySelectorAll('.report-card__link').map((el) => el.textContent);
   assert.deepEqual(titles, ['Kinh tế Việt Nam quý 3', 'Chip AI và chuỗi cung ứng']);
 });
 
-test('RSS teasers delegate available images to the shared thumbnail builder', () => {
+test('report cards delegate available images to the shared thumbnail builder', () => {
   const { reports, thumbs } = load();
-  const card = reports.teaserCard({
+  const card = reports.reportCard({
     t: 'Report with an image',
     img: 'https://cdn.example.test/report.jpg',
   });

@@ -32,6 +32,10 @@ param(
     [string]$RepoPath,
     [switch]$NoPush,
     [switch]$DryRunNotify,
+    # Used by news-hunter's 15:00 report run: it publishes the day first, then sends
+    # one combined report notification itself. Suppress every notification from this
+    # helper invocation so the reader does not receive a duplicate News Vault alert.
+    [switch]$NoNotify,
     # Build only the newest day, the way this script used to. Kept for a quick manual run;
     # the nightly job must NOT use it - see the comment on $buildArgs below.
     [switch]$TodayOnly,
@@ -108,6 +112,10 @@ function Format-RunMessage {
 }
 
 function Send-Telegram([string]$text) {
+    if ($NoNotify) {
+        Write-Log "telegram: bo qua (-NoNotify)"
+        return
+    }
     if ($DryRunNotify) {
         Write-Log ("TELEGRAM (dry-run):`n{0}" -f $text)
         return

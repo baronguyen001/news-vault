@@ -2874,9 +2874,9 @@ code {
   [data-layout="two"] .ipost,
   [data-layout="three"] .ipost,
   [data-layout="grid"] .ipost,
-  [data-layout="two"] .report-teaser,
-  [data-layout="three"] .report-teaser,
-  [data-layout="grid"] .report-teaser,
+  [data-layout="two"] .report-card,
+  [data-layout="three"] .report-card,
+  [data-layout="grid"] .report-card,
   [data-layout="two"] .fpost,
   [data-layout="three"] .fpost,
   [data-layout="grid"] .fpost {
@@ -2891,9 +2891,9 @@ code {
   [data-layout="two"] .ipost__footer,
   [data-layout="three"] .ipost__footer,
   [data-layout="grid"] .ipost__footer,
-  [data-layout="two"] .report-teaser .card__foot,
-  [data-layout="three"] .report-teaser .card__foot,
-  [data-layout="grid"] .report-teaser .card__foot,
+  [data-layout="two"] .report-card .card__foot,
+  [data-layout="three"] .report-card .card__foot,
+  [data-layout="grid"] .report-card .card__foot,
   [data-layout="two"] .fpost .card__foot,
   [data-layout="three"] .fpost .card__foot,
   [data-layout="grid"] .fpost .card__foot {
@@ -3557,6 +3557,17 @@ body.modal-open {
   grid-template-columns: minmax(0, 1fr);
 }
 
+/* A day report is read as a small feature: showing its image across the card before
+ * the headline gives the summary enough width.  The shared card layout switches to
+ * a side-by-side thumbnail at 520px, which made this one-column section feel cramped. */
+.reports__day-list .card__lead {
+  flex-direction: column;
+}
+
+.reports__day-list .card__lead .card__thumb {
+  width: 100%;
+}
+
 .reports-index__head {
   margin-block: var(--space-lg) var(--space-md);
 }
@@ -3618,48 +3629,83 @@ body.modal-open {
   padding-block: var(--space-xl);
 }
 
-.card--report-teaser {
+.card--report {
   border-inline-start: 3px solid var(--accent);
 }
 
-.report-teaser__title {
+.report-card__title {
   margin: 0;
   font-size: 1.0625rem;
   line-height: 1.35;
 }
 
-.report-teaser__link,
-.report-teaser__cta {
+.report-card__link,
+.report-card__cta {
   color: inherit;
 }
 
-.report-teaser__link:hover,
-.report-teaser__link:focus-visible {
+.report-card__link:hover,
+.report-card__link:focus-visible {
   color: var(--accent);
 }
 
-.report-teaser__meta,
-.report-teaser__snippet {
+.report-card__meta,
+.report-card__summary,
+.report-card__full-summary {
   color: var(--text-dim);
 }
 
-.report-teaser__meta {
+.report-card__meta {
   margin: var(--space-xs) 0 0;
   font-size: 0.8125rem;
 }
 
-.report-teaser__snippet {
+.report-card__summary {
   margin: var(--space-sm) 0 0;
   line-height: 1.6;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
-.report-teaser__cta {
+.report-card__cta {
   display: inline-flex;
   align-items: center;
   min-height: 32px;
   color: var(--accent);
   font-weight: 600;
 }
+
+.report-card__detail {
+  line-height: 1.65;
+}
+
+.report-card__full-summary {
+  margin-top: 0;
+}
+
+.reports__context {
+  margin: var(--space-xs) 0 var(--space-md);
+  color: var(--text-dim);
+  font-size: 0.875rem;
+}
+
+.reports__archive-link {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.fpost__preview {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.fpost__preview > :first-child { margin-top: 0; }
 
 /* ---------- article page ---------- */
 

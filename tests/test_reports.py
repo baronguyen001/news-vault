@@ -115,6 +115,7 @@ def test_report_payload_keeps_teaser_flag_and_day_card_index() -> None:
     teaser_item = next(item for item in index["items"] if item["u"] == teaser.url)
     assert teaser_item["te"] is True
     assert teaser_item["d"] == "2026-08-09"
+    assert teaser_item["fi"] == "2026-08-09T10:00:00+07:00"
     assert teaser_item["img"] == "https://cdn.example.test/teaser.jpg"
 
     day = day_payload(
@@ -133,3 +134,24 @@ def test_report_payload_keeps_teaser_flag_and_day_card_index() -> None:
     assert [item["i"] for item in day["reports"]] == [1, 0]
     assert day["reports"][0]["te"] is True
     assert day["reports"][0]["img"] == "https://cdn.example.test/teaser.jpg"
+
+
+def test_report_index_defaults_to_collection_time_not_source_publication_time() -> None:
+    future_dated = _article(
+        id=1,
+        published_iso="2026-09-10T11:00:00-04:00",
+        fetched_at="2026-08-31T08:00:00+00:00",
+    )
+    collected_later = _article(
+        id=2,
+        url="https://example.test/later",
+        published_iso="2026-08-01T00:00:00+00:00",
+        fetched_at="2026-08-31T09:00:00+00:00",
+    )
+
+    payload = report_index_payload(
+        [future_dated, collected_later], generated_at="2026-08-31T18:00:00+07:00"
+    )
+
+    assert [item["u"] for item in payload["items"]] == [collected_later.url, future_dated.url]
+    assert payload["items"][0]["fi"] == "2026-08-31T09:00:00+00:00"
