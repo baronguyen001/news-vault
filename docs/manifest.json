@@ -744,18 +744,18 @@
     {
       "d": "2026-09-01",
       "months": "2026-09",
-      "n": 40
+      "n": 66
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 1521,
+      "n": 1537,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 345,
+      "n": 348,
       "slug": "dau-tu"
     },
     {
@@ -765,37 +765,37 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 244,
+      "n": 248,
       "slug": "doanh-nghiep"
     },
     {
       "label": "thuế",
-      "n": 218,
+      "n": 220,
       "slug": "thue"
     },
     {
       "label": "chính phủ",
-      "n": 186,
+      "n": 187,
       "slug": "chinh-phu"
     },
     {
       "label": "công nghệ",
-      "n": 175,
+      "n": 178,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 171,
+      "n": 176,
       "slug": "du-lieu"
     },
     {
       "label": "chip",
-      "n": 161,
+      "n": 162,
       "slug": "chip"
     },
     {
       "label": "ngân hàng",
-      "n": 146,
+      "n": 148,
       "slug": "ngan-hang"
     },
     {
@@ -805,42 +805,42 @@
     },
     {
       "label": "lãi suất",
-      "n": 120,
+      "n": 122,
       "slug": "lai-suat"
     },
     {
       "label": "chính sách",
-      "n": 113,
+      "n": 114,
       "slug": "chinh-sach"
     },
     {
       "label": "lạm phát",
-      "n": 103,
+      "n": 106,
       "slug": "lam-phat"
     },
     {
       "label": "đảng",
-      "n": 99,
+      "n": 100,
       "slug": "dang"
     },
     {
       "label": "trung ương",
-      "n": 99,
+      "n": 100,
       "slug": "trung-uong"
     },
     {
       "label": "xuất khẩu",
-      "n": 99,
+      "n": 100,
       "slug": "xuat-khau"
     },
     {
       "label": "nghị quyết",
-      "n": 91,
+      "n": 92,
       "slug": "nghi-quyet"
     },
     {
       "label": "xung đột",
-      "n": 85,
+      "n": 86,
       "slug": "xung-dot"
     },
     {
@@ -865,8 +865,13 @@
     },
     {
       "label": "nhập khẩu",
-      "n": 57,
+      "n": 58,
       "slug": "nhap-khau"
+    },
+    {
+      "label": "thuế quan",
+      "n": 51,
+      "slug": "thue-quan"
     },
     {
       "label": "trừng phạt",
@@ -874,13 +879,8 @@
       "slug": "trung-phat"
     },
     {
-      "label": "thuế quan",
-      "n": 50,
-      "slug": "thue-quan"
-    },
-    {
       "label": "pháp lý",
-      "n": 49,
+      "n": 50,
       "slug": "phap-ly"
     },
     {
@@ -909,14 +909,14 @@
       "slug": "hanh-chinh"
     },
     {
+      "label": "cải cách",
+      "n": 25,
+      "slug": "cai-cach"
+    },
+    {
       "label": "bộ chính trị",
       "n": 24,
       "slug": "bo-chinh-tri"
-    },
-    {
-      "label": "cải cách",
-      "n": 24,
-      "slug": "cai-cach"
     },
     {
       "label": "trí tuệ nhân tạo",
@@ -1019,6 +1019,11 @@
       "slug": "argentina"
     },
     {
+      "label": "blockchain",
+      "n": 4,
+      "slug": "blockchain"
+    },
+    {
       "label": "Bóng đá",
       "n": 4,
       "slug": "bong-da"
@@ -1072,11 +1077,6 @@
       "label": "biến đổi khí hậu",
       "n": 3,
       "slug": "bien-doi-khi-hau"
-    },
-    {
-      "label": "blockchain",
-      "n": 3,
-      "slug": "blockchain"
     },
     {
       "label": "Đổi mới sáng tạo",
