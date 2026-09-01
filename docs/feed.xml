@@ -2,46 +2,53 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>https://baronguyen001.github.io/news-vault</id>
   <title>Kho tin</title>
-  <updated>2026-08-31T23:59:59+07:00</updated>
+  <updated>2026-09-01T23:59:59+07:00</updated>
   <link href="https://baronguyen001.github.io/news-vault"/>
   <entry>
+  <id>urn:news-vault:day:2026-09-01</id>
+  <title>01/09/2026 — 40 tin</title>
+  <updated>2026-09-01T00:00:00+07:00</updated>
+  <link href="https://baronguyen001.github.io/news-vault/d/2026-09-01/"/>
+  <summary></summary>
+</entry>
+<entry>
   <id>urn:news-vault:day:2026-08-31</id>
-  <title>31/08/2026 — 126 tin</title>
+  <title>31/08/2026 — 153 tin</title>
   <updated>2026-08-31T00:00:00+07:00</updated>
   <link href="https://baronguyen001.github.io/news-vault/d/2026-08-31/"/>
   <summary>Chính trị/Chính sách 23 · Công nghệ/AI 17 · Kinh tế/Tài chính 16 · Xung đột/Chiến tranh 5 · Crypto 3 · Pháp luật/Nghị định 2 · Văn hóa/Xã hội 2 · Chứng khoán 1</summary>
 </entry>
 <entry>
   <id>urn:news-vault:day:2026-08-30</id>
-  <title>30/08/2026 — 180 tin</title>
+  <title>30/08/2026 — 182 tin</title>
   <updated>2026-08-30T00:00:00+07:00</updated>
   <link href="https://baronguyen001.github.io/news-vault/d/2026-08-30/"/>
   <summary>Chính trị/Chính sách 30 · Kinh tế/Tài chính 30 · Xung đột/Chiến tranh 21 · Công nghệ/AI 19 · Pháp luật/Nghị định 7 · Văn hóa/Xã hội 3 · Crypto 2 · Chứng khoán 1</summary>
 </entry>
 <entry>
   <id>urn:news-vault:day:2026-08-29</id>
-  <title>29/08/2026 — 233 tin</title>
+  <title>29/08/2026 — 234 tin</title>
   <updated>2026-08-29T00:00:00+07:00</updated>
   <link href="https://baronguyen001.github.io/news-vault/d/2026-08-29/"/>
   <summary>Chính trị/Chính sách 55 · Công nghệ/AI 46 · Kinh tế/Tài chính 31 · Xung đột/Chiến tranh 17 · Pháp luật/Nghị định 11 · Văn hóa/Xã hội 5 · Chứng khoán 3</summary>
 </entry>
 <entry>
   <id>urn:news-vault:day:2026-08-28</id>
-  <title>28/08/2026 — 115 tin</title>
+  <title>28/08/2026 — 116 tin</title>
   <updated>2026-08-28T00:00:00+07:00</updated>
   <link href="https://baronguyen001.github.io/news-vault/d/2026-08-28/"/>
   <summary>Chính trị/Chính sách 21 · Công nghệ/AI 6 · Kinh tế/Tài chính 6 · Xung đột/Chiến tranh 6 · Pháp luật/Nghị định 5 · Chứng khoán 1 · Văn hóa/Xã hội 1</summary>
 </entry>
 <entry>
   <id>urn:news-vault:day:2026-08-27</id>
-  <title>27/08/2026 — 176 tin</title>
+  <title>27/08/2026 — 177 tin</title>
   <updated>2026-08-27T00:00:00+07:00</updated>
   <link href="https://baronguyen001.github.io/news-vault/d/2026-08-27/"/>
   <summary>Chính trị/Chính sách 29 · Công nghệ/AI 15 · Xung đột/Chiến tranh 15 · Kinh tế/Tài chính 13 · Pháp luật/Nghị định 7 · Chứng khoán 5 · Crypto 1 · Văn hóa/Xã hội 1</summary>
 </entry>
 <entry>
   <id>urn:news-vault:day:2026-08-26</id>
-  <title>26/08/2026 — 193 tin</title>
+  <title>26/08/2026 — 194 tin</title>
   <updated>2026-08-26T00:00:00+07:00</updated>
   <link href="https://baronguyen001.github.io/news-vault/d/2026-08-26/"/>
   <summary>Chính trị/Chính sách 27 · Công nghệ/AI 22 · Kinh tế/Tài chính 21 · Xung đột/Chiến tranh 19 · Văn hóa/Xã hội 7 · Crypto 4 · Pháp luật/Nghị định 4 · Chứng khoán 2</summary>
@@ -415,13 +422,6 @@
   <title>04/07/2026 — 9 tin</title>
   <updated>2026-07-04T00:00:00+07:00</updated>
   <link href="https://baronguyen001.github.io/news-vault/d/2026-07-04/"/>
-  <summary></summary>
-</entry>
-<entry>
-  <id>urn:news-vault:day:2026-07-03</id>
-  <title>03/07/2026 — 7 tin</title>
-  <updated>2026-07-03T00:00:00+07:00</updated>
-  <link href="https://baronguyen001.github.io/news-vault/d/2026-07-03/"/>
   <summary></summary>
 </entry>
 </feed>
