@@ -2,7 +2,9 @@
 #
 # Task \NewsVault\Daily fires this TWICE a day, both times Asia/Ho_Chi_Minh:
 #
-#   14:00 - after news-hunter's 13:00 digest, so the day's articles are readable by early
+#   14:00 - after news-hunter's 11:30 digest (moved from 12:01 on 2026-09-02: the digest's
+#           own 120min worst-case deadline could still be running at 14:00 otherwise, which
+#           is exactly what happened that day), so the day's articles are readable by early
 #           afternoon instead of waiting for the evening.
 #   21:15 - after the 20:00 YouTube summariser, which is the run that picks up the videos.
 #
