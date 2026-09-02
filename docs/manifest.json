@@ -755,18 +755,18 @@
     {
       "d": "2026-09-02",
       "months": "2026-09",
-      "n": 70
+      "n": 93
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 1546,
+      "n": 1560,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 349,
+      "n": 352,
       "slug": "dau-tu"
     },
     {
@@ -776,32 +776,32 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 249,
+      "n": 256,
       "slug": "doanh-nghiep"
     },
     {
       "label": "thuế",
-      "n": 221,
+      "n": 222,
       "slug": "thue"
     },
     {
       "label": "chính phủ",
-      "n": 189,
+      "n": 191,
       "slug": "chinh-phu"
     },
     {
-      "label": "công nghệ",
-      "n": 178,
-      "slug": "cong-nghe"
-    },
-    {
       "label": "dữ liệu",
-      "n": 178,
+      "n": 183,
       "slug": "du-lieu"
     },
     {
+      "label": "công nghệ",
+      "n": 179,
+      "slug": "cong-nghe"
+    },
+    {
       "label": "chip",
-      "n": 163,
+      "n": 164,
       "slug": "chip"
     },
     {
@@ -821,17 +821,17 @@
     },
     {
       "label": "chính sách",
-      "n": 115,
+      "n": 117,
       "slug": "chinh-sach"
     },
     {
       "label": "lạm phát",
-      "n": 106,
+      "n": 109,
       "slug": "lam-phat"
     },
     {
       "label": "đảng",
-      "n": 101,
+      "n": 102,
       "slug": "dang"
     },
     {
@@ -856,7 +856,7 @@
     },
     {
       "label": "chiến tranh",
-      "n": 70,
+      "n": 71,
       "slug": "chien-tranh"
     },
     {
@@ -881,12 +881,12 @@
     },
     {
       "label": "thuế quan",
-      "n": 52,
+      "n": 53,
       "slug": "thue-quan"
     },
     {
       "label": "trừng phạt",
-      "n": 52,
+      "n": 53,
       "slug": "trung-phat"
     },
     {
@@ -906,7 +906,7 @@
     },
     {
       "label": "bảo hiểm",
-      "n": 29,
+      "n": 31,
       "slug": "bao-hiem"
     },
     {
