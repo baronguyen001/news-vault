@@ -756,52 +756,57 @@
       "d": "2026-09-02",
       "months": "2026-09",
       "n": 267
+    },
+    {
+      "d": "2026-09-03",
+      "months": "2026-09",
+      "n": 102
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 1602,
+      "n": 1631,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 362,
+      "n": 367,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 301,
+      "n": 303,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 262,
+      "n": 265,
       "slug": "doanh-nghiep"
     },
     {
       "label": "thuế",
-      "n": 224,
+      "n": 230,
       "slug": "thue"
     },
     {
       "label": "chính phủ",
-      "n": 199,
+      "n": 202,
       "slug": "chinh-phu"
     },
     {
       "label": "dữ liệu",
-      "n": 187,
+      "n": 190,
       "slug": "du-lieu"
     },
     {
       "label": "công nghệ",
-      "n": 183,
+      "n": 186,
       "slug": "cong-nghe"
     },
     {
       "label": "chip",
-      "n": 168,
+      "n": 171,
       "slug": "chip"
     },
     {
@@ -811,7 +816,7 @@
     },
     {
       "label": "quốc hội",
-      "n": 145,
+      "n": 146,
       "slug": "quoc-hoi"
     },
     {
@@ -821,33 +826,33 @@
     },
     {
       "label": "chính sách",
-      "n": 119,
+      "n": 121,
       "slug": "chinh-sach"
     },
     {
       "label": "lạm phát",
-      "n": 112,
+      "n": 113,
       "slug": "lam-phat"
     },
     {
-      "label": "trung ương",
-      "n": 103,
-      "slug": "trung-uong"
-    },
-    {
       "label": "đảng",
-      "n": 102,
+      "n": 104,
       "slug": "dang"
     },
     {
-      "label": "xuất khẩu",
-      "n": 102,
-      "slug": "xuat-khau"
+      "label": "nghị quyết",
+      "n": 104,
+      "slug": "nghi-quyet"
     },
     {
-      "label": "nghị quyết",
-      "n": 99,
-      "slug": "nghi-quyet"
+      "label": "trung ương",
+      "n": 104,
+      "slug": "trung-uong"
+    },
+    {
+      "label": "xuất khẩu",
+      "n": 104,
+      "slug": "xuat-khau"
     },
     {
       "label": "xung đột",
@@ -856,28 +861,33 @@
     },
     {
       "label": "chiến tranh",
-      "n": 75,
+      "n": 77,
       "slug": "chien-tranh"
     },
     {
-      "label": "chứng khoán",
-      "n": 68,
-      "slug": "chung-khoan"
-    },
-    {
       "label": "năng lượng",
-      "n": 68,
+      "n": 70,
       "slug": "nang-luong"
     },
     {
+      "label": "chứng khoán",
+      "n": 69,
+      "slug": "chung-khoan"
+    },
+    {
       "label": "nghị định",
-      "n": 67,
+      "n": 68,
       "slug": "nghi-dinh"
     },
     {
       "label": "nhập khẩu",
-      "n": 60,
+      "n": 63,
       "slug": "nhap-khau"
+    },
+    {
+      "label": "trừng phạt",
+      "n": 56,
+      "slug": "trung-phat"
     },
     {
       "label": "thuế quan",
@@ -885,13 +895,8 @@
       "slug": "thue-quan"
     },
     {
-      "label": "trừng phạt",
-      "n": 54,
-      "slug": "trung-phat"
-    },
-    {
       "label": "pháp lý",
-      "n": 50,
+      "n": 51,
       "slug": "phap-ly"
     },
     {
@@ -901,7 +906,7 @@
     },
     {
       "label": "bán dẫn",
-      "n": 40,
+      "n": 41,
       "slug": "ban-dan"
     },
     {
@@ -911,7 +916,7 @@
     },
     {
       "label": "hành chính",
-      "n": 30,
+      "n": 31,
       "slug": "hanh-chinh"
     },
     {
@@ -921,7 +926,7 @@
     },
     {
       "label": "cải cách",
-      "n": 26,
+      "n": 27,
       "slug": "cai-cach"
     },
     {
@@ -961,13 +966,18 @@
     },
     {
       "label": "chỉ thị",
-      "n": 7,
+      "n": 8,
       "slug": "chi-thi"
     },
     {
       "label": "Địa chính trị",
       "n": 7,
       "slug": "dia-chinh-tri"
+    },
+    {
+      "label": "điện toán đám mây",
+      "n": 7,
+      "slug": "dien-toan-dam-may"
     },
     {
       "label": "kinh tế",
@@ -978,11 +988,6 @@
       "label": "dầu mỏ",
       "n": 6,
       "slug": "dau-mo"
-    },
-    {
-      "label": "điện toán đám mây",
-      "n": 6,
-      "slug": "dien-toan-dam-may"
     },
     {
       "label": "Hàn Quốc",
@@ -1200,7 +1205,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-09-02T23:59:59+07:00",
+  "generated_at": "2026-09-03T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
