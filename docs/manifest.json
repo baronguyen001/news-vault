@@ -720,7 +720,7 @@
     {
       "d": "2026-08-26",
       "months": "2026-08",
-      "n": 194
+      "n": 195
     },
     {
       "d": "2026-08-27",
@@ -750,84 +750,89 @@
     {
       "d": "2026-09-01",
       "months": "2026-09",
-      "n": 110
+      "n": 127
     },
     {
       "d": "2026-09-02",
       "months": "2026-09",
-      "n": 134
+      "n": 267
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 1559,
+      "n": 1602,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 352,
+      "n": 362,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 295,
+      "n": 301,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 257,
+      "n": 262,
       "slug": "doanh-nghiep"
     },
     {
       "label": "thuế",
-      "n": 222,
+      "n": 224,
       "slug": "thue"
     },
     {
       "label": "chính phủ",
-      "n": 191,
+      "n": 199,
       "slug": "chinh-phu"
     },
     {
       "label": "dữ liệu",
-      "n": 184,
+      "n": 187,
       "slug": "du-lieu"
     },
     {
       "label": "công nghệ",
-      "n": 179,
+      "n": 183,
       "slug": "cong-nghe"
     },
     {
       "label": "chip",
-      "n": 164,
+      "n": 168,
       "slug": "chip"
     },
     {
       "label": "ngân hàng",
-      "n": 149,
+      "n": 153,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 144,
+      "n": 145,
       "slug": "quoc-hoi"
     },
     {
       "label": "lãi suất",
-      "n": 123,
+      "n": 125,
       "slug": "lai-suat"
     },
     {
       "label": "chính sách",
-      "n": 117,
+      "n": 119,
       "slug": "chinh-sach"
     },
     {
       "label": "lạm phát",
-      "n": 109,
+      "n": 112,
       "slug": "lam-phat"
+    },
+    {
+      "label": "trung ương",
+      "n": 103,
+      "slug": "trung-uong"
     },
     {
       "label": "đảng",
@@ -835,18 +840,13 @@
       "slug": "dang"
     },
     {
-      "label": "trung ương",
-      "n": 101,
-      "slug": "trung-uong"
-    },
-    {
       "label": "xuất khẩu",
-      "n": 100,
+      "n": 102,
       "slug": "xuat-khau"
     },
     {
       "label": "nghị quyết",
-      "n": 95,
+      "n": 99,
       "slug": "nghi-quyet"
     },
     {
@@ -856,7 +856,7 @@
     },
     {
       "label": "chiến tranh",
-      "n": 71,
+      "n": 75,
       "slug": "chien-tranh"
     },
     {
@@ -865,28 +865,28 @@
       "slug": "chung-khoan"
     },
     {
+      "label": "năng lượng",
+      "n": 68,
+      "slug": "nang-luong"
+    },
+    {
       "label": "nghị định",
       "n": 67,
       "slug": "nghi-dinh"
     },
     {
-      "label": "năng lượng",
-      "n": 66,
-      "slug": "nang-luong"
-    },
-    {
       "label": "nhập khẩu",
-      "n": 59,
+      "n": 60,
       "slug": "nhap-khau"
     },
     {
       "label": "thuế quan",
-      "n": 53,
+      "n": 54,
       "slug": "thue-quan"
     },
     {
       "label": "trừng phạt",
-      "n": 53,
+      "n": 54,
       "slug": "trung-phat"
     },
     {
@@ -901,17 +901,17 @@
     },
     {
       "label": "bán dẫn",
-      "n": 39,
+      "n": 40,
       "slug": "ban-dan"
     },
     {
       "label": "bảo hiểm",
-      "n": 31,
+      "n": 32,
       "slug": "bao-hiem"
     },
     {
       "label": "hành chính",
-      "n": 28,
+      "n": 30,
       "slug": "hanh-chinh"
     },
     {
@@ -951,7 +951,7 @@
     },
     {
       "label": "khởi nghiệp",
-      "n": 12,
+      "n": 13,
       "slug": "khoi-nghiep"
     },
     {
@@ -1215,12 +1215,55 @@
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
   "substack": [
+    "322",
+    "328",
+    "348",
+    "355",
+    "334",
+    "317",
+    "337",
+    "319",
+    "321",
+    "350",
+    "354",
+    "326",
+    "314",
+    "330",
+    "327",
+    "313",
+    "324",
+    "346",
+    "352",
+    "349",
+    "342",
+    "343",
+    "335",
+    "323",
+    "331",
+    "329",
+    "316",
+    "353",
+    "332",
     "309",
+    "318",
     "306",
+    "345",
+    "333",
+    "338",
     "307",
+    "315",
     "311",
     "310",
+    "312",
+    "325",
+    "320",
+    "341",
+    "347",
+    "351",
+    "339",
+    "336",
     "308",
+    "344",
     "290",
     "303",
     "278",
@@ -1336,6 +1379,7 @@
     "200",
     "194",
     "190",
+    "340",
     "199",
     "115",
     "7",
