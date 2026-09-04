@@ -765,13 +765,13 @@
     {
       "d": "2026-09-04",
       "months": "2026-09",
-      "n": 141
+      "n": 158
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 1691,
+      "n": 1692,
       "slug": "ai"
     },
     {
@@ -786,7 +786,7 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 273,
+      "n": 274,
       "slug": "doanh-nghiep"
     },
     {
@@ -801,7 +801,7 @@
     },
     {
       "label": "công nghệ",
-      "n": 198,
+      "n": 199,
       "slug": "cong-nghe"
     },
     {
@@ -901,7 +901,7 @@
     },
     {
       "label": "pháp lý",
-      "n": 54,
+      "n": 55,
       "slug": "phap-ly"
     },
     {
