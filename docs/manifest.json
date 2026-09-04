@@ -765,13 +765,13 @@
     {
       "d": "2026-09-04",
       "months": "2026-09",
-      "n": 158
+      "n": 182
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 1692,
+      "n": 1694,
       "slug": "ai"
     },
     {
@@ -826,7 +826,7 @@
     },
     {
       "label": "lãi suất",
-      "n": 129,
+      "n": 130,
       "slug": "lai-suat"
     },
     {
@@ -846,18 +846,18 @@
     },
     {
       "label": "xuất khẩu",
-      "n": 106,
+      "n": 107,
       "slug": "xuat-khau"
+    },
+    {
+      "label": "đảng",
+      "n": 105,
+      "slug": "dang"
     },
     {
       "label": "nghị quyết",
       "n": 105,
       "slug": "nghi-quyet"
-    },
-    {
-      "label": "đảng",
-      "n": 104,
-      "slug": "dang"
     },
     {
       "label": "xung đột",
