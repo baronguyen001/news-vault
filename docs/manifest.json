@@ -760,38 +760,43 @@
     {
       "d": "2026-09-03",
       "months": "2026-09",
-      "n": 201
+      "n": 203
     },
     {
       "d": "2026-09-04",
       "months": "2026-09",
-      "n": 182
+      "n": 205
+    },
+    {
+      "d": "2026-09-05",
+      "months": "2026-09",
+      "n": 72
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 1694,
+      "n": 1720,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 378,
+      "n": 383,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 316,
+      "n": 317,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 274,
+      "n": 276,
       "slug": "doanh-nghiep"
     },
     {
       "label": "thuế",
-      "n": 238,
+      "n": 240,
       "slug": "thue"
     },
     {
@@ -800,33 +805,33 @@
       "slug": "chinh-phu"
     },
     {
+      "label": "dữ liệu",
+      "n": 202,
+      "slug": "du-lieu"
+    },
+    {
       "label": "công nghệ",
       "n": 199,
       "slug": "cong-nghe"
     },
     {
-      "label": "dữ liệu",
-      "n": 198,
-      "slug": "du-lieu"
-    },
-    {
       "label": "chip",
-      "n": 175,
+      "n": 177,
       "slug": "chip"
     },
     {
       "label": "ngân hàng",
-      "n": 164,
+      "n": 166,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 148,
+      "n": 149,
       "slug": "quoc-hoi"
     },
     {
       "label": "lãi suất",
-      "n": 130,
+      "n": 132,
       "slug": "lai-suat"
     },
     {
@@ -841,32 +846,32 @@
     },
     {
       "label": "trung ương",
-      "n": 109,
+      "n": 110,
       "slug": "trung-uong"
     },
     {
       "label": "xuất khẩu",
-      "n": 107,
+      "n": 110,
       "slug": "xuat-khau"
     },
     {
       "label": "đảng",
-      "n": 105,
+      "n": 108,
       "slug": "dang"
     },
     {
       "label": "nghị quyết",
-      "n": 105,
+      "n": 106,
       "slug": "nghi-quyet"
     },
     {
       "label": "xung đột",
-      "n": 91,
+      "n": 93,
       "slug": "xung-dot"
     },
     {
       "label": "chiến tranh",
-      "n": 78,
+      "n": 79,
       "slug": "chien-tranh"
     },
     {
@@ -876,12 +881,12 @@
     },
     {
       "label": "chứng khoán",
-      "n": 70,
+      "n": 71,
       "slug": "chung-khoan"
     },
     {
       "label": "nghị định",
-      "n": 68,
+      "n": 69,
       "slug": "nghi-dinh"
     },
     {
@@ -891,12 +896,12 @@
     },
     {
       "label": "trừng phạt",
-      "n": 61,
+      "n": 62,
       "slug": "trung-phat"
     },
     {
       "label": "thuế quan",
-      "n": 57,
+      "n": 58,
       "slug": "thue-quan"
     },
     {
@@ -906,27 +911,27 @@
     },
     {
       "label": "startup",
-      "n": 49,
+      "n": 50,
       "slug": "startup"
     },
     {
       "label": "bán dẫn",
-      "n": 43,
+      "n": 44,
       "slug": "ban-dan"
     },
     {
       "label": "bảo hiểm",
-      "n": 33,
+      "n": 35,
       "slug": "bao-hiem"
     },
     {
       "label": "hành chính",
-      "n": 31,
+      "n": 33,
       "slug": "hanh-chinh"
     },
     {
       "label": "cải cách",
-      "n": 29,
+      "n": 30,
       "slug": "cai-cach"
     },
     {
@@ -936,7 +941,7 @@
     },
     {
       "label": "bộ chính trị",
-      "n": 26,
+      "n": 27,
       "slug": "bo-chinh-tri"
     },
     {
@@ -1210,7 +1215,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-09-04T23:59:59+07:00",
+  "generated_at": "2026-09-05T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
@@ -1225,6 +1230,24 @@
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
   "substack": [
+    "382",
+    "393",
+    "388",
+    "383",
+    "396",
+    "398",
+    "384",
+    "385",
+    "395",
+    "390",
+    "380",
+    "387",
+    "381",
+    "394",
+    "397",
+    "389",
+    "392",
+    "386",
     "372",
     "364",
     "368",
@@ -1233,10 +1256,12 @@
     "363",
     "375",
     "367",
+    "391",
     "358",
     "377",
     "361",
     "356",
+    "357",
     "365",
     "374",
     "373",
