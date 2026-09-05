@@ -770,7 +770,7 @@
     {
       "d": "2026-09-05",
       "months": "2026-09",
-      "n": 102
+      "n": 124
     }
   ],
   "entities": [
@@ -830,18 +830,18 @@
       "slug": "quoc-hoi"
     },
     {
+      "label": "lãi suất",
+      "n": 133,
+      "slug": "lai-suat"
+    },
+    {
       "label": "chính sách",
       "n": 132,
       "slug": "chinh-sach"
     },
     {
-      "label": "lãi suất",
-      "n": 132,
-      "slug": "lai-suat"
-    },
-    {
       "label": "lạm phát",
-      "n": 116,
+      "n": 117,
       "slug": "lam-phat"
     },
     {
@@ -866,7 +866,7 @@
     },
     {
       "label": "xung đột",
-      "n": 94,
+      "n": 95,
       "slug": "xung-dot"
     },
     {
