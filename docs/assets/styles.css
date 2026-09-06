@@ -4022,8 +4022,8 @@ body.modal-open {
 /* ---------- Substack essays ---------- */
 /* Mirrors the ".dcard" / ".deep__*" block above almost rule for rule — same reasoning as
    substack.js's header comment: the reading problem is identical, only the source differs.
-   No thumbnail track here: an essay card has no picture, so `.scard__link` never needs the
-   side-by-side grid `.dcard__link` gets at 720px. */
+   Mirrors `.deepteaser__list`'s pattern rule-for-rule: essay covers ARE usually present, so
+   `.scard__link` gets the same side-by-side grid `.dcard__link` gets at 720px. */
 
 .badge--sub {
   background: color-mix(in srgb, var(--accent) 18%, var(--surface-2));
@@ -4052,8 +4052,9 @@ body.modal-open {
 }
 
 .scard__link {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
   padding: var(--space-md);
   color: inherit;
   text-decoration: none;
@@ -4174,11 +4175,17 @@ body.modal-open {
   line-clamp: 1;
 }
 
-/* Day-page mentions stay a compact one-liner, same reasoning as hiding .scard__badges
- * above - a full cover image would make this teaser as heavy as the listing-page card it
- * is meant to be a small pointer toward. */
-.subteaser__list .scard__thumb {
-  display: none;
+@media (min-width: 720px) {
+  .subteaser__list .scard__link {
+    grid-template-columns: 13rem minmax(0, 1fr);
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .subteaser__list .scard__lead {
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
 }
 
 /* ---------- listing page ---------- */
