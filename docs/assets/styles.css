@@ -2816,6 +2816,7 @@ code {
   [data-layout="two"] .videos__list,
   [data-layout="two"] .xposts__list,
   [data-layout="two"] .sublist__items,
+  [data-layout="two"] .subteaser__list,
   [data-layout="two"] .ilist__items,
   [data-layout="two"] .deeplist__items,
   [data-layout="two"] .reports__list,
@@ -2824,6 +2825,7 @@ code {
   [data-layout="three"] .videos__list,
   [data-layout="three"] .xposts__list,
   [data-layout="three"] .sublist__items,
+  [data-layout="three"] .subteaser__list,
   [data-layout="three"] .ilist__items,
   [data-layout="three"] .deeplist__items,
   [data-layout="three"] .reports__list,
@@ -2844,6 +2846,7 @@ code {
   [data-layout="grid"] .videos__list,
   [data-layout="grid"] .xposts__list,
   [data-layout="grid"] .sublist__items,
+  [data-layout="grid"] .subteaser__list,
   [data-layout="grid"] .ilist__items,
   [data-layout="grid"] .deeplist__items,
   [data-layout="grid"] .reports__list,
@@ -2909,6 +2912,9 @@ code {
   [data-layout="two"] .sublist__items,
   [data-layout="three"] .sublist__items,
   [data-layout="grid"] .sublist__items,
+  [data-layout="two"] .subteaser__list,
+  [data-layout="three"] .subteaser__list,
+  [data-layout="grid"] .subteaser__list,
   [data-layout="two"] .deeplist__items,
   [data-layout="three"] .deeplist__items,
   [data-layout="grid"] .deeplist__items {
@@ -2966,6 +2972,7 @@ code {
   [data-layout="three"] .videos__list,
   [data-layout="three"] .xposts__list,
   [data-layout="three"] .sublist__items,
+  [data-layout="three"] .subteaser__list,
   [data-layout="three"] .ilist__items,
   [data-layout="three"] .deeplist__items {
     grid-template-columns: repeat(3, minmax(0, 1fr));
