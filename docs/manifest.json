@@ -775,48 +775,48 @@
     {
       "d": "2026-09-06",
       "months": "2026-09",
-      "n": 101
+      "n": 119
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 1785,
+      "n": 1796,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 392,
+      "n": 393,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 322,
+      "n": 323,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 280,
+      "n": 281,
       "slug": "doanh-nghiep"
     },
     {
       "label": "thuế",
-      "n": 243,
+      "n": 244,
       "slug": "thue"
     },
     {
       "label": "chính phủ",
-      "n": 210,
+      "n": 212,
       "slug": "chinh-phu"
     },
     {
       "label": "dữ liệu",
-      "n": 208,
+      "n": 209,
       "slug": "du-lieu"
     },
     {
       "label": "công nghệ",
-      "n": 203,
+      "n": 206,
       "slug": "cong-nghe"
     },
     {
@@ -826,7 +826,7 @@
     },
     {
       "label": "ngân hàng",
-      "n": 174,
+      "n": 176,
       "slug": "ngan-hang"
     },
     {
@@ -836,33 +836,33 @@
     },
     {
       "label": "lãi suất",
-      "n": 141,
+      "n": 142,
       "slug": "lai-suat"
     },
     {
       "label": "chính sách",
-      "n": 134,
+      "n": 139,
       "slug": "chinh-sach"
     },
     {
       "label": "lạm phát",
-      "n": 122,
+      "n": 123,
       "slug": "lam-phat"
     },
     {
       "label": "đảng",
-      "n": 116,
+      "n": 117,
       "slug": "dang"
     },
     {
-      "label": "xuất khẩu",
-      "n": 116,
-      "slug": "xuat-khau"
+      "label": "trung ương",
+      "n": 117,
+      "slug": "trung-uong"
     },
     {
-      "label": "trung ương",
-      "n": 115,
-      "slug": "trung-uong"
+      "label": "xuất khẩu",
+      "n": 117,
+      "slug": "xuat-khau"
     },
     {
       "label": "nghị quyết",
@@ -886,7 +886,7 @@
     },
     {
       "label": "chứng khoán",
-      "n": 73,
+      "n": 74,
       "slug": "chung-khoan"
     },
     {
@@ -906,12 +906,12 @@
     },
     {
       "label": "thuế quan",
-      "n": 59,
+      "n": 60,
       "slug": "thue-quan"
     },
     {
       "label": "pháp lý",
-      "n": 55,
+      "n": 56,
       "slug": "phap-ly"
     },
     {
@@ -926,7 +926,7 @@
     },
     {
       "label": "bảo hiểm",
-      "n": 36,
+      "n": 37,
       "slug": "bao-hiem"
     },
     {
@@ -936,7 +936,7 @@
     },
     {
       "label": "cải cách",
-      "n": 31,
+      "n": 32,
       "slug": "cai-cach"
     },
     {
@@ -951,7 +951,7 @@
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 24,
+      "n": 25,
       "slug": "tri-tue-nhan-tao"
     },
     {
