@@ -950,6 +950,7 @@ def build_site(options: BuildOptions) -> BuildReport:
             # and `_write_substack_pages` writes every page on every run, so this can never
             # be the partial list that would make the pruner delete live essays.
             substack_ids=[item.id for item in substack_items],
+            report_ids=[article.id for article in reports],
         )
     finally:
         conn.close()
@@ -1389,6 +1390,37 @@ def _write_reports_index(
     state: Mapping[str, str],
     fresh: dict[str, str],
 ) -> None:
+    for article in reports:
+        data = payload.report_payload(article)
+        key = f"report:{article.id}"
+        fresh[key] = _digest(data, with_shell=True)
+        target = out_dir / "r" / str(article.id)
+        if state.get(key) == fresh[key] and (target / "data.enc").exists():
+            continue
+        config = {
+            "kind": "report",
+            "base": "../../",
+            "version": __version__,
+            "kdfIterations": crypto.DEFAULT_ITERATIONS,
+            "site": options.site,
+            "siteUrl": options.site_url,
+            "reportId": article.id,
+            "dataUrl": "data.enc",
+            "manifestUrl": "../../manifest.json",
+            "indexBase": "../../idx/",
+        }
+        render.write_page(
+            target / "index.html",
+            render.render_page(
+                kind="report",
+                base="../../",
+                title=f"Báo cáo phân tích — {options.site}",
+                config=config,
+                meta=meta,
+            ),
+        )
+        crypto.write_encrypted(target / "data.enc", data, options.password, salt=salt)
+
     """Write the dedicated listing of report-source articles.
 
     The article rows are already part of each day payload and search shard. This is only
@@ -1641,6 +1673,7 @@ def _write_root_files(
     weeks: Sequence[tuple[str, str, str]] = (),
     curated_ids: Sequence[str] | None = None,
     substack_ids: Sequence[str] | None = None,
+    report_ids: Sequence[int] | None = None,
 ) -> None:
     """Manifest, feeds, assets and the static root files."""
     # Anchored to the newest day, not to the clock, for the same reason `_day_anchor` exists:
@@ -1660,6 +1693,7 @@ def _write_root_files(
         weeks=weeks,
         curated=curated_ids,
         substack=substack_ids,
+        reports=report_ids,
         generated_at=generated_at,
         kdf_iterations=crypto.DEFAULT_ITERATIONS,
         site=options.site,

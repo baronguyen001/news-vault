@@ -43,6 +43,8 @@ def expected_paths(manifest: dict, docs: Path) -> set[Path]:
         expected.add(docs / "c" / str(curated_id))
     for substack_id in manifest.get("substack", []):
         expected.add(docs / "sub" / str(substack_id))
+    for report_id in manifest.get("reports", []):
+        expected.add(docs / "r" / str(report_id))
     return expected
 
 
@@ -51,7 +53,7 @@ def find_orphans(manifest: dict, docs: Path) -> list[Path]:
     expected = expected_paths(manifest, docs)
     orphans: list[Path] = []
 
-    for name in ("d", "e", "w", "c", "sub"):
+    for name in ("d", "e", "w", "c", "sub", "r"):
         parent = docs / name
         if not parent.is_dir():
             continue
@@ -67,6 +69,8 @@ def find_orphans(manifest: dict, docs: Path) -> list[Path]:
             continue
         # Same non-destructive contract for Substack essays, keyed by `docs/sub`.
         if name == "sub" and "substack" not in manifest:
+            continue
+        if name == "r" and "reports" not in manifest:
             continue
         orphans.extend(
             child for child in sorted(parent.iterdir()) if child.is_dir() and child not in expected

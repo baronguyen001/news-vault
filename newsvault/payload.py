@@ -337,9 +337,43 @@ def report_index_payload(reports: Sequence[Article], *, generated_at: str) -> di
             "generated_at": generated_at,
             "total": len(ordered),
             "items": [
-                compact_article(article, index, with_day=True)
+                {**compact_article(article, index, with_day=True), "id": article.id}
                 for index, article in enumerate(ordered)
             ],
+        }
+    )
+
+
+def report_payload(article: Article) -> dict[str, object]:
+    """Full payload for one analyst report reading page."""
+    return _sorted(
+        {
+            "v": 1,
+            "kind": "report",
+            "id": article.id,
+            "t": article.title_vi or article.title or "",
+            "to": article.title or "",
+            "u": article.url,
+            "s": article.source or "",
+            "sk": article.source_key or "",
+            "d": article.day or "",
+            "p": article.published_at or "",
+            "pi": article.published_iso or "",
+            "fi": article.fetched_at or "",
+            "tr": article.tier,
+            "r": article.region or "",
+            "c": article.category or "",
+            "tp": article.topic or "",
+            "im": article.impact_level or "",
+            "sc": article.score,
+            "rel": article.relevance,
+            "sum": article.summary_vi or "",
+            "kp": list(article.key_points),
+            "tg": list(article.tags),
+            "an": article.analysis or {},
+            "law": bool(article.is_law_policy),
+            "te": bool(article.is_teaser),
+            "img": article.image_url,
         }
     )
 
@@ -713,7 +747,10 @@ def day_payload(
             # Preserve the original article indices: normal report cards retain their
             # cluster anchors and reader state when rendered in their own section.
             "reports": [
-                compact_article(report, url_to_index.get(report.url, -1), entities=entity_map)
+                {
+                    **compact_article(report, url_to_index.get(report.url, -1), entities=entity_map),
+                    "id": report.id,
+                }
                 for report in reports
             ],
             "posts": [compact_post(p) for p in posts],
@@ -882,6 +919,7 @@ def manifest(
     weeks: Sequence[tuple[str, str, str]] = (),
     curated: Sequence[str] | None = None,
     substack: Sequence[str] | None = None,
+    reports: Sequence[int] | None = None,
     generated_at: str,
     kdf_iterations: int,
     site: str,
@@ -915,6 +953,8 @@ def manifest(
     # Substack essays and the pruner must leave docs/sub alone.
     if substack is not None:
         data["substack"] = list(substack)
+    if reports is not None:
+        data["reports"] = list(reports)
 
     return _sorted(data)
 

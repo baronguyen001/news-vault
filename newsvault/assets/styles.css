@@ -2816,6 +2816,7 @@ code {
   [data-layout="two"] .videos__list,
   [data-layout="two"] .xposts__list,
   [data-layout="two"] .sublist__items,
+  [data-layout="two"] .subteaser__list,
   [data-layout="two"] .ilist__items,
   [data-layout="two"] .deeplist__items,
   [data-layout="two"] .reports__list,
@@ -2824,6 +2825,7 @@ code {
   [data-layout="three"] .videos__list,
   [data-layout="three"] .xposts__list,
   [data-layout="three"] .sublist__items,
+  [data-layout="three"] .subteaser__list,
   [data-layout="three"] .ilist__items,
   [data-layout="three"] .deeplist__items,
   [data-layout="three"] .reports__list,
@@ -2844,6 +2846,7 @@ code {
   [data-layout="grid"] .videos__list,
   [data-layout="grid"] .xposts__list,
   [data-layout="grid"] .sublist__items,
+  [data-layout="grid"] .subteaser__list,
   [data-layout="grid"] .ilist__items,
   [data-layout="grid"] .deeplist__items,
   [data-layout="grid"] .reports__list,
@@ -2909,6 +2912,9 @@ code {
   [data-layout="two"] .sublist__items,
   [data-layout="three"] .sublist__items,
   [data-layout="grid"] .sublist__items,
+  [data-layout="two"] .subteaser__list,
+  [data-layout="three"] .subteaser__list,
+  [data-layout="grid"] .subteaser__list,
   [data-layout="two"] .deeplist__items,
   [data-layout="three"] .deeplist__items,
   [data-layout="grid"] .deeplist__items {
@@ -2966,6 +2972,7 @@ code {
   [data-layout="three"] .videos__list,
   [data-layout="three"] .xposts__list,
   [data-layout="three"] .sublist__items,
+  [data-layout="three"] .subteaser__list,
   [data-layout="three"] .ilist__items,
   [data-layout="three"] .deeplist__items {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -3697,6 +3704,22 @@ body.modal-open {
   font-weight: 600;
 }
 
+.report-article {
+  max-width: 850px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-md) 4rem;
+}
+.report-article__back,
+.report-article__source { color: var(--accent); font-weight: 600; }
+.report-article__title { margin: var(--space-lg) 0 var(--space-sm); line-height: 1.2; }
+.report-article__meta { color: var(--text-dim); }
+.report-article__source { display: inline-block; margin: var(--space-sm) 0 var(--space-lg); }
+.report-article__body { font-size: 1.04rem; line-height: 1.78; }
+.report-article__summary p { margin: 0 0 var(--space-md); }
+.report-article__heading { margin-top: var(--space-xl); }
+.report-article__points { padding-left: 1.4rem; }
+.report-article__body .card__analysis { margin-top: var(--space-xl); }
+
 .fpost__preview {
   display: -webkit-box;
   overflow: hidden;
@@ -4022,8 +4045,8 @@ body.modal-open {
 /* ---------- Substack essays ---------- */
 /* Mirrors the ".dcard" / ".deep__*" block above almost rule for rule — same reasoning as
    substack.js's header comment: the reading problem is identical, only the source differs.
-   No thumbnail track here: an essay card has no picture, so `.scard__link` never needs the
-   side-by-side grid `.dcard__link` gets at 720px. */
+   Mirrors `.deepteaser__list`'s pattern rule-for-rule: essay covers ARE usually present, so
+   `.scard__link` gets the same side-by-side grid `.dcard__link` gets at 720px. */
 
 .badge--sub {
   background: color-mix(in srgb, var(--accent) 18%, var(--surface-2));
@@ -4052,8 +4075,9 @@ body.modal-open {
 }
 
 .scard__link {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
   padding: var(--space-md);
   color: inherit;
   text-decoration: none;
@@ -4174,11 +4198,17 @@ body.modal-open {
   line-clamp: 1;
 }
 
-/* Day-page mentions stay a compact one-liner, same reasoning as hiding .scard__badges
- * above - a full cover image would make this teaser as heavy as the listing-page card it
- * is meant to be a small pointer toward. */
-.subteaser__list .scard__thumb {
-  display: none;
+@media (min-width: 720px) {
+  .subteaser__list .scard__link {
+    grid-template-columns: 13rem minmax(0, 1fr);
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .subteaser__list .scard__lead {
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
 }
 
 /* ---------- listing page ---------- */
