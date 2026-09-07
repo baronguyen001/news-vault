@@ -3704,6 +3704,22 @@ body.modal-open {
   font-weight: 600;
 }
 
+.report-article {
+  max-width: 850px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-md) 4rem;
+}
+.report-article__back,
+.report-article__source { color: var(--accent); font-weight: 600; }
+.report-article__title { margin: var(--space-lg) 0 var(--space-sm); line-height: 1.2; }
+.report-article__meta { color: var(--text-dim); }
+.report-article__source { display: inline-block; margin: var(--space-sm) 0 var(--space-lg); }
+.report-article__body { font-size: 1.04rem; line-height: 1.78; }
+.report-article__summary p { margin: 0 0 var(--space-md); }
+.report-article__heading { margin-top: var(--space-xl); }
+.report-article__points { padding-left: 1.4rem; }
+.report-article__body .card__analysis { margin-top: var(--space-xl); }
+
 .fpost__preview {
   display: -webkit-box;
   overflow: hidden;

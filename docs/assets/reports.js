@@ -21,7 +21,9 @@
     sortPublishedOldest: "Xuất bản cũ nhất",
     sortSource: "Theo nguồn A–Z",
     noResults: "Không có báo cáo phù hợp với bộ lọc.",
-    clear: "Xóa bộ lọc"
+    clear: "Xóa bộ lọc",
+    back: "Về danh sách báo cáo",
+    source: "Mở nguồn gốc →"
   };
 
   function make(tag, cls, parent) {
@@ -59,6 +61,7 @@
   }
 
   function reportCard(item) {
+    const base = arguments[1];
     const report = item && typeof item === "object" ? item : {};
     const li = make("li", "card card--report report-card");
     const header = make("div", "card__head", li);
@@ -75,9 +78,7 @@
     const content = make("div", "report-card__content", lead);
     const title = make("h3", "card__title report-card__title", content);
     const link = make("a", "report-card__link", title);
-    link.href = report.u || "#";
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
+    link.href = (base || "../") + "r/" + encodeURIComponent(report.id == null ? "" : report.id) + "/";
     text(link, report.t || "");
     const meta = make("p", "card__meta report-card__meta", content);
     text(meta, [report.s, formatDate(report.pi || report.fi || report.d)].filter(Boolean).join(" · "));
@@ -110,9 +111,7 @@
       text(more, "Xem thêm");
     }
     const cta = make("a", "report-card__cta", foot);
-    cta.href = report.u || "#";
-    cta.target = "_blank";
-    cta.rel = "noopener noreferrer";
+    cta.href = (base || "../") + "r/" + encodeURIComponent(report.id == null ? "" : report.id) + "/";
     text(cta, T.full);
     return li;
   }
@@ -121,7 +120,7 @@
     const list = Array.isArray(items) ? items : [];
     const ul = make("ul", "cards reports__list" + (cls ? " " + cls : ""));
     for (let index = 0; index < list.length; index += 1) {
-      ul.appendChild(reportCard(list[index]));
+      ul.appendChild(reportCard(list[index], base));
     }
     return ul;
   }
@@ -240,7 +239,7 @@
       text(shownCount, shown.length === 1 ? T.countOne : shown.length + T.countMany);
       text(list, "");
       for (let i = 0; i < shown.length; i++) {
-        list.appendChild(reportCard(shown[i]));
+        list.appendChild(reportCard(shown[i], "../"));
       }
       empty.hidden = shown.length !== 0;
     }
@@ -270,10 +269,45 @@
     paint();
   }
 
+  function renderArticle(app, payload, config) {
+    const report = payload && typeof payload === "object" ? payload : {};
+    const article = make("article", "report-article", app);
+    const back = make("a", "report-article__back", article);
+    back.href = (config && config.base || "../../") + "r/";
+    text(back, T.back);
+    const h1 = make("h1", "report-article__title", article);
+    text(h1, report.t || "Báo cáo phân tích");
+    const meta = make("p", "report-article__meta", article);
+    text(meta, [report.s, formatDate(report.pi || report.fi || report.d)].filter(Boolean).join(" · "));
+    if (report.u) {
+      const source = make("a", "report-article__source", article);
+      source.href = report.u;
+      source.target = "_blank";
+      source.rel = "noopener noreferrer";
+      text(source, T.source);
+    }
+    const body = make("div", "report-article__body", article);
+    if (report.sum) {
+      const summary = make("div", "report-article__summary", body);
+      String(report.sum).split(/\n\s*\n/).filter(Boolean).forEach((paragraph) => {
+        text(make("p", "", summary), paragraph.trim());
+      });
+    }
+    if (Array.isArray(report.kp) && report.kp.length) {
+      text(make("h2", "report-article__heading", body), "Điểm chính");
+      const points = make("ul", "report-article__points", body);
+      report.kp.forEach((point) => text(make("li", "", points), point));
+    }
+    if (hasAnalysis(report) && window.NV.app && typeof window.NV.app.renderAnalysisBlocks === "function") {
+      body.appendChild(window.NV.app.renderAnalysisBlocks(report, null));
+    }
+  }
+
   window.NV.reports = {
     daySection: daySection,
     renderIndex: renderIndex,
     reportCard: reportCard,
-    cardList: cardList
+    cardList: cardList,
+    renderArticle: renderArticle
   };
 })();

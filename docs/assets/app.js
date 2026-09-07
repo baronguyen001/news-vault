@@ -492,6 +492,7 @@
     else if (config.kind === "curatedIndex") renderCuratedIndex();
     else if (config.kind === "curated") renderCuratedArticle();
     else if (config.kind === "reportsIndex") renderReportsIndex();
+    else if (config.kind === "report") renderReportArticle();
     else if (config.kind === "substackIndex") renderSubstackIndex();
     else if (config.kind === "substack") renderSubstackArticle();
     else if (config.kind === "videoIndex") renderVideoIndex();
@@ -883,6 +884,16 @@
     app.className = "app app--ilist";
     renderSimpleTopbar(app);
     if (NV.indie) NV.indie.renderIndex(app, payload, config);
+  }
+
+  function renderReportArticle() {
+    const app = $("#app");
+    text(app, "");
+    app.className = "app app--report-article";
+    renderSimpleTopbar(app);
+    if (NV.reports && typeof NV.reports.renderArticle === "function") {
+      NV.reports.renderArticle(app, payload, config);
+    }
   }
 
   function renderFacebookIndex() {
