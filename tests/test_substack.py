@@ -199,6 +199,11 @@ def test_resolve_day_prefers_published_at_over_fetched_at() -> None:
     ) == "2026-08-09"
 
 
+def test_resolve_day_converts_utc_to_vietnam_time_across_midnight() -> None:
+    """A 21:32 UTC post belongs to the following calendar day in Vietnam."""
+    assert substack._resolve_day("2026-09-07T21:32:37+00:00", "") == "2026-09-08"
+
+
 def test_resolve_day_falls_back_to_fetched_at() -> None:
     assert substack._resolve_day("", "2026-08-10T00:00:00+00:00") == "2026-08-10"
 

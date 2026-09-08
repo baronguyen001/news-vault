@@ -19,6 +19,7 @@ import datetime
 import sqlite3
 from collections.abc import Iterator, Sequence
 from dataclasses import dataclass
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from .curated import Section, count_words, curated_blocks, lead_text, reading_minutes, sections_of
 from .videos import Block, connect
@@ -34,6 +35,14 @@ __all__ = [
 ]
 
 TABLE = "posts"
+
+# The daily archive is organised in Vietnam time.  substack-digest stores source
+# timestamps in UTC, so using just the first ten characters would file a post
+# published shortly after midnight ICT under the preceding UTC day.
+try:
+    _ARCHIVE_TZ = ZoneInfo("Asia/Ho_Chi_Minh")
+except ZoneInfoNotFoundError:  # pragma: no cover - depends on the host tzdata
+    _ARCHIVE_TZ = datetime.timezone(datetime.timedelta(hours=7), "ICT")
 
 
 @dataclass(frozen=True, slots=True)
@@ -196,15 +205,23 @@ def _row_number(row: sqlite3.Row, name: str) -> float | None:
 
 
 def _resolve_day(published_at: str, fetched_at: str) -> str:
-    """The essay's own publish date wins; the scrape time is only a fallback for the rare
-    row where the author's page carried no parseable publish date."""
+    """Return the essay's publication day in Vietnam time.
+
+    The essay's own publish date wins; the scrape time is only a fallback for
+    the rare row where the author's page carried no parseable publish date.
+    """
     for candidate in (published_at, fetched_at):
         if not candidate:
             continue
         try:
-            return datetime.datetime.fromisoformat(candidate[:10]).date().isoformat()
+            parsed = datetime.datetime.fromisoformat(candidate.replace("Z", "+00:00"))
         except ValueError:
             continue
+        # Old rows without an offset were recorded by the local scraper.  Treat
+        # them as ICT rather than accidentally applying the machine's timezone.
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=_ARCHIVE_TZ)
+        return parsed.astimezone(_ARCHIVE_TZ).date().isoformat()
     return ""
 
 
