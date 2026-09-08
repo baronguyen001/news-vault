@@ -788,18 +788,18 @@
     {
       "d": "2026-09-08",
       "months": "2026-09",
-      "n": 185
+      "n": 205
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 1889,
+      "n": 1891,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 402,
+      "n": 403,
       "slug": "dau-tu"
     },
     {
@@ -823,14 +823,14 @@
       "slug": "chinh-phu"
     },
     {
+      "label": "dữ liệu",
+      "n": 216,
+      "slug": "du-lieu"
+    },
+    {
       "label": "công nghệ",
       "n": 215,
       "slug": "cong-nghe"
-    },
-    {
-      "label": "dữ liệu",
-      "n": 215,
-      "slug": "du-lieu"
     },
     {
       "label": "chip",
@@ -839,7 +839,7 @@
     },
     {
       "label": "ngân hàng",
-      "n": 182,
+      "n": 183,
       "slug": "ngan-hang"
     },
     {
@@ -894,7 +894,7 @@
     },
     {
       "label": "năng lượng",
-      "n": 82,
+      "n": 83,
       "slug": "nang-luong"
     },
     {
