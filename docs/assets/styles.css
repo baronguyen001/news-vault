@@ -2691,6 +2691,36 @@ code {
   stroke-width: 1.5;
 }
 
+/* A compact, always-visible excerpt lets a reader decide whether to open the full recap. */
+.video__preview {
+  margin-top: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  border-inline-start: 2px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.video__preview-label {
+  display: block;
+  margin-bottom: 0.1rem;
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.video__preview-text {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
 /* === Badges === */
 .badge--video {
   background-color: var(--accent);

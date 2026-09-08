@@ -147,6 +147,25 @@
     wrapper.appendChild(icon);
   }
 
+  function runsText(runs) {
+    if (!Array.isArray(runs)) return "";
+    return runs.map((run) => Array.isArray(run) && run.length ? String(run[0] || "") : "").join("");
+  }
+
+  // The full recap remains behind the fold.  This keeps the daily page skimmable while
+  // taking its wording only from the already sanitised summary blocks in the payload.
+  function previewText(blocks, limit = 280) {
+    if (!Array.isArray(blocks) || limit < 1) return "";
+    const parts = blocks
+      .filter((block) => block && typeof block === "object" && block.k !== "h")
+      .map((block) => runsText(block.r).replace(/\s+/g, " ").trim())
+      .filter(Boolean);
+    const joined = parts.join(" ");
+    if (joined.length <= limit) return joined;
+    const cut = joined.slice(0, limit - 1).lastIndexOf(" ");
+    return (cut > 0 ? joined.slice(0, cut) : joined.slice(0, limit - 1)).trim() + "…";
+  }
+
   function emptyThumb(parent, cls) {
     const wrapper = make("div", "card__thumb card__thumb--empty" + (cls ? " " + cls : ""), parent);
     appendEmptyThumbIcon(wrapper);
@@ -232,10 +251,19 @@
       text(meta, metaParts.join(" · "));
     }
 
+    const blocks = Array.isArray(v.bl) ? v.bl : [];
+    const preview = previewText(blocks);
+    if (preview) {
+      const quick = make("div", "video__preview", textWrap);
+      const label = make("span", "video__preview-label", quick);
+      text(label, "Xem nhanh");
+      const value = make("p", "video__preview-text", quick);
+      text(value, preview);
+    }
+
     const body = make("div", "card__body", li);
     body.hidden = true;
 
-    const blocks = Array.isArray(v.bl) ? v.bl : [];
     let currentList = null;
 
     for (let i = 0; i < blocks.length; i++) {
@@ -308,6 +336,7 @@
     thumb: thumb,
     card: card,
     section: section,
+    previewText: previewText,
     setOpen: setOpen,
     useModal: useModal,
     openModal: openModal

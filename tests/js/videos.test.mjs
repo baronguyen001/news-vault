@@ -217,6 +217,27 @@ test('a non-array bl value does not throw', () => {
   assert.doesNotThrow(() => videos.card({ ...LONG, bl: 'invalid' }));
 });
 
+test('a video card shows a short preview before its folded full recap', () => {
+  const { videos } = load();
+  const card = videos.card({
+    ...LONG,
+    bl: [
+      { k: 'h', r: [['Bối cảnh', false]] },
+      { k: 'p', r: [['Đây là phần xem nhanh của video.', false]] },
+      { k: 'b', r: [['Có điểm cần lưu ý.', false]] },
+    ],
+  });
+  assert.equal(card.querySelector('.video__preview-label').textContent, 'Xem nhanh');
+  assert.equal(card.querySelector('.video__preview-text').textContent, 'Đây là phần xem nhanh của video. Có điểm cần lưu ý.');
+});
+
+test('preview ignores headings and truncates on a word boundary', () => {
+  const { videos } = load();
+  assert.equal(videos.previewText([{ k: 'h', r: [['Heading', false]] }]), '');
+  const value = videos.previewText([{ k: 'p', r: [['mot hai ba bon nam sau bay tam', false]] }], 17);
+  assert.equal(value, 'mot hai ba bon…');
+});
+
 test('section creates two video list items', () => {
   const { videos } = load();
   const sec = videos.section([SHORT, LONG]);
