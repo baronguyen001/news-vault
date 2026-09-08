@@ -203,8 +203,9 @@
     return wrapper;
   }
 
-  function card(video, index) {
+  function card(video, index, options) {
     const v = video && typeof video === "object" ? video : {};
+    const showPreview = !!(options && options.preview);
     const li = make("li", "card card--video card--closed");
     if (index >= 0) li.id = "v-" + index;
     if (v.sh) li.classList.add("card--short");
@@ -252,7 +253,7 @@
     }
 
     const blocks = Array.isArray(v.bl) ? v.bl : [];
-    const preview = previewText(blocks);
+    const preview = showPreview ? previewText(blocks) : "";
     if (preview) {
       const quick = make("div", "video__preview", textWrap);
       const label = make("span", "video__preview-label", quick);
@@ -312,7 +313,7 @@
    * and 42% of the archive is Shorts - so numbering the cards by their position here would
    * put `#v-7` on a different video than the search index means by 7, and only for readers
    * with that preference on. Callers that render the whole list can omit it. */
-  function section(videos, anchors) {
+  function section(videos, anchors, options) {
     const list = Array.isArray(videos) ? videos : [];
     if (!list.length) return null;
     const at = Array.isArray(anchors) ? anchors : null;
@@ -324,7 +325,7 @@
     const ul = make("ul", "cards videos__list", sec);
     for (let i = 0; i < list.length; i++) {
       try {
-        ul.appendChild(card(list[i], at ? at[i] : i));
+        ul.appendChild(card(list[i], at ? at[i] : i, options));
       } catch (e) {
         // Drop malformed entries instead of breaking the whole page.
       }

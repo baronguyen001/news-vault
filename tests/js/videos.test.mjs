@@ -226,7 +226,7 @@ test('a video card shows a short preview before its folded full recap', () => {
       { k: 'p', r: [['Đây là phần xem nhanh của video.', false]] },
       { k: 'b', r: [['Có điểm cần lưu ý.', false]] },
     ],
-  });
+  }, -1, { preview: true });
   assert.equal(card.querySelector('.video__preview-label').textContent, 'Xem nhanh');
   assert.equal(card.querySelector('.video__preview-text').textContent, 'Đây là phần xem nhanh của video. Có điểm cần lưu ý.');
 });
@@ -236,6 +236,11 @@ test('preview ignores headings and truncates on a word boundary', () => {
   assert.equal(videos.previewText([{ k: 'h', r: [['Heading', false]] }]), '');
   const value = videos.previewText([{ k: 'p', r: [['mot hai ba bon nam sau bay tam', false]] }], 17);
   assert.equal(value, 'mot hai ba bon…');
+});
+
+test('library cards retain the old no-preview layout by default', () => {
+  const { videos } = load();
+  assert.equal(videos.card(LONG).querySelector('.video__preview'), null);
 });
 
 test('section creates two video list items', () => {

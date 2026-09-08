@@ -2621,6 +2621,8 @@ code {
 .vlibrary__channel { min-height: 38px; padding: .4rem .55rem; border: 1px solid transparent; border-radius: var(--radius-sm); color: var(--text); text-align: left; cursor: pointer; }
 .vlibrary__channel[aria-pressed="true"] { background: var(--accent); color: var(--accent-contrast); }
 .vlibrary__list { margin-top: var(--space-sm); }
+.vlibrary__more { min-height: 44px; margin-top: var(--space-md); padding: .45rem .75rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface-2); color: var(--text); cursor: pointer; }
+.vlibrary__more:hover { border-color: var(--accent); }
 .vlibrary__empty { padding: var(--space-lg); border: 1px dashed var(--border); border-radius: var(--radius-md); color: var(--text-dim); }
 .vlibrary__status--summarized { background: var(--ok); color: var(--accent-contrast); }
 .vlibrary__status--retry { background: var(--c3); color: var(--accent-contrast); }

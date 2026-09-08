@@ -27,6 +27,7 @@
     complete: "Đã tóm tắt",
     pending: "Cần xử lý"
   };
+  const PAGE_SIZE = 24;
 
   function make(tag, cls, parent) {
     const el = document.createElement(tag);
@@ -41,6 +42,7 @@
     return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/đ/g, "d");
   }
   function timestamp(video) { return String(video.p || video.d || ""); }
+  function pageOf(items, limit) { return items.slice(0, Math.max(0, limit)); }
 
   function addStat(parent, value, labelText) {
     const stat = make("div", "vlibrary__stat", parent);
@@ -51,7 +53,7 @@
   function render(app, data) {
     const payload = data && typeof data === "object" ? data : {};
     const videos = safeList(payload.videos);
-    const state = { channel: "", query: "", type: "all", status: "all", sort: "newest" };
+    const state = { channel: "", query: "", type: "all", status: "all", sort: "newest", limit: PAGE_SIZE };
 
     const head = make("header", "vlibrary__head", app);
     const h1 = make("h1", "vlibrary__title", head); text(h1, T.title);
@@ -95,9 +97,11 @@
     const main = make("section", "vlibrary__main", layout);
     const count = make("p", "vlibrary__count", main); count.setAttribute("aria-live", "polite");
     const list = make("ul", "cards videos__list vlibrary__list", main);
+    const more = make("button", "vlibrary__more", main); more.type = "button";
     const empty = make("p", "vlibrary__empty", main); text(empty, T.noResults); empty.hidden = true;
 
-    function setChannel(channel) { state.channel = channel; channelSelect.value = channel; paint(); }
+    function resetPage() { state.limit = PAGE_SIZE; }
+    function setChannel(channel) { state.channel = channel; channelSelect.value = channel; resetPage(); paint(); }
     function buildChannelButtons() {
       text(channelButtons, "");
       const counts = new Map(); videos.forEach((video) => counts.set(label(video), (counts.get(label(video)) || 0) + 1));
@@ -125,7 +129,7 @@
     function paint() {
       const shown = sorted(videos.filter(matches));
       text(count, T.result(shown.length)); text(list, "");
-      for (const video of shown) {
+      for (const video of pageOf(shown, state.limit)) {
         if (!window.NV.videos) continue;
         const card = window.NV.videos.card(video);
         const header = card.children && card.children[0];
@@ -135,16 +139,20 @@
         }
         list.appendChild(card);
       }
+      const remaining = shown.length - Math.min(shown.length, state.limit);
+      more.hidden = remaining <= 0;
+      if (remaining > 0) text(more, `Xem thêm ${Math.min(PAGE_SIZE, remaining)} video (còn ${remaining})`);
       empty.hidden = shown.length !== 0;
       buildChannelButtons();
     }
-    input.addEventListener("input", () => { state.query = input.value.trim(); paint(); });
+    more.addEventListener("click", () => { state.limit += PAGE_SIZE; paint(); });
+    input.addEventListener("input", () => { state.query = input.value.trim(); resetPage(); paint(); });
     channelSelect.addEventListener("change", () => setChannel(channelSelect.value));
-    typeSelect.addEventListener("change", () => { state.type = typeSelect.value; paint(); });
-    statusSelect.addEventListener("change", () => { state.status = statusSelect.value; paint(); });
-    sortSelect.addEventListener("change", () => { state.sort = sortSelect.value; paint(); });
-    clear.addEventListener("click", () => { state.channel = ""; state.query = ""; state.type = "all"; state.status = "all"; state.sort = "newest"; input.value = ""; channelSelect.value = ""; typeSelect.value = "all"; statusSelect.value = "all"; sortSelect.value = "newest"; paint(); });
+    typeSelect.addEventListener("change", () => { state.type = typeSelect.value; resetPage(); paint(); });
+    statusSelect.addEventListener("change", () => { state.status = statusSelect.value; resetPage(); paint(); });
+    sortSelect.addEventListener("change", () => { state.sort = sortSelect.value; resetPage(); paint(); });
+    clear.addEventListener("click", () => { state.channel = ""; state.query = ""; state.type = "all"; state.status = "all"; state.sort = "newest"; input.value = ""; channelSelect.value = ""; typeSelect.value = "all"; statusSelect.value = "all"; sortSelect.value = "newest"; resetPage(); paint(); });
     paint();
   }
-  window.NV.videoLibrary = { render: render, folded: folded };
+  window.NV.videoLibrary = { render: render, folded: folded, pageOf: pageOf, pageSize: PAGE_SIZE };
 })();

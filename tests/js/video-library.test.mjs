@@ -18,3 +18,11 @@ function load() {
 test('channel search folding ignores Vietnamese diacritics, including đ', () => {
   assert.equal(load().folded('Đầu Tư & Công Nghệ'), 'dau tu & cong nghe');
 });
+
+test('pagination returns only the requested first page without mutating the source list', () => {
+  const library = load();
+  const source = [{ id: 1 }, { id: 2 }, { id: 3 }];
+  assert.deepEqual(library.pageOf(source, 2), [{ id: 1 }, { id: 2 }]);
+  assert.equal(source.length, 3);
+  assert.equal(library.pageSize, 24);
+});

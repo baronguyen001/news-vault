@@ -967,7 +967,7 @@
     // Anchors come from the FULL list: `#v-<i>` in a search result counts every video the
     // day published, including the Shorts this reader has chosen not to see.
     const anchors = visible.map((v) => list.indexOf(v));
-    const section = NV.videos.section(visible, anchors);
+    const section = NV.videos.section(visible, anchors, { preview: true });
     if (!section) return;
     // The fold's own summary already names the section. While the panel opened closed
     // nobody saw the second copy; now that it starts open, the heading would appear twice.
