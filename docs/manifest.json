@@ -793,49 +793,49 @@
     {
       "d": "2026-09-09",
       "months": "2026-09",
-      "n": 104
+      "n": 128
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 1927,
+      "n": 1946,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 410,
+      "n": 412,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 341,
+      "n": 342,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 296,
+      "n": 300,
       "slug": "doanh-nghiep"
     },
     {
       "label": "thuế",
-      "n": 253,
+      "n": 255,
       "slug": "thue"
     },
     {
+      "label": "dữ liệu",
+      "n": 228,
+      "slug": "du-lieu"
+    },
+    {
       "label": "chính phủ",
-      "n": 222,
+      "n": 223,
       "slug": "chinh-phu"
     },
     {
       "label": "công nghệ",
-      "n": 219,
+      "n": 222,
       "slug": "cong-nghe"
-    },
-    {
-      "label": "dữ liệu",
-      "n": 218,
-      "slug": "du-lieu"
     },
     {
       "label": "chip",
@@ -854,13 +854,18 @@
     },
     {
       "label": "lãi suất",
-      "n": 149,
+      "n": 150,
       "slug": "lai-suat"
     },
     {
       "label": "chính sách",
-      "n": 140,
+      "n": 142,
       "slug": "chinh-sach"
+    },
+    {
+      "label": "xuất khẩu",
+      "n": 131,
+      "slug": "xuat-khau"
     },
     {
       "label": "đảng",
@@ -868,13 +873,8 @@
       "slug": "dang"
     },
     {
-      "label": "xuất khẩu",
-      "n": 129,
-      "slug": "xuat-khau"
-    },
-    {
       "label": "lạm phát",
-      "n": 126,
+      "n": 128,
       "slug": "lam-phat"
     },
     {
@@ -884,17 +884,17 @@
     },
     {
       "label": "nghị quyết",
-      "n": 112,
+      "n": 113,
       "slug": "nghi-quyet"
     },
     {
       "label": "xung đột",
-      "n": 102,
+      "n": 105,
       "slug": "xung-dot"
     },
     {
       "label": "chiến tranh",
-      "n": 88,
+      "n": 91,
       "slug": "chien-tranh"
     },
     {
@@ -914,7 +914,7 @@
     },
     {
       "label": "nhập khẩu",
-      "n": 73,
+      "n": 74,
       "slug": "nhap-khau"
     },
     {
@@ -924,12 +924,12 @@
     },
     {
       "label": "thuế quan",
-      "n": 60,
+      "n": 62,
       "slug": "thue-quan"
     },
     {
       "label": "pháp lý",
-      "n": 59,
+      "n": 60,
       "slug": "phap-ly"
     },
     {
@@ -999,7 +999,7 @@
     },
     {
       "label": "chỉ thị",
-      "n": 8,
+      "n": 9,
       "slug": "chi-thi"
     },
     {
@@ -1494,7 +1494,31 @@
     4513,
     4512,
     4514,
-    4661
+    4661,
+    4770,
+    4764,
+    4757,
+    4760,
+    4768,
+    4759,
+    4761,
+    4758,
+    4775,
+    4773,
+    4752,
+    4753,
+    4769,
+    4763,
+    4771,
+    4756,
+    4754,
+    4762,
+    4767,
+    4766,
+    4772,
+    4774,
+    4755,
+    4765
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
