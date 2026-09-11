@@ -22,6 +22,7 @@ from dataclasses import dataclass
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from .curated import Section, count_words, curated_blocks, lead_text, reading_minutes, sections_of
+from .publish_quality import publishable_text
 from .videos import Block, connect
 
 __all__ = [
@@ -156,7 +157,7 @@ def _item_from_row(row: sqlite3.Row) -> Essay | None:
     title = (row["title"] or "").strip()
     post_id = str(row["id"] or "")
     summary = row["summary_text"] or ""
-    if not post_id or not title or not summary.strip():
+    if not post_id or not title or not publishable_text(summary, minimum=0):
         return None
 
     published_at = row["published_at"] or ""

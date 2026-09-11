@@ -22,6 +22,7 @@ import sqlite3
 from collections.abc import Iterator, Sequence
 from dataclasses import dataclass, field
 
+from .publish_quality import publishable_text
 from .videos import Block, connect, summary_blocks
 
 __all__ = [
@@ -151,6 +152,8 @@ def _post_from_row(row: sqlite3.Row) -> Post | None:
         return None
 
     summary = row["summary_vi"] or ""
+    if not publishable_text(summary, minimum=0):
+        return None
     return Post(
         id=post_id,
         url=row["url"] or "",

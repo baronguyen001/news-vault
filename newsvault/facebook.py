@@ -12,6 +12,7 @@ from collections.abc import Iterator, Sequence
 from dataclasses import dataclass
 
 from .curated import curated_blocks
+from .publish_quality import publishable_text
 from .videos import Block, connect
 
 __all__ = [
@@ -111,7 +112,7 @@ def _post_from_row(row: sqlite3.Row) -> FacebookPost | None:
     summary = (row["summary_text"] or "").strip()
     scraped_at = row["scraped_at"] or ""
     day = _resolve_day(scraped_at)
-    if not post_id or not summary or summary == NO_NEWS_SUMMARY or not day:
+    if not post_id or summary == NO_NEWS_SUMMARY or not publishable_text(summary, minimum=0) or not day:
         return None
     return FacebookPost(
         id=post_id,
