@@ -803,18 +803,18 @@
     {
       "d": "2026-09-11",
       "months": "2026-09",
-      "n": 146
+      "n": 148
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2013,
+      "n": 2014,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 419,
+      "n": 420,
       "slug": "dau-tu"
     },
     {
@@ -824,7 +824,7 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 304,
+      "n": 305,
       "slug": "doanh-nghiep"
     },
     {
@@ -983,14 +983,14 @@
       "slug": "tri-tue-nhan-tao"
     },
     {
+      "label": "xe điện",
+      "n": 22,
+      "slug": "xe-dien"
+    },
+    {
       "label": "FDI",
       "n": 21,
       "slug": "fdi"
-    },
-    {
-      "label": "xe điện",
-      "n": 21,
-      "slug": "xe-dien"
     },
     {
       "label": "thông tư",
@@ -1530,7 +1530,9 @@
     4755,
     4765,
     4841,
-    4840
+    4840,
+    4938,
+    4937
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
