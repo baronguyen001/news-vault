@@ -819,7 +819,7 @@
     {
       "d": "2026-09-12",
       "months": "2026-09",
-      "n": 125
+      "n": 126
     }
   ],
   "entities": [
@@ -925,12 +925,12 @@
     },
     {
       "label": "năng lượng",
-      "n": 92,
+      "n": 93,
       "slug": "nang-luong"
     },
     {
       "label": "nhập khẩu",
-      "n": 81,
+      "n": 82,
       "slug": "nhap-khau"
     },
     {
@@ -1549,7 +1549,8 @@
     4840,
     4938,
     4937,
-    4941
+    4941,
+    5017
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
