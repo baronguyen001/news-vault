@@ -829,28 +829,28 @@
     {
       "d": "2026-09-14",
       "months": "2026-09",
-      "n": 105
+      "n": 114
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2118,
+      "n": 2125,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 436,
+      "n": 437,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 369,
+      "n": 371,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 318,
+      "n": 322,
       "slug": "doanh-nghiep"
     },
     {
@@ -860,12 +860,12 @@
     },
     {
       "label": "dữ liệu",
-      "n": 248,
+      "n": 249,
       "slug": "du-lieu"
     },
     {
       "label": "công nghệ",
-      "n": 239,
+      "n": 242,
       "slug": "cong-nghe"
     },
     {
@@ -875,12 +875,12 @@
     },
     {
       "label": "chip",
-      "n": 217,
+      "n": 218,
       "slug": "chip"
     },
     {
       "label": "ngân hàng",
-      "n": 195,
+      "n": 196,
       "slug": "ngan-hang"
     },
     {
@@ -895,7 +895,7 @@
     },
     {
       "label": "chính sách",
-      "n": 149,
+      "n": 150,
       "slug": "chinh-sach"
     },
     {
@@ -920,7 +920,7 @@
     },
     {
       "label": "xung đột",
-      "n": 119,
+      "n": 120,
       "slug": "xung-dot"
     },
     {
@@ -935,7 +935,7 @@
     },
     {
       "label": "năng lượng",
-      "n": 97,
+      "n": 99,
       "slug": "nang-luong"
     },
     {
@@ -1005,12 +1005,12 @@
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 26,
+      "n": 27,
       "slug": "tri-tue-nhan-tao"
     },
     {
       "label": "xe điện",
-      "n": 24,
+      "n": 25,
       "slug": "xe-dien"
     },
     {
@@ -1025,7 +1025,7 @@
     },
     {
       "label": "khởi nghiệp",
-      "n": 15,
+      "n": 16,
       "slug": "khoi-nghiep"
     },
     {
@@ -1582,7 +1582,16 @@
     5096,
     5097,
     5101,
-    5094
+    5094,
+    5191,
+    5186,
+    5184,
+    5185,
+    5187,
+    5189,
+    5190,
+    5183,
+    5188
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
