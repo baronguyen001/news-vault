@@ -839,13 +839,13 @@
     {
       "d": "2026-09-16",
       "months": "2026-09",
-      "n": 82
+      "n": 107
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2152,
+      "n": 2155,
       "slug": "ai"
     },
     {
@@ -875,12 +875,12 @@
     },
     {
       "label": "công nghệ",
-      "n": 243,
+      "n": 244,
       "slug": "cong-nghe"
     },
     {
       "label": "chính phủ",
-      "n": 240,
+      "n": 241,
       "slug": "chinh-phu"
     },
     {
@@ -909,14 +909,14 @@
       "slug": "chinh-sach"
     },
     {
+      "label": "đảng",
+      "n": 145,
+      "slug": "dang"
+    },
+    {
       "label": "xuất khẩu",
       "n": 145,
       "slug": "xuat-khau"
-    },
-    {
-      "label": "đảng",
-      "n": 144,
-      "slug": "dang"
     },
     {
       "label": "lạm phát",
