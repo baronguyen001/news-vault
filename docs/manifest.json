@@ -839,13 +839,13 @@
     {
       "d": "2026-09-16",
       "months": "2026-09",
-      "n": 80
+      "n": 82
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2150,
+      "n": 2152,
       "slug": "ai"
     },
     {
@@ -890,12 +890,12 @@
     },
     {
       "label": "ngân hàng",
-      "n": 196,
+      "n": 197,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 171,
+      "n": 172,
       "slug": "quoc-hoi"
     },
     {
@@ -905,7 +905,7 @@
     },
     {
       "label": "chính sách",
-      "n": 151,
+      "n": 152,
       "slug": "chinh-sach"
     },
     {
@@ -925,7 +925,7 @@
     },
     {
       "label": "trung ương",
-      "n": 129,
+      "n": 130,
       "slug": "trung-uong"
     },
     {
@@ -940,7 +940,7 @@
     },
     {
       "label": "chiến tranh",
-      "n": 104,
+      "n": 105,
       "slug": "chien-tranh"
     },
     {
@@ -1604,7 +1604,9 @@
     5188,
     5215,
     5216,
-    5214
+    5214,
+    5255,
+    5254
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
