@@ -839,13 +839,13 @@
     {
       "d": "2026-09-16",
       "months": "2026-09",
-      "n": 107
+      "n": 141
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2155,
+      "n": 2158,
       "slug": "ai"
     },
     {
@@ -870,22 +870,22 @@
     },
     {
       "label": "dữ liệu",
-      "n": 252,
+      "n": 253,
       "slug": "du-lieu"
     },
     {
       "label": "công nghệ",
-      "n": 244,
+      "n": 245,
       "slug": "cong-nghe"
     },
     {
       "label": "chính phủ",
-      "n": 241,
+      "n": 242,
       "slug": "chinh-phu"
     },
     {
       "label": "chip",
-      "n": 219,
+      "n": 221,
       "slug": "chip"
     },
     {
