@@ -844,13 +844,13 @@
     {
       "d": "2026-09-17",
       "months": "2026-09",
-      "n": 56
+      "n": 86
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2171,
+      "n": 2172,
       "slug": "ai"
     },
     {
@@ -885,7 +885,7 @@
     },
     {
       "label": "chính phủ",
-      "n": 244,
+      "n": 245,
       "slug": "chinh-phu"
     },
     {
@@ -914,14 +914,14 @@
       "slug": "chinh-sach"
     },
     {
+      "label": "đảng",
+      "n": 146,
+      "slug": "dang"
+    },
+    {
       "label": "xuất khẩu",
       "n": 146,
       "slug": "xuat-khau"
-    },
-    {
-      "label": "đảng",
-      "n": 145,
-      "slug": "dang"
     },
     {
       "label": "lạm phát",
@@ -1626,9 +1626,9 @@
     5270,
     5271,
     5280,
-    5268,
     5274,
-    5267
+    5267,
+    5268
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
