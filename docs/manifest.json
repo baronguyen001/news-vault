@@ -844,28 +844,28 @@
     {
       "d": "2026-09-17",
       "months": "2026-09",
-      "n": 39
+      "n": 56
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2158,
+      "n": 2171,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 439,
+      "n": 443,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 375,
+      "n": 376,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 327,
+      "n": 331,
       "slug": "doanh-nghiep"
     },
     {
@@ -875,32 +875,32 @@
     },
     {
       "label": "dữ liệu",
-      "n": 253,
+      "n": 257,
       "slug": "du-lieu"
     },
     {
       "label": "công nghệ",
-      "n": 245,
+      "n": 249,
       "slug": "cong-nghe"
     },
     {
       "label": "chính phủ",
-      "n": 242,
+      "n": 244,
       "slug": "chinh-phu"
     },
     {
       "label": "chip",
-      "n": 221,
+      "n": 222,
       "slug": "chip"
     },
     {
       "label": "ngân hàng",
-      "n": 197,
+      "n": 199,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 172,
+      "n": 174,
       "slug": "quoc-hoi"
     },
     {
@@ -910,8 +910,13 @@
     },
     {
       "label": "chính sách",
-      "n": 152,
+      "n": 154,
       "slug": "chinh-sach"
+    },
+    {
+      "label": "xuất khẩu",
+      "n": 146,
+      "slug": "xuat-khau"
     },
     {
       "label": "đảng",
@@ -919,23 +924,18 @@
       "slug": "dang"
     },
     {
-      "label": "xuất khẩu",
-      "n": 145,
-      "slug": "xuat-khau"
-    },
-    {
       "label": "lạm phát",
-      "n": 140,
+      "n": 142,
       "slug": "lam-phat"
     },
     {
       "label": "trung ương",
-      "n": 130,
+      "n": 131,
       "slug": "trung-uong"
     },
     {
       "label": "xung đột",
-      "n": 124,
+      "n": 126,
       "slug": "xung-dot"
     },
     {
@@ -945,12 +945,12 @@
     },
     {
       "label": "chiến tranh",
-      "n": 105,
+      "n": 106,
       "slug": "chien-tranh"
     },
     {
       "label": "năng lượng",
-      "n": 103,
+      "n": 105,
       "slug": "nang-luong"
     },
     {
@@ -960,7 +960,7 @@
     },
     {
       "label": "chứng khoán",
-      "n": 81,
+      "n": 82,
       "slug": "chung-khoan"
     },
     {
@@ -974,18 +974,18 @@
       "slug": "trung-phat"
     },
     {
+      "label": "pháp lý",
+      "n": 65,
+      "slug": "phap-ly"
+    },
+    {
       "label": "thuế quan",
       "n": 64,
       "slug": "thue-quan"
     },
     {
-      "label": "pháp lý",
-      "n": 63,
-      "slug": "phap-ly"
-    },
-    {
       "label": "bán dẫn",
-      "n": 56,
+      "n": 57,
       "slug": "ban-dan"
     },
     {
@@ -995,7 +995,7 @@
     },
     {
       "label": "bảo hiểm",
-      "n": 42,
+      "n": 43,
       "slug": "bao-hiem"
     },
     {
@@ -1005,7 +1005,7 @@
     },
     {
       "label": "hành chính",
-      "n": 36,
+      "n": 37,
       "slug": "hanh-chinh"
     },
     {
@@ -1014,14 +1014,14 @@
       "slug": "bat-dong-san"
     },
     {
+      "label": "trí tuệ nhân tạo",
+      "n": 32,
+      "slug": "tri-tue-nhan-tao"
+    },
+    {
       "label": "bộ chính trị",
       "n": 28,
       "slug": "bo-chinh-tri"
-    },
-    {
-      "label": "trí tuệ nhân tạo",
-      "n": 27,
-      "slug": "tri-tue-nhan-tao"
     },
     {
       "label": "xe điện",
@@ -1611,7 +1611,24 @@
     5216,
     5214,
     5255,
-    5254
+    5254,
+    5264,
+    5266,
+    5269,
+    5278,
+    5273,
+    5275,
+    5276,
+    5272,
+    5279,
+    5265,
+    5277,
+    5270,
+    5271,
+    5280,
+    5268,
+    5274,
+    5267
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
