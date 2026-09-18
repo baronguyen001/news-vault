@@ -851,28 +851,28 @@
     {
       "d": "2026-09-18",
       "months": "2026-09",
-      "n": 151
+      "n": 166
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2236,
+      "n": 2248,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 454,
+      "n": 456,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 385,
+      "n": 386,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 336,
+      "n": 340,
       "slug": "doanh-nghiep"
     },
     {
@@ -882,17 +882,17 @@
     },
     {
       "label": "dữ liệu",
-      "n": 268,
+      "n": 272,
       "slug": "du-lieu"
     },
     {
       "label": "công nghệ",
-      "n": 254,
+      "n": 256,
       "slug": "cong-nghe"
     },
     {
       "label": "chính phủ",
-      "n": 247,
+      "n": 248,
       "slug": "chinh-phu"
     },
     {
@@ -917,7 +917,7 @@
     },
     {
       "label": "chính sách",
-      "n": 157,
+      "n": 159,
       "slug": "chinh-sach"
     },
     {
@@ -952,12 +952,12 @@
     },
     {
       "label": "chiến tranh",
-      "n": 111,
+      "n": 112,
       "slug": "chien-tranh"
     },
     {
       "label": "năng lượng",
-      "n": 107,
+      "n": 108,
       "slug": "nang-luong"
     },
     {
@@ -967,7 +967,7 @@
     },
     {
       "label": "chứng khoán",
-      "n": 83,
+      "n": 84,
       "slug": "chung-khoan"
     },
     {
@@ -977,7 +977,7 @@
     },
     {
       "label": "trừng phạt",
-      "n": 80,
+      "n": 81,
       "slug": "trung-phat"
     },
     {
@@ -1022,7 +1022,7 @@
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 32,
+      "n": 36,
       "slug": "tri-tue-nhan-tao"
     },
     {
@@ -1056,6 +1056,11 @@
       "slug": "chuyen-doi-so"
     },
     {
+      "label": "blockchain",
+      "n": 10,
+      "slug": "blockchain"
+    },
+    {
       "label": "chỉ thị",
       "n": 9,
       "slug": "chi-thi"
@@ -1064,11 +1069,6 @@
       "label": "điện toán đám mây",
       "n": 9,
       "slug": "dien-toan-dam-may"
-    },
-    {
-      "label": "blockchain",
-      "n": 8,
-      "slug": "blockchain"
     },
     {
       "label": "Địa chính trị",
@@ -1635,7 +1635,22 @@
     5280,
     5274,
     5267,
-    5268
+    5268,
+    5406,
+    5403,
+    5408,
+    5413,
+    5415,
+    5410,
+    5404,
+    5414,
+    5416,
+    5407,
+    5409,
+    5417,
+    5412,
+    5411,
+    5405
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
