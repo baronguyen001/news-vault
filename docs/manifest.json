@@ -856,73 +856,78 @@
     {
       "d": "2026-09-19",
       "months": "2026-09",
-      "n": 165
+      "n": 168
+    },
+    {
+      "d": "2026-09-20",
+      "months": "2026-09",
+      "n": 106
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2309,
+      "n": 2343,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 473,
+      "n": 480,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 395,
+      "n": 402,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 342,
+      "n": 347,
       "slug": "doanh-nghiep"
     },
     {
-      "label": "thuế",
-      "n": 279,
-      "slug": "thue"
-    },
-    {
       "label": "dữ liệu",
-      "n": 276,
+      "n": 282,
       "slug": "du-lieu"
     },
     {
+      "label": "thuế",
+      "n": 282,
+      "slug": "thue"
+    },
+    {
       "label": "công nghệ",
-      "n": 261,
+      "n": 267,
       "slug": "cong-nghe"
     },
     {
       "label": "chính phủ",
-      "n": 251,
+      "n": 257,
       "slug": "chinh-phu"
     },
     {
       "label": "chip",
-      "n": 232,
+      "n": 237,
       "slug": "chip"
     },
     {
       "label": "ngân hàng",
-      "n": 208,
+      "n": 211,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 179,
+      "n": 182,
       "slug": "quoc-hoi"
     },
     {
       "label": "lãi suất",
-      "n": 177,
+      "n": 179,
       "slug": "lai-suat"
     },
     {
       "label": "chính sách",
-      "n": 163,
+      "n": 167,
       "slug": "chinh-sach"
     },
     {
@@ -937,57 +942,57 @@
     },
     {
       "label": "lạm phát",
-      "n": 145,
+      "n": 146,
       "slug": "lam-phat"
     },
     {
       "label": "trung ương",
-      "n": 137,
+      "n": 139,
       "slug": "trung-uong"
     },
     {
       "label": "xung đột",
-      "n": 135,
+      "n": 137,
       "slug": "xung-dot"
     },
     {
       "label": "nghị quyết",
-      "n": 124,
+      "n": 126,
       "slug": "nghi-quyet"
     },
     {
       "label": "chiến tranh",
-      "n": 120,
+      "n": 123,
       "slug": "chien-tranh"
     },
     {
       "label": "năng lượng",
-      "n": 110,
+      "n": 112,
       "slug": "nang-luong"
     },
     {
       "label": "nhập khẩu",
-      "n": 88,
+      "n": 89,
       "slug": "nhap-khau"
     },
     {
       "label": "chứng khoán",
-      "n": 85,
+      "n": 87,
       "slug": "chung-khoan"
     },
     {
       "label": "trừng phạt",
-      "n": 85,
+      "n": 86,
       "slug": "trung-phat"
     },
     {
       "label": "nghị định",
-      "n": 83,
+      "n": 85,
       "slug": "nghi-dinh"
     },
     {
       "label": "thuế quan",
-      "n": 69,
+      "n": 70,
       "slug": "thue-quan"
     },
     {
@@ -1021,23 +1026,23 @@
       "slug": "cai-cach"
     },
     {
+      "label": "bất động sản",
+      "n": 38,
+      "slug": "bat-dong-san"
+    },
+    {
       "label": "hành chính",
       "n": 38,
       "slug": "hanh-chinh"
     },
     {
-      "label": "bất động sản",
-      "n": 37,
-      "slug": "bat-dong-san"
-    },
-    {
       "label": "bộ chính trị",
-      "n": 30,
+      "n": 31,
       "slug": "bo-chinh-tri"
     },
     {
       "label": "xe điện",
-      "n": 25,
+      "n": 26,
       "slug": "xe-dien"
     },
     {
@@ -1301,7 +1306,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-09-19T23:59:59+07:00",
+  "generated_at": "2026-09-20T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
