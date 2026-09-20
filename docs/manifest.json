@@ -861,18 +861,18 @@
     {
       "d": "2026-09-20",
       "months": "2026-09",
-      "n": 106
+      "n": 120
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2343,
+      "n": 2351,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 480,
+      "n": 483,
       "slug": "dau-tu"
     },
     {
@@ -882,12 +882,12 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 347,
+      "n": 351,
       "slug": "doanh-nghiep"
     },
     {
       "label": "dữ liệu",
-      "n": 282,
+      "n": 285,
       "slug": "du-lieu"
     },
     {
@@ -897,7 +897,7 @@
     },
     {
       "label": "công nghệ",
-      "n": 267,
+      "n": 271,
       "slug": "cong-nghe"
     },
     {
@@ -912,47 +912,47 @@
     },
     {
       "label": "ngân hàng",
-      "n": 211,
+      "n": 213,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 182,
+      "n": 183,
       "slug": "quoc-hoi"
     },
     {
       "label": "lãi suất",
-      "n": 179,
+      "n": 180,
       "slug": "lai-suat"
     },
     {
       "label": "chính sách",
-      "n": 167,
+      "n": 169,
       "slug": "chinh-sach"
     },
     {
       "label": "đảng",
-      "n": 157,
+      "n": 158,
       "slug": "dang"
     },
     {
       "label": "xuất khẩu",
-      "n": 156,
+      "n": 157,
       "slug": "xuat-khau"
     },
     {
       "label": "lạm phát",
-      "n": 146,
+      "n": 147,
       "slug": "lam-phat"
     },
     {
       "label": "trung ương",
-      "n": 139,
+      "n": 141,
       "slug": "trung-uong"
     },
     {
       "label": "xung đột",
-      "n": 137,
+      "n": 138,
       "slug": "xung-dot"
     },
     {
@@ -962,7 +962,7 @@
     },
     {
       "label": "chiến tranh",
-      "n": 123,
+      "n": 124,
       "slug": "chien-tranh"
     },
     {
@@ -976,14 +976,14 @@
       "slug": "nhap-khau"
     },
     {
+      "label": "trừng phạt",
+      "n": 88,
+      "slug": "trung-phat"
+    },
+    {
       "label": "chứng khoán",
       "n": 87,
       "slug": "chung-khoan"
-    },
-    {
-      "label": "trừng phạt",
-      "n": 86,
-      "slug": "trung-phat"
     },
     {
       "label": "nghị định",
@@ -997,7 +997,7 @@
     },
     {
       "label": "pháp lý",
-      "n": 67,
+      "n": 68,
       "slug": "phap-ly"
     },
     {
@@ -1017,7 +1017,7 @@
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 41,
+      "n": 44,
       "slug": "tri-tue-nhan-tao"
     },
     {
@@ -1082,7 +1082,7 @@
     },
     {
       "label": "kinh tế vĩ mô",
-      "n": 8,
+      "n": 9,
       "slug": "kinh-te-vi-mo"
     },
     {
@@ -1676,7 +1676,21 @@
     5515,
     5526,
     5522,
-    5516
+    5516,
+    5613,
+    5611,
+    5617,
+    5609,
+    5608,
+    5614,
+    5605,
+    5610,
+    5612,
+    5615,
+    5607,
+    5616,
+    5618,
+    5606
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
