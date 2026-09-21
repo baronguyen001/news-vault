@@ -866,13 +866,13 @@
     {
       "d": "2026-09-21",
       "months": "2026-09",
-      "n": 54
+      "n": 103
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2352,
+      "n": 2357,
       "slug": "ai"
     },
     {
@@ -882,7 +882,7 @@
     },
     {
       "label": "luật",
-      "n": 402,
+      "n": 403,
       "slug": "luat"
     },
     {
@@ -892,7 +892,7 @@
     },
     {
       "label": "dữ liệu",
-      "n": 286,
+      "n": 287,
       "slug": "du-lieu"
     },
     {
@@ -902,7 +902,7 @@
     },
     {
       "label": "công nghệ",
-      "n": 272,
+      "n": 273,
       "slug": "cong-nghe"
     },
     {
@@ -912,7 +912,7 @@
     },
     {
       "label": "chip",
-      "n": 237,
+      "n": 238,
       "slug": "chip"
     },
     {
@@ -927,7 +927,7 @@
     },
     {
       "label": "lãi suất",
-      "n": 181,
+      "n": 182,
       "slug": "lai-suat"
     },
     {
@@ -936,18 +936,18 @@
       "slug": "chinh-sach"
     },
     {
+      "label": "xuất khẩu",
+      "n": 160,
+      "slug": "xuat-khau"
+    },
+    {
       "label": "đảng",
       "n": 158,
       "slug": "dang"
     },
     {
-      "label": "xuất khẩu",
-      "n": 158,
-      "slug": "xuat-khau"
-    },
-    {
       "label": "lạm phát",
-      "n": 148,
+      "n": 149,
       "slug": "lam-phat"
     },
     {
@@ -961,18 +961,18 @@
       "slug": "xung-dot"
     },
     {
+      "label": "chiến tranh",
+      "n": 126,
+      "slug": "chien-tranh"
+    },
+    {
       "label": "nghị quyết",
       "n": 126,
       "slug": "nghi-quyet"
     },
     {
-      "label": "chiến tranh",
-      "n": 125,
-      "slug": "chien-tranh"
-    },
-    {
       "label": "năng lượng",
-      "n": 112,
+      "n": 114,
       "slug": "nang-luong"
     },
     {
@@ -1027,7 +1027,7 @@
     },
     {
       "label": "cải cách",
-      "n": 40,
+      "n": 41,
       "slug": "cai-cach"
     },
     {
