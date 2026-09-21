@@ -160,8 +160,8 @@ def test_malformed_key_points_degrade_to_none(tmp_path: Path) -> None:
 def test_ordering_is_newest_day_then_highest_score(tmp_path: Path) -> None:
     rows = (
         _row(id="1", day="2026-08-11", score=95),
-        _row(id="2", day="2026-08-12", score=40),
-        _row(id="3", day="2026-08-12", score=90),
+        _row(id="2", day="2026-08-12", score=40, title_vi="ECB giữ nguyên lãi suất"),
+        _row(id="3", day="2026-08-12", score=90, title_vi="Giá dầu tăng sau căng thẳng"),
     )
     conn = posts.connect(_make_db(tmp_path, rows))
     try:
@@ -169,6 +169,44 @@ def test_ordering_is_newest_day_then_highest_score(tmp_path: Path) -> None:
     finally:
         conn.close()
     assert [post.id for post in loaded] == ["3", "2", "1"]
+
+
+def test_archive_excludes_low_relevance_posts(tmp_path: Path) -> None:
+    conn = posts.connect(_make_db(tmp_path, (_row(id="low", relevance=5), _row(id="high", relevance=6))))
+    try:
+        assert [post.id for post in posts.load_all(conn)] == ["high"]
+    finally:
+        conn.close()
+
+
+def test_archive_keeps_one_highest_scoring_near_duplicate(tmp_path: Path) -> None:
+    rows = (
+        _row(id="winner", score=80, title_vi="Trump cấm CNN và Politico khỏi Nhà Trắng"),
+        _row(id="loser", score=70, title_vi="Tổng thống Trump tuyên bố cấm CNN Politico khỏi Nhà Trắng"),
+    )
+    conn = posts.connect(_make_db(tmp_path, rows))
+    try:
+        assert [post.id for post in posts.load_all(conn)] == ["winner"]
+    finally:
+        conn.close()
+
+
+def test_archive_normalizes_spaced_brand_names_when_deduplicating(tmp_path: Path) -> None:
+    rows = (
+        _row(
+            id="winner", score=80,
+            title_vi="Trump cấm CNN, MSNOW và Politico khỏi Nhà Trắng vì cáo buộc đưa tin giả",
+        ),
+        _row(
+            id="loser", score=70,
+            title_vi="Tổng thống Trump tuyên bố cấm CNN, MS NOW và Politico khỏi Nhà Trắng",
+        ),
+    )
+    conn = posts.connect(_make_db(tmp_path, rows))
+    try:
+        assert [post.id for post in posts.load_all(conn)] == ["winner"]
+    finally:
+        conn.close()
 
 
 def test_group_by_day_and_available_days(tmp_path: Path) -> None:

@@ -27,7 +27,8 @@
     empty: "Chưa có bài phân tích nào.",
     countOne: "1 bài",
     countMany: " bài",
-    readOn: "Đọc bài phân tích"
+    readOn: "Đọc bài phân tích",
+    preview: "Xem thêm"
   };
 
   function make(tag, cls, parent) {
@@ -159,6 +160,27 @@
     if (typeof app.renderScoreTopicBadges === "function") app.renderScoreTopicBadges(badges, item);
   }
 
+  function previewBody(item) {
+    const blocks = Array.isArray(item.pv) ? item.pv : [];
+    if (!blocks.length) return null;
+    const preview = make("div", "dcard__preview");
+    let list = null;
+    for (let i = 0; i < blocks.length; i++) {
+      const block = blocks[i] || {};
+      const runs = Array.isArray(block.r) ? block.r : [];
+      if (!runs.length) continue;
+      if (block.k === "b") {
+        if (!list) list = make("ul", "dcard__preview-list", preview);
+        appendRuns(make("li", "", list), runs);
+        continue;
+      }
+      list = null;
+      const tag = block.k === "h" ? "h3" : "p";
+      appendRuns(make(tag, "dcard__preview-" + (block.k === "h" ? "heading" : "text"), preview), runs);
+    }
+    return preview.childNodes.length ? preview : null;
+  }
+
   /* One teaser card. `base` is the page's relative root, so the same builder serves the
    * listing page (base "../") and a day page (base "../../"). */
   function teaserCard(item, base) {
@@ -191,6 +213,24 @@
 
     const cta = make("span", "dcard__cta", body);
     text(cta, T.readOn);
+
+    const preview = previewBody(v);
+    if (preview) {
+      preview.hidden = true;
+      const foot = make("div", "dcard__foot", li);
+      const more = make("button", "dcard__more", foot);
+      more.type = "button";
+      more.addEventListener("click", function () {
+        if (!window.NV.modal) return;
+        window.NV.modal.open({
+          title: v.t || "",
+          node: preview,
+          onClose: function () { preview.hidden = true; }
+        });
+      });
+      text(more, T.preview);
+      li.appendChild(preview);
+    }
 
     return li;
   }
@@ -459,6 +499,7 @@
     renderArticle: renderArticle,
     formatDate: formatDate,
     runsText: runsText,
-    buildBody: buildBody
+    buildBody: buildBody,
+    previewBody: previewBody
   };
 })();

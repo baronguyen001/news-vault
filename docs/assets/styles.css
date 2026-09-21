@@ -3475,6 +3475,58 @@ body.modal-open {
   content: " \2192";
 }
 
+.dcard__foot,
+.scard__foot {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--space-xs) var(--space-md) var(--space-sm);
+  border-top: 1px solid var(--border);
+}
+
+.dcard__more,
+.scard__more {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.dcard__more:hover,
+.dcard__more:focus-visible,
+.scard__more:hover,
+.scard__more:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+.dcard__preview,
+.scard__preview {
+  max-width: 48rem;
+}
+
+.dcard__preview-heading,
+.scard__preview-heading {
+  margin: var(--space-md) 0 var(--space-xs);
+  font-size: 1rem;
+}
+
+.dcard__preview-text,
+.scard__preview-text {
+  margin: 0 0 var(--space-sm);
+  line-height: 1.7;
+}
+
+.dcard__preview-list,
+.scard__preview-list {
+  margin: 0 0 var(--space-sm);
+  padding-inline-start: 1.25rem;
+  line-height: 1.6;
+}
+
 @media (min-width: 720px) {
   .dcard__link {
     grid-template-columns: 15rem minmax(0, 1fr);

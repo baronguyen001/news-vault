@@ -146,6 +146,15 @@ test('a malformed img url is rejected without throwing', () => {
   assert.doesNotThrow(() => substack.teaserCard(Object.assign({}, ESSAY, { img: 'not a url' }), '../'));
 });
 
+test('a quick-preview payload adds a Xem thêm button outside the article link', () => {
+  const { substack } = load();
+  const card = substack.teaserCard(Object.assign({}, ESSAY, {
+    pv: [{ k: 'p', r: [['Nội dung xem nhanh.', false]] }],
+  }), '../');
+  assert.equal(card.querySelector('.scard__more').textContent, 'Xem thêm');
+  assert.equal(card.querySelector('.scard__preview').hidden, true);
+});
+
 // --------------------------------------------------------------------------- renderIndex filters
 
 function renderTwo(extra1, extra2) {

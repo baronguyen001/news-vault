@@ -131,9 +131,11 @@ def test_posts_reach_the_encrypted_day_payload(tmp_path: Path) -> None:
 
     report = _build(out, db, x_db)
 
-    assert report.posts_included == 2
+    # The archive's final publication guard collapses the deliberately duplicated
+    # fixture headlines, just as it does historic X rows.
+    assert report.posts_included == 1
     data = _decrypt(out, day)
-    assert len(data["posts"]) == 2
+    assert len(data["posts"]) == 1
     # Highest score leads, and the tier travels with the card.
     assert data["posts"][0]["t"].endswith("số 1")
     assert data["posts"][0]["tr"] == 0.85
@@ -180,7 +182,7 @@ def test_a_day_with_only_x_posts_still_gets_a_page(tmp_path: Path) -> None:
     assert quiet_day in report.days_built
     data = _decrypt(out, quiet_day)
     assert data["articles"] == []
-    assert len(data["posts"]) == 2
+    assert len(data["posts"]) == 1
 
 
 def test_facebook_posts_reach_the_day_payload_and_exclude_noise(tmp_path: Path) -> None:

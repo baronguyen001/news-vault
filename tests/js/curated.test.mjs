@@ -20,6 +20,7 @@ function makeEl(tag) {
     childNodes: [],
     parentNode: null,
     attrs: {},
+    listeners: {},
     appendChild(child) {
       child.parentNode = this;
       this.children.push(child);
@@ -37,6 +38,7 @@ function makeEl(tag) {
       return child;
     },
     setAttribute(k, v) { this.attrs[k] = String(v); },
+    addEventListener(type, fn) { (this.listeners[type] = this.listeners[type] || []).push(fn); },
     getAttribute(k) {
       return Object.prototype.hasOwnProperty.call(this.attrs, k) ? this.attrs[k] : null;
     },
@@ -149,6 +151,15 @@ test('a missing thumbnail renders a placeholder in its normal card track', () =>
   assert.notEqual(thumb, null);
   assert.equal(thumb.classList.contains('card__thumb--empty'), true);
   assert.equal(thumb.children[0].tagName, 'SVG');
+});
+
+test('a quick-preview payload adds a Xem thêm button outside the article link', () => {
+  const { curated } = load();
+  const card = curated.teaserCard(Object.assign({}, ITEM, {
+    pv: [{ k: 'p', r: [['Nội dung xem nhanh.', false]] }],
+  }), '../../');
+  assert.equal(card.querySelector('.dcard__more').textContent, 'Xem thêm');
+  assert.equal(card.querySelector('.dcard__preview').hidden, true);
 });
 
 test('model-written text lands as text, never markup', () => {

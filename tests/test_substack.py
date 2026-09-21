@@ -301,11 +301,14 @@ def test_available_days_are_sorted_without_duplicates(tmp_path: Path) -> None:
 # Group B: payload construction.
 
 
-def test_substack_teaser_omits_blocks(tmp_path: Path) -> None:
+def test_substack_teaser_carries_only_a_bounded_quick_preview(tmp_path: Path) -> None:
     item = _one_item(tmp_path)
     teaser = substack_teaser(item)
     assert "lead" in teaser
     assert "bl" not in teaser
+    assert teaser["pv"]
+    assert len(teaser["pv"]) <= 4
+    assert all(set(block) == {"k", "r"} for block in teaser["pv"])
 
 
 def test_substack_teaser_carries_the_cover_image(tmp_path: Path) -> None:

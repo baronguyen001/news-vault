@@ -30,7 +30,8 @@
     sortOldest: "Cũ nhất",
     sortAuthor: "Theo tác giả A–Z",
     noResults: "Không có bài phù hợp với bộ lọc.",
-    clear: "Xóa bộ lọc"
+    clear: "Xóa bộ lọc",
+    preview: "Xem thêm"
   };
 
   function make(tag, cls, parent) {
@@ -139,6 +140,27 @@
     if (typeof app.renderScoreTopicBadges === "function") app.renderScoreTopicBadges(badges, item);
   }
 
+  function previewBody(item) {
+    const blocks = Array.isArray(item.pv) ? item.pv : [];
+    if (!blocks.length) return null;
+    const preview = make("div", "scard__preview");
+    let list = null;
+    for (let i = 0; i < blocks.length; i++) {
+      const block = blocks[i] || {};
+      const runs = Array.isArray(block.r) ? block.r : [];
+      if (!runs.length) continue;
+      if (block.k === "b") {
+        if (!list) list = make("ul", "scard__preview-list", preview);
+        appendRuns(make("li", "", list), runs);
+        continue;
+      }
+      list = null;
+      const tag = block.k === "h" ? "h3" : "p";
+      appendRuns(make(tag, "scard__preview-" + (block.k === "h" ? "heading" : "text"), preview), runs);
+    }
+    return preview.childNodes.length ? preview : null;
+  }
+
   /* One teaser card. `base` is the page's relative root, so the same builder serves the
    * listing page (base "../") and a day page (base "../../"). */
   function teaserCard(item, base) {
@@ -171,6 +193,24 @@
 
     const cta = make("span", "scard__cta", body);
     text(cta, T.readOn);
+
+    const preview = previewBody(v);
+    if (preview) {
+      preview.hidden = true;
+      const foot = make("div", "scard__foot", li);
+      const more = make("button", "scard__more", foot);
+      more.type = "button";
+      more.addEventListener("click", function () {
+        if (!window.NV.modal) return;
+        window.NV.modal.open({
+          title: v.t || "",
+          node: preview,
+          onClose: function () { preview.hidden = true; }
+        });
+      });
+      text(more, T.preview);
+      li.appendChild(preview);
+    }
 
     return li;
   }
@@ -540,6 +580,7 @@
     renderIndex: renderIndex,
     renderArticle: renderArticle,
     formatDate: formatDate,
+    previewBody: previewBody,
     runsText: runsText,
     buildBody: buildBody
   };

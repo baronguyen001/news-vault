@@ -23,6 +23,7 @@ from collections.abc import Iterator, Sequence
 from dataclasses import dataclass, field
 
 from .publish_quality import publishable_text
+from .text import fold, tokens
 from .videos import Block, connect, summary_blocks
 
 __all__ = [
@@ -36,6 +37,14 @@ __all__ = [
 ]
 
 TABLE = "x_feed"
+
+# X-pulse keeps a wider editorial queue (relevance >= 5) for its own digest.  The
+# archive is a reading surface, where the fifth band proved too chatty: it included
+# tentative court hearings and several versions of the same announcement.  Publish the
+# clearly material band, then retain the highest-scoring representative of one story.
+MIN_PUBLISHED_RELEVANCE = 6
+MAX_POSTS_PER_DAY = 25
+NEAR_DUPLICATE_THRESHOLD = 0.6
 
 # Mirrors xpulse/config.py. Kept as a plain dict rather than imported: the two projects
 # are separate repositories and news-vault must build with x-pulse absent.
@@ -108,10 +117,60 @@ def available_days(conn: sqlite3.Connection) -> list[str]:
 def load_all(conn: sqlite3.Connection) -> list[Post]:
     """Every publishable post, newest day first, highest score first within a day."""
     posts = [post for post in _iter_posts(conn) if post is not None]
+    posts = _select_for_archive(posts)
     # Stable sort chain: id ascending is the final tie-break between two equal scores.
     posts = sorted(posts, key=lambda post: post.id)
     posts.sort(key=lambda post: (post.day, post.score), reverse=True)
     return posts
+
+
+def _same_story(left: Post, right: Post) -> bool:
+    """True for translated headlines that describe the same daily X event.
+
+    This is deliberately a conservative final guard.  x-pulse has its own semantic
+    clustering, but historical rows made before that repair can still reach a static
+    rebuild.  We only collapse titles that share at least 60% of their meaningful words.
+    """
+    # A source may write the channel name as either "MSNOW" or "MS NOW".  Normalise
+    # this spelling before tokenising; otherwise the one editorial difference prevents
+    # two otherwise identical White House headlines from meeting the duplicate guard.
+    left_tokens = tokens(fold(left.title).replace("ms now", "msnow"))
+    right_tokens = tokens(fold(right.title).replace("ms now", "msnow"))
+    union = left_tokens | right_tokens
+    if not union:
+        return False
+    shared = len(left_tokens & right_tokens)
+    if shared / len(union) >= NEAR_DUPLICATE_THRESHOLD:
+        return True
+    # Syndicated alerts often add different attribution clauses around the same compact
+    # core.  Five shared meaningful terms at 55% containment is still conservative, but
+    # catches "Trump cấm CNN..." versus "Tổng thống Trump tuyên bố cấm CNN...".
+    shorter = min(len(left_tokens), len(right_tokens))
+    return shared >= 5 and shorter > 0 and shared / shorter >= 0.55
+
+
+def _select_for_archive(posts: Sequence[Post]) -> list[Post]:
+    """Apply the site-specific relevance, duplicate and daily-volume guard."""
+    by_day: dict[str, list[Post]] = {}
+    for post in posts:
+        if post.relevance < MIN_PUBLISHED_RELEVANCE:
+            continue
+        by_day.setdefault(post.day, []).append(post)
+
+    selected: list[Post] = []
+    for day in sorted(by_day, reverse=True):
+        # Deterministic rank means a rebuild cannot arbitrarily change the surviving
+        # representative of a cluster.
+        ranked = sorted(by_day[day], key=lambda post: (-post.score, -post.relevance, post.id))
+        kept: list[Post] = []
+        for post in ranked:
+            if any(_same_story(post, prior) for prior in kept):
+                continue
+            kept.append(post)
+            if len(kept) == MAX_POSTS_PER_DAY:
+                break
+        selected.extend(kept)
+    return selected
 
 
 def group_by_day(posts: Sequence[Post]) -> dict[str, list[Post]]:

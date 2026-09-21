@@ -98,6 +98,12 @@ def test_load_all_excludes_dropped_rows(tmp_path: Path) -> None:
     assert [post.id for post in indie.load_all(conn)] == ["kept"]
 
 
+def test_load_all_excludes_cjk_output(tmp_path: Path) -> None:
+    """A failed translation must not be published just because it was marked keep."""
+    conn = _connect(_make_db(tmp_path, rows=(_row(summary_vi="如果 Squad đạt $10k MRR"),)))
+    assert indie.load_all(conn) == []
+
+
 def test_load_all_excludes_unscored_rows(tmp_path: Path) -> None:
     """`keep IS NULL` (not yet scored) must not render as "kept"."""
     rows = (_row(id="pending", keep=None, summary_vi=None, scored_at=None),)

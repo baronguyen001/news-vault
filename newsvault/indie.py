@@ -16,6 +16,7 @@ import sqlite3
 from collections.abc import Iterator, Sequence
 from dataclasses import dataclass
 
+from .publish_quality import publishable_text
 from .videos import connect
 
 __all__ = [
@@ -135,7 +136,7 @@ def _post_from_row(row: sqlite3.Row) -> IndiePost | None:
     post_id = str(row["id"] or "")
     text_vi = (row["summary_vi"] or "").strip()
     day = row["day"] or ""
-    if not post_id or not text_vi or not day:
+    if not post_id or not day or not publishable_text(text_vi, minimum=0):
         return None
     # row.keys(), not row itself - sqlite3.Row.__contains__ searches values, not columns.
     image = _https_url(row["media_url"]) if "media_url" in row.keys() else ""  # noqa: SIM118

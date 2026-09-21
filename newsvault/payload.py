@@ -13,7 +13,7 @@ from newsvault.posts import Post
 from newsvault.substack import Essay
 from newsvault.text import excerpt, fold
 from newsvault.trends import Trend
-from newsvault.videos import Video
+from newsvault.videos import Block, Video
 
 
 def _sorted(value: dict[str, object]) -> dict[str, object]:
@@ -246,9 +246,36 @@ def curated_teaser(item: CuratedItem) -> dict[str, object]:
         "w": item.words,
         "m": item.minutes,
         "ns": len(item.sections),
+        "pv": _quick_preview(item.blocks),
     }
     value.update(_optional_metadata(item))
     return _sorted(value)
+
+
+def _quick_preview(blocks: Sequence[Block], *, max_blocks: int = 4, max_chars: int = 900) -> list[dict[str, object]]:
+    """Return a small, safe-to-render glimpse of a long-form piece.
+
+    Day cards need a genuine "Xem thêm" without downloading a second encrypted page or
+    making the day payload carry an entire 800--1200 word article.  Keep the model's
+    already-parsed runs, but cap both structure and text so a busy day remains quick.
+    """
+    preview: list[dict[str, object]] = []
+    remaining = max_chars
+    for block in blocks:
+        if remaining <= 0 or len(preview) >= max_blocks:
+            break
+        runs: list[list[object]] = []
+        for run, bold in block.runs:
+            if remaining <= 0:
+                break
+            part = str(run)[:remaining]
+            if not part:
+                continue
+            runs.append([part, bold])
+            remaining -= len(part)
+        if runs:
+            preview.append({"k": block.kind, "r": runs})
+    return preview
 
 
 def curated_payload(item: CuratedItem) -> dict[str, object]:
@@ -479,6 +506,7 @@ def substack_teaser(item: Essay) -> dict[str, object]:
         "w": item.words,
         "m": item.minutes,
         "ns": len(item.sections),
+        "pv": _quick_preview(item.blocks),
     }
     value.update(_optional_metadata(item))
     return _sorted(value)
