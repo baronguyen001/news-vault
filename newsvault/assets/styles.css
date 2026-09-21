@@ -4819,6 +4819,16 @@ body.modal-open {
 .fpost__header { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-xs) var(--space-sm); font-size: .8125rem; }
 .fpost__author { font-weight: 600; color: var(--text); }
 .fpost__category { color: var(--text-dim); }
+/* Facebook summaries may contain several paragraphs.  Keep their folded-card
+   preview scan-friendly on a phone; the complete, structured summary stays
+   available through the card's "Xem thêm" control. */
+.fpost__preview {
+  display: -webkit-box;
+  max-height: calc(1.6em * 2);
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
 .fpost__body { margin: var(--space-xs) 0 0; color: var(--text); font-size: .9375rem; line-height: 1.6; white-space: pre-line; }
 .fpost__h { margin: var(--space-md) 0 var(--space-xs); font-size: 1rem; }
 .fpost__bullets { margin: var(--space-xs) 0 0; padding-inline-start: 1.25rem; line-height: 1.6; }
