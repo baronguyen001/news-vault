@@ -871,33 +871,38 @@
     {
       "d": "2026-09-22",
       "months": "2026-09",
-      "n": 93
+      "n": 129
+    },
+    {
+      "d": "2026-09-23",
+      "months": "2026-09",
+      "n": 73
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2378,
+      "n": 2400,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 485,
+      "n": 487,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 406,
+      "n": 412,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 352,
+      "n": 353,
       "slug": "doanh-nghiep"
     },
     {
       "label": "dữ liệu",
-      "n": 290,
+      "n": 293,
       "slug": "du-lieu"
     },
     {
@@ -907,32 +912,32 @@
     },
     {
       "label": "công nghệ",
-      "n": 273,
+      "n": 275,
       "slug": "cong-nghe"
     },
     {
       "label": "chính phủ",
-      "n": 258,
+      "n": 260,
       "slug": "chinh-phu"
     },
     {
       "label": "chip",
-      "n": 240,
+      "n": 244,
       "slug": "chip"
     },
     {
       "label": "ngân hàng",
-      "n": 215,
+      "n": 216,
       "slug": "ngan-hang"
     },
     {
       "label": "lãi suất",
-      "n": 185,
+      "n": 186,
       "slug": "lai-suat"
     },
     {
       "label": "quốc hội",
-      "n": 184,
+      "n": 185,
       "slug": "quoc-hoi"
     },
     {
@@ -942,7 +947,7 @@
     },
     {
       "label": "xuất khẩu",
-      "n": 161,
+      "n": 162,
       "slug": "xuat-khau"
     },
     {
@@ -952,7 +957,7 @@
     },
     {
       "label": "lạm phát",
-      "n": 149,
+      "n": 150,
       "slug": "lam-phat"
     },
     {
@@ -962,12 +967,12 @@
     },
     {
       "label": "xung đột",
-      "n": 141,
+      "n": 142,
       "slug": "xung-dot"
     },
     {
       "label": "chiến tranh",
-      "n": 126,
+      "n": 128,
       "slug": "chien-tranh"
     },
     {
@@ -977,7 +982,7 @@
     },
     {
       "label": "năng lượng",
-      "n": 115,
+      "n": 119,
       "slug": "nang-luong"
     },
     {
@@ -1017,12 +1022,12 @@
     },
     {
       "label": "startup",
-      "n": 59,
+      "n": 60,
       "slug": "startup"
     },
     {
       "label": "bảo hiểm",
-      "n": 47,
+      "n": 49,
       "slug": "bao-hiem"
     },
     {
@@ -1032,7 +1037,7 @@
     },
     {
       "label": "cải cách",
-      "n": 41,
+      "n": 42,
       "slug": "cai-cach"
     },
     {
@@ -1316,7 +1321,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-09-22T23:59:59+07:00",
+  "generated_at": "2026-09-23T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
@@ -1707,6 +1712,31 @@
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
   "substack": [
+    "831",
+    "828",
+    "822",
+    "819",
+    "837",
+    "818",
+    "829",
+    "815",
+    "832",
+    "816",
+    "826",
+    "814",
+    "835",
+    "821",
+    "834",
+    "836",
+    "827",
+    "833",
+    "824",
+    "830",
+    "817",
+    "838",
+    "823",
+    "825",
+    "820",
     "805",
     "810",
     "801",
