@@ -881,18 +881,18 @@
     {
       "d": "2026-09-24",
       "months": "2026-09",
-      "n": 80
+      "n": 82
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2433,
+      "n": 2435,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 491,
+      "n": 492,
       "slug": "dau-tu"
     },
     {
@@ -902,7 +902,7 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 354,
+      "n": 356,
       "slug": "doanh-nghiep"
     },
     {
@@ -917,7 +917,7 @@
     },
     {
       "label": "công nghệ",
-      "n": 277,
+      "n": 279,
       "slug": "cong-nghe"
     },
     {
@@ -1037,7 +1037,7 @@
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 44,
+      "n": 45,
       "slug": "tri-tue-nhan-tao"
     },
     {
@@ -1716,7 +1716,9 @@
     5721,
     5722,
     5719,
-    5720
+    5720,
+    5771,
+    5772
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
