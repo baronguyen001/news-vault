@@ -876,133 +876,138 @@
     {
       "d": "2026-09-23",
       "months": "2026-09",
-      "n": 153
+      "n": 154
     },
     {
       "d": "2026-09-24",
       "months": "2026-09",
-      "n": 120
+      "n": 147
+    },
+    {
+      "d": "2026-09-25",
+      "months": "2026-09",
+      "n": 137
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2435,
+      "n": 2476,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 492,
+      "n": 497,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 412,
+      "n": 426,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 356,
+      "n": 360,
       "slug": "doanh-nghiep"
     },
     {
       "label": "dữ liệu",
-      "n": 296,
+      "n": 299,
       "slug": "du-lieu"
     },
     {
       "label": "thuế",
-      "n": 283,
+      "n": 285,
       "slug": "thue"
     },
     {
       "label": "công nghệ",
-      "n": 279,
+      "n": 283,
       "slug": "cong-nghe"
     },
     {
       "label": "chính phủ",
-      "n": 261,
+      "n": 266,
       "slug": "chinh-phu"
     },
     {
       "label": "chip",
-      "n": 245,
+      "n": 246,
       "slug": "chip"
     },
     {
       "label": "ngân hàng",
-      "n": 217,
+      "n": 221,
       "slug": "ngan-hang"
     },
     {
-      "label": "lãi suất",
-      "n": 187,
-      "slug": "lai-suat"
-    },
-    {
       "label": "quốc hội",
-      "n": 187,
+      "n": 194,
       "slug": "quoc-hoi"
     },
     {
+      "label": "lãi suất",
+      "n": 190,
+      "slug": "lai-suat"
+    },
+    {
       "label": "chính sách",
-      "n": 170,
+      "n": 174,
       "slug": "chinh-sach"
     },
     {
       "label": "xuất khẩu",
-      "n": 163,
+      "n": 164,
       "slug": "xuat-khau"
     },
     {
       "label": "đảng",
-      "n": 160,
+      "n": 162,
       "slug": "dang"
     },
     {
       "label": "lạm phát",
-      "n": 151,
+      "n": 153,
       "slug": "lam-phat"
     },
     {
       "label": "trung ương",
-      "n": 144,
+      "n": 145,
       "slug": "trung-uong"
     },
     {
       "label": "xung đột",
-      "n": 144,
+      "n": 145,
       "slug": "xung-dot"
     },
     {
       "label": "chiến tranh",
-      "n": 131,
+      "n": 133,
       "slug": "chien-tranh"
     },
     {
       "label": "nghị quyết",
-      "n": 126,
+      "n": 130,
       "slug": "nghi-quyet"
     },
     {
       "label": "năng lượng",
-      "n": 123,
+      "n": 126,
       "slug": "nang-luong"
     },
     {
       "label": "nhập khẩu",
-      "n": 90,
+      "n": 92,
       "slug": "nhap-khau"
     },
     {
       "label": "trừng phạt",
-      "n": 89,
+      "n": 92,
       "slug": "trung-phat"
     },
     {
       "label": "chứng khoán",
-      "n": 87,
+      "n": 88,
       "slug": "chung-khoan"
     },
     {
@@ -1017,12 +1022,12 @@
     },
     {
       "label": "pháp lý",
-      "n": 68,
+      "n": 69,
       "slug": "phap-ly"
     },
     {
       "label": "bán dẫn",
-      "n": 63,
+      "n": 64,
       "slug": "ban-dan"
     },
     {
@@ -1032,7 +1037,7 @@
     },
     {
       "label": "bảo hiểm",
-      "n": 50,
+      "n": 52,
       "slug": "bao-hiem"
     },
     {
@@ -1042,22 +1047,22 @@
     },
     {
       "label": "cải cách",
-      "n": 42,
+      "n": 43,
       "slug": "cai-cach"
     },
     {
-      "label": "bất động sản",
-      "n": 38,
-      "slug": "bat-dong-san"
-    },
-    {
       "label": "hành chính",
-      "n": 38,
+      "n": 40,
       "slug": "hanh-chinh"
     },
     {
+      "label": "bất động sản",
+      "n": 39,
+      "slug": "bat-dong-san"
+    },
+    {
       "label": "bộ chính trị",
-      "n": 31,
+      "n": 32,
       "slug": "bo-chinh-tri"
     },
     {
@@ -1067,7 +1072,7 @@
     },
     {
       "label": "FDI",
-      "n": 23,
+      "n": 24,
       "slug": "fdi"
     },
     {
@@ -1081,14 +1086,14 @@
       "slug": "khoi-nghiep"
     },
     {
+      "label": "blockchain",
+      "n": 13,
+      "slug": "blockchain"
+    },
+    {
       "label": "chuyển đổi số",
       "n": 12,
       "slug": "chuyen-doi-so"
-    },
-    {
-      "label": "blockchain",
-      "n": 11,
-      "slug": "blockchain"
     },
     {
       "label": "chỉ thị",
@@ -1326,7 +1331,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-09-24T23:59:59+07:00",
+  "generated_at": "2026-09-25T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
@@ -1723,6 +1728,34 @@
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
   "substack": [
+    "871",
+    "893",
+    "885",
+    "894",
+    "877",
+    "883",
+    "872",
+    "891",
+    "888",
+    "878",
+    "868",
+    "880",
+    "869",
+    "879",
+    "870",
+    "875",
+    "895",
+    "890",
+    "876",
+    "896",
+    "887",
+    "892",
+    "889",
+    "874",
+    "884",
+    "886",
+    "873",
+    "881",
     "854",
     "864",
     "862",
@@ -1730,6 +1763,7 @@
     "842",
     "844",
     "845",
+    "882",
     "839",
     "849",
     "860",
