@@ -886,68 +886,73 @@
     {
       "d": "2026-09-25",
       "months": "2026-09",
-      "n": 203
+      "n": 226
+    },
+    {
+      "d": "2026-09-26",
+      "months": "2026-09",
+      "n": 133
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2492,
+      "n": 2539,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 501,
+      "n": 504,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 430,
+      "n": 444,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 364,
+      "n": 374,
       "slug": "doanh-nghiep"
     },
     {
       "label": "dữ liệu",
-      "n": 301,
+      "n": 311,
       "slug": "du-lieu"
     },
     {
       "label": "công nghệ",
-      "n": 290,
+      "n": 294,
       "slug": "cong-nghe"
     },
     {
       "label": "thuế",
-      "n": 287,
+      "n": 292,
       "slug": "thue"
     },
     {
       "label": "chính phủ",
-      "n": 266,
+      "n": 282,
       "slug": "chinh-phu"
     },
     {
       "label": "chip",
-      "n": 248,
+      "n": 252,
       "slug": "chip"
     },
     {
       "label": "ngân hàng",
-      "n": 222,
+      "n": 228,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 194,
+      "n": 203,
       "slug": "quoc-hoi"
     },
     {
       "label": "lãi suất",
-      "n": 191,
+      "n": 194,
       "slug": "lai-suat"
     },
     {
@@ -957,67 +962,67 @@
     },
     {
       "label": "đảng",
-      "n": 164,
+      "n": 170,
       "slug": "dang"
     },
     {
       "label": "xuất khẩu",
-      "n": 164,
+      "n": 168,
       "slug": "xuat-khau"
     },
     {
       "label": "lạm phát",
-      "n": 154,
+      "n": 155,
       "slug": "lam-phat"
     },
     {
       "label": "xung đột",
-      "n": 147,
+      "n": 150,
       "slug": "xung-dot"
     },
     {
       "label": "trung ương",
-      "n": 145,
+      "n": 147,
       "slug": "trung-uong"
     },
     {
       "label": "chiến tranh",
-      "n": 135,
+      "n": 138,
       "slug": "chien-tranh"
     },
     {
       "label": "nghị quyết",
-      "n": 130,
+      "n": 132,
       "slug": "nghi-quyet"
     },
     {
       "label": "năng lượng",
-      "n": 127,
+      "n": 128,
       "slug": "nang-luong"
     },
     {
       "label": "nhập khẩu",
-      "n": 92,
+      "n": 93,
       "slug": "nhap-khau"
     },
     {
       "label": "trừng phạt",
-      "n": 92,
+      "n": 93,
       "slug": "trung-phat"
     },
     {
       "label": "chứng khoán",
-      "n": 90,
+      "n": 91,
       "slug": "chung-khoan"
     },
     {
       "label": "nghị định",
-      "n": 85,
+      "n": 90,
       "slug": "nghi-dinh"
     },
     {
       "label": "pháp lý",
-      "n": 72,
+      "n": 74,
       "slug": "phap-ly"
     },
     {
@@ -1027,17 +1032,17 @@
     },
     {
       "label": "bán dẫn",
-      "n": 66,
+      "n": 68,
       "slug": "ban-dan"
     },
     {
       "label": "startup",
-      "n": 60,
+      "n": 61,
       "slug": "startup"
     },
     {
       "label": "bảo hiểm",
-      "n": 52,
+      "n": 53,
       "slug": "bao-hiem"
     },
     {
@@ -1052,12 +1057,12 @@
     },
     {
       "label": "hành chính",
-      "n": 41,
+      "n": 42,
       "slug": "hanh-chinh"
     },
     {
       "label": "bất động sản",
-      "n": 39,
+      "n": 40,
       "slug": "bat-dong-san"
     },
     {
@@ -1067,7 +1072,7 @@
     },
     {
       "label": "xe điện",
-      "n": 26,
+      "n": 27,
       "slug": "xe-dien"
     },
     {
@@ -1087,7 +1092,7 @@
     },
     {
       "label": "blockchain",
-      "n": 13,
+      "n": 14,
       "slug": "blockchain"
     },
     {
@@ -1331,7 +1336,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-09-25T23:59:59+07:00",
+  "generated_at": "2026-09-26T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
@@ -1750,6 +1755,27 @@
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
   "substack": [
+    "914",
+    "900",
+    "908",
+    "901",
+    "909",
+    "899",
+    "906",
+    "916",
+    "902",
+    "897",
+    "898",
+    "917",
+    "915",
+    "907",
+    "913",
+    "910",
+    "903",
+    "911",
+    "905",
+    "912",
+    "904",
     "871",
     "893",
     "885",
