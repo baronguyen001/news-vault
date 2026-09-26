@@ -891,38 +891,38 @@
     {
       "d": "2026-09-26",
       "months": "2026-09",
-      "n": 133
+      "n": 146
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2539,
+      "n": 2548,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 504,
+      "n": 506,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 444,
+      "n": 445,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 374,
+      "n": 378,
       "slug": "doanh-nghiep"
     },
     {
       "label": "dữ liệu",
-      "n": 311,
+      "n": 312,
       "slug": "du-lieu"
     },
     {
       "label": "công nghệ",
-      "n": 294,
+      "n": 299,
       "slug": "cong-nghe"
     },
     {
@@ -967,12 +967,12 @@
     },
     {
       "label": "xuất khẩu",
-      "n": 168,
+      "n": 169,
       "slug": "xuat-khau"
     },
     {
       "label": "lạm phát",
-      "n": 155,
+      "n": 156,
       "slug": "lam-phat"
     },
     {
@@ -987,7 +987,7 @@
     },
     {
       "label": "chiến tranh",
-      "n": 138,
+      "n": 140,
       "slug": "chien-tranh"
     },
     {
@@ -1012,7 +1012,7 @@
     },
     {
       "label": "chứng khoán",
-      "n": 91,
+      "n": 92,
       "slug": "chung-khoan"
     },
     {
@@ -1022,7 +1022,7 @@
     },
     {
       "label": "pháp lý",
-      "n": 74,
+      "n": 76,
       "slug": "phap-ly"
     },
     {
@@ -1047,7 +1047,7 @@
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 46,
+      "n": 50,
       "slug": "tri-tue-nhan-tao"
     },
     {
@@ -1077,7 +1077,7 @@
     },
     {
       "label": "FDI",
-      "n": 25,
+      "n": 26,
       "slug": "fdi"
     },
     {
@@ -1092,7 +1092,7 @@
     },
     {
       "label": "blockchain",
-      "n": 14,
+      "n": 15,
       "slug": "blockchain"
     },
     {
@@ -1750,7 +1750,20 @@
     5884,
     5875,
     5874,
-    5889
+    5889,
+    6001,
+    6005,
+    5993,
+    6004,
+    6000,
+    5994,
+    5997,
+    6002,
+    5999,
+    6003,
+    5998,
+    5996,
+    5995
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
