@@ -897,38 +897,38 @@
     {
       "d": "2026-09-27",
       "months": "2026-09",
-      "n": 101
+      "n": 116
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2588,
+      "n": 2598,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 515,
+      "n": 518,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 450,
+      "n": 451,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 379,
+      "n": 382,
       "slug": "doanh-nghiep"
     },
     {
       "label": "dữ liệu",
-      "n": 315,
+      "n": 318,
       "slug": "du-lieu"
     },
     {
       "label": "công nghệ",
-      "n": 303,
+      "n": 307,
       "slug": "cong-nghe"
     },
     {
@@ -938,7 +938,7 @@
     },
     {
       "label": "chính phủ",
-      "n": 286,
+      "n": 289,
       "slug": "chinh-phu"
     },
     {
@@ -958,12 +958,12 @@
     },
     {
       "label": "lãi suất",
-      "n": 195,
+      "n": 196,
       "slug": "lai-suat"
     },
     {
       "label": "chính sách",
-      "n": 179,
+      "n": 181,
       "slug": "chinh-sach"
     },
     {
@@ -978,12 +978,12 @@
     },
     {
       "label": "lạm phát",
-      "n": 157,
+      "n": 159,
       "slug": "lam-phat"
     },
     {
       "label": "xung đột",
-      "n": 150,
+      "n": 153,
       "slug": "xung-dot"
     },
     {
@@ -993,7 +993,7 @@
     },
     {
       "label": "chiến tranh",
-      "n": 142,
+      "n": 143,
       "slug": "chien-tranh"
     },
     {
@@ -1008,12 +1008,12 @@
     },
     {
       "label": "chứng khoán",
-      "n": 93,
+      "n": 94,
       "slug": "chung-khoan"
     },
     {
       "label": "nhập khẩu",
-      "n": 93,
+      "n": 94,
       "slug": "nhap-khau"
     },
     {
@@ -1053,7 +1053,7 @@
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 51,
+      "n": 54,
       "slug": "tri-tue-nhan-tao"
     },
     {
@@ -1087,14 +1087,14 @@
       "slug": "fdi"
     },
     {
+      "label": "khởi nghiệp",
+      "n": 18,
+      "slug": "khoi-nghiep"
+    },
+    {
       "label": "thông tư",
       "n": 18,
       "slug": "thong-tu"
-    },
-    {
-      "label": "khởi nghiệp",
-      "n": 17,
-      "slug": "khoi-nghiep"
     },
     {
       "label": "blockchain",
@@ -1769,7 +1769,22 @@
     6003,
     5998,
     5996,
-    5995
+    5995,
+    6080,
+    6087,
+    6085,
+    6084,
+    6091,
+    6089,
+    6078,
+    6090,
+    6086,
+    6088,
+    6081,
+    6082,
+    6083,
+    6079,
+    6092
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
