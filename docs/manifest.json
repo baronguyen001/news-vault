@@ -1,5 +1,6 @@
 {
   "curated": [
+    "8_qvtnUAxEY",
     "Bu0xNDLNORU",
     "ZlEceN_TqsQ",
     "EpkLdSaELGQ",
@@ -886,93 +887,98 @@
     {
       "d": "2026-09-25",
       "months": "2026-09",
-      "n": 228
+      "n": 229
     },
     {
       "d": "2026-09-26",
       "months": "2026-09",
-      "n": 191
+      "n": 231
+    },
+    {
+      "d": "2026-09-27",
+      "months": "2026-09",
+      "n": 101
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2548,
+      "n": 2588,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 506,
+      "n": 515,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 445,
+      "n": 450,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 378,
+      "n": 379,
       "slug": "doanh-nghiep"
     },
     {
       "label": "dữ liệu",
-      "n": 312,
+      "n": 315,
       "slug": "du-lieu"
     },
     {
       "label": "công nghệ",
-      "n": 299,
+      "n": 303,
       "slug": "cong-nghe"
     },
     {
       "label": "thuế",
-      "n": 292,
+      "n": 294,
       "slug": "thue"
     },
     {
       "label": "chính phủ",
-      "n": 282,
+      "n": 286,
       "slug": "chinh-phu"
     },
     {
       "label": "chip",
-      "n": 252,
+      "n": 253,
       "slug": "chip"
     },
     {
       "label": "ngân hàng",
-      "n": 228,
+      "n": 232,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 203,
+      "n": 209,
       "slug": "quoc-hoi"
     },
     {
       "label": "lãi suất",
-      "n": 194,
+      "n": 195,
       "slug": "lai-suat"
     },
     {
       "label": "chính sách",
-      "n": 177,
+      "n": 179,
       "slug": "chinh-sach"
     },
     {
       "label": "đảng",
-      "n": 170,
+      "n": 171,
       "slug": "dang"
     },
     {
       "label": "xuất khẩu",
-      "n": 169,
+      "n": 171,
       "slug": "xuat-khau"
     },
     {
       "label": "lạm phát",
-      "n": 156,
+      "n": 157,
       "slug": "lam-phat"
     },
     {
@@ -982,23 +988,28 @@
     },
     {
       "label": "trung ương",
-      "n": 147,
+      "n": 149,
       "slug": "trung-uong"
     },
     {
       "label": "chiến tranh",
-      "n": 141,
+      "n": 142,
       "slug": "chien-tranh"
     },
     {
       "label": "nghị quyết",
-      "n": 132,
+      "n": 134,
       "slug": "nghi-quyet"
     },
     {
       "label": "năng lượng",
-      "n": 128,
+      "n": 130,
       "slug": "nang-luong"
+    },
+    {
+      "label": "chứng khoán",
+      "n": 93,
+      "slug": "chung-khoan"
     },
     {
       "label": "nhập khẩu",
@@ -1011,13 +1022,8 @@
       "slug": "trung-phat"
     },
     {
-      "label": "chứng khoán",
-      "n": 92,
-      "slug": "chung-khoan"
-    },
-    {
       "label": "nghị định",
-      "n": 90,
+      "n": 92,
       "slug": "nghi-dinh"
     },
     {
@@ -1027,7 +1033,7 @@
     },
     {
       "label": "thuế quan",
-      "n": 72,
+      "n": 73,
       "slug": "thue-quan"
     },
     {
@@ -1037,17 +1043,17 @@
     },
     {
       "label": "startup",
-      "n": 61,
+      "n": 62,
       "slug": "startup"
     },
     {
       "label": "bảo hiểm",
-      "n": 53,
+      "n": 55,
       "slug": "bao-hiem"
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 50,
+      "n": 51,
       "slug": "tri-tue-nhan-tao"
     },
     {
@@ -1057,17 +1063,17 @@
     },
     {
       "label": "hành chính",
-      "n": 42,
+      "n": 43,
       "slug": "hanh-chinh"
     },
     {
       "label": "bất động sản",
-      "n": 40,
+      "n": 41,
       "slug": "bat-dong-san"
     },
     {
       "label": "bộ chính trị",
-      "n": 32,
+      "n": 33,
       "slug": "bo-chinh-tri"
     },
     {
@@ -1336,7 +1342,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-09-26T23:59:59+07:00",
+  "generated_at": "2026-09-27T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
@@ -1768,6 +1774,23 @@
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
   "substack": [
+    "924",
+    "922",
+    "923",
+    "934",
+    "930",
+    "919",
+    "925",
+    "932",
+    "920",
+    "918",
+    "927",
+    "931",
+    "928",
+    "926",
+    "933",
+    "921",
+    "929",
     "914",
     "900",
     "908",
@@ -1786,6 +1809,7 @@
     "910",
     "903",
     "911",
+    "935",
     "905",
     "912",
     "904",

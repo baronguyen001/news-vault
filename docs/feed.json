@@ -3,17 +3,24 @@
   "home_page_url": "https://baronguyen001.github.io/news-vault",
   "items": [
     {
+      "date_published": "2026-09-27T00:00:00+07:00",
+      "id": "urn:news-vault:day:2026-09-27",
+      "summary": "Chính trị/Chính sách 22 · Công nghệ/AI 17 · Kinh tế/Tài chính 14 · Xung đột/Chiến tranh 9 · Pháp luật/Nghị định 4 · Chứng khoán 2 · Crypto 1 · Văn hóa/Xã hội 1",
+      "title": "27/09/2026 — 101 tin",
+      "url": "https://baronguyen001.github.io/news-vault/d/2026-09-27/"
+    },
+    {
       "date_published": "2026-09-26T00:00:00+07:00",
       "id": "urn:news-vault:day:2026-09-26",
       "summary": "Chính trị/Chính sách 30 · Công nghệ/AI 23 · Xung đột/Chiến tranh 21 · Pháp luật/Nghị định 18 · Kinh tế/Tài chính 17 · Crypto 5 · Văn hóa/Xã hội 2",
-      "title": "26/09/2026 — 191 tin",
+      "title": "26/09/2026 — 231 tin",
       "url": "https://baronguyen001.github.io/news-vault/d/2026-09-26/"
     },
     {
       "date_published": "2026-09-25T00:00:00+07:00",
       "id": "urn:news-vault:day:2026-09-25",
       "summary": "Chính trị/Chính sách 38 · Công nghệ/AI 21 · Xung đột/Chiến tranh 20 · Kinh tế/Tài chính 18 · Crypto 10 · Pháp luật/Nghị định 8 · Chứng khoán 3 · Khác 1",
-      "title": "25/09/2026 — 228 tin",
+      "title": "25/09/2026 — 229 tin",
       "url": "https://baronguyen001.github.io/news-vault/d/2026-09-25/"
     },
     {
@@ -414,13 +421,6 @@
       "summary": "Chính trị/Chính sách 31 · Kinh tế/Tài chính 29 · Công nghệ/AI 12 · Xung đột/Chiến tranh 6 · Pháp luật/Nghị định 3",
       "title": "30/07/2026 — 87 tin",
       "url": "https://baronguyen001.github.io/news-vault/d/2026-07-30/"
-    },
-    {
-      "date_published": "2026-07-29T00:00:00+07:00",
-      "id": "urn:news-vault:day:2026-07-29",
-      "summary": "Chính trị/Chính sách 40 · Kinh tế/Tài chính 32 · Công nghệ/AI 30 · Xung đột/Chiến tranh 23 · Pháp luật/Nghị định 12 · Văn hóa/Xã hội 2 · Khác 1",
-      "title": "29/07/2026 — 149 tin",
-      "url": "https://baronguyen001.github.io/news-vault/d/2026-07-29/"
     }
   ],
   "title": "Kho tin",
