@@ -902,23 +902,23 @@
     {
       "d": "2026-09-28",
       "months": "2026-09",
-      "n": 109
+      "n": 147
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2630,
+      "n": 2633,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 519,
+      "n": 520,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 455,
+      "n": 456,
       "slug": "luat"
     },
     {
@@ -928,7 +928,7 @@
     },
     {
       "label": "dữ liệu",
-      "n": 325,
+      "n": 326,
       "slug": "du-lieu"
     },
     {
@@ -938,12 +938,12 @@
     },
     {
       "label": "thuế",
-      "n": 295,
+      "n": 297,
       "slug": "thue"
     },
     {
       "label": "chính phủ",
-      "n": 290,
+      "n": 292,
       "slug": "chinh-phu"
     },
     {
@@ -953,17 +953,17 @@
     },
     {
       "label": "ngân hàng",
-      "n": 232,
+      "n": 234,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 215,
+      "n": 217,
       "slug": "quoc-hoi"
     },
     {
       "label": "lãi suất",
-      "n": 196,
+      "n": 197,
       "slug": "lai-suat"
     },
     {
@@ -973,7 +973,7 @@
     },
     {
       "label": "đảng",
-      "n": 173,
+      "n": 175,
       "slug": "dang"
     },
     {
@@ -993,7 +993,7 @@
     },
     {
       "label": "trung ương",
-      "n": 150,
+      "n": 151,
       "slug": "trung-uong"
     },
     {
@@ -1012,6 +1012,11 @@
       "slug": "nang-luong"
     },
     {
+      "label": "trừng phạt",
+      "n": 95,
+      "slug": "trung-phat"
+    },
+    {
       "label": "chứng khoán",
       "n": 94,
       "slug": "chung-khoan"
@@ -1020,11 +1025,6 @@
       "label": "nhập khẩu",
       "n": 94,
       "slug": "nhap-khau"
-    },
-    {
-      "label": "trừng phạt",
-      "n": 94,
-      "slug": "trung-phat"
     },
     {
       "label": "nghị định",
