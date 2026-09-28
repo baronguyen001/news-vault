@@ -897,53 +897,58 @@
     {
       "d": "2026-09-27",
       "months": "2026-09",
-      "n": 151
+      "n": 186
+    },
+    {
+      "d": "2026-09-28",
+      "months": "2026-09",
+      "n": 99
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2598,
+      "n": 2627,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 518,
+      "n": 519,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 451,
+      "n": 455,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 382,
+      "n": 385,
       "slug": "doanh-nghiep"
     },
     {
       "label": "dữ liệu",
-      "n": 318,
+      "n": 323,
       "slug": "du-lieu"
     },
     {
       "label": "công nghệ",
-      "n": 307,
+      "n": 315,
       "slug": "cong-nghe"
     },
     {
       "label": "thuế",
-      "n": 294,
+      "n": 295,
       "slug": "thue"
     },
     {
       "label": "chính phủ",
-      "n": 289,
+      "n": 290,
       "slug": "chinh-phu"
     },
     {
       "label": "chip",
-      "n": 253,
+      "n": 256,
       "slug": "chip"
     },
     {
@@ -953,7 +958,7 @@
     },
     {
       "label": "quốc hội",
-      "n": 209,
+      "n": 215,
       "slug": "quoc-hoi"
     },
     {
@@ -963,12 +968,12 @@
     },
     {
       "label": "chính sách",
-      "n": 181,
+      "n": 183,
       "slug": "chinh-sach"
     },
     {
       "label": "đảng",
-      "n": 171,
+      "n": 173,
       "slug": "dang"
     },
     {
@@ -978,32 +983,32 @@
     },
     {
       "label": "lạm phát",
-      "n": 159,
+      "n": 160,
       "slug": "lam-phat"
     },
     {
       "label": "xung đột",
-      "n": 153,
+      "n": 155,
       "slug": "xung-dot"
     },
     {
       "label": "trung ương",
-      "n": 149,
+      "n": 150,
       "slug": "trung-uong"
     },
     {
       "label": "chiến tranh",
-      "n": 143,
+      "n": 146,
       "slug": "chien-tranh"
     },
     {
       "label": "nghị quyết",
-      "n": 134,
+      "n": 136,
       "slug": "nghi-quyet"
     },
     {
       "label": "năng lượng",
-      "n": 130,
+      "n": 131,
       "slug": "nang-luong"
     },
     {
@@ -1018,22 +1023,22 @@
     },
     {
       "label": "trừng phạt",
-      "n": 93,
+      "n": 94,
       "slug": "trung-phat"
     },
     {
       "label": "nghị định",
-      "n": 92,
+      "n": 93,
       "slug": "nghi-dinh"
     },
     {
       "label": "pháp lý",
-      "n": 76,
+      "n": 77,
       "slug": "phap-ly"
     },
     {
       "label": "thuế quan",
-      "n": 73,
+      "n": 74,
       "slug": "thue-quan"
     },
     {
@@ -1043,7 +1048,7 @@
     },
     {
       "label": "startup",
-      "n": 62,
+      "n": 63,
       "slug": "startup"
     },
     {
@@ -1058,7 +1063,7 @@
     },
     {
       "label": "cải cách",
-      "n": 43,
+      "n": 44,
       "slug": "cai-cach"
     },
     {
@@ -1087,14 +1092,14 @@
       "slug": "fdi"
     },
     {
+      "label": "thông tư",
+      "n": 19,
+      "slug": "thong-tu"
+    },
+    {
       "label": "khởi nghiệp",
       "n": 18,
       "slug": "khoi-nghiep"
-    },
-    {
-      "label": "thông tư",
-      "n": 18,
-      "slug": "thong-tu"
     },
     {
       "label": "blockchain",
@@ -1113,7 +1118,7 @@
     },
     {
       "label": "điện toán đám mây",
-      "n": 9,
+      "n": 10,
       "slug": "dien-toan-dam-may"
     },
     {
@@ -1342,7 +1347,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-09-27T23:59:59+07:00",
+  "generated_at": "2026-09-28T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
@@ -1789,6 +1794,30 @@
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
   "substack": [
+    "957",
+    "948",
+    "947",
+    "959",
+    "956",
+    "945",
+    "946",
+    "942",
+    "944",
+    "938",
+    "954",
+    "937",
+    "958",
+    "943",
+    "939",
+    "941",
+    "953",
+    "940",
+    "955",
+    "952",
+    "936",
+    "950",
+    "949",
+    "951",
     "924",
     "922",
     "923",
@@ -2779,6 +2808,11 @@
       "e": "2026-09-27",
       "s": "2026-09-21",
       "w": "2026-W39"
+    },
+    {
+      "e": "2026-10-04",
+      "s": "2026-09-28",
+      "w": "2026-W40"
     }
   ]
 }
