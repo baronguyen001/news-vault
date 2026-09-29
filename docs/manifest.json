@@ -907,23 +907,23 @@
     {
       "d": "2026-09-29",
       "months": "2026-09",
-      "n": 91
+      "n": 140
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2664,
+      "n": 2670,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 526,
+      "n": 527,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 462,
+      "n": 463,
       "slug": "luat"
     },
     {
@@ -933,23 +933,23 @@
     },
     {
       "label": "dữ liệu",
-      "n": 330,
+      "n": 331,
       "slug": "du-lieu"
     },
     {
       "label": "công nghệ",
-      "n": 317,
+      "n": 318,
       "slug": "cong-nghe"
+    },
+    {
+      "label": "chính phủ",
+      "n": 297,
+      "slug": "chinh-phu"
     },
     {
       "label": "thuế",
       "n": 297,
       "slug": "thue"
-    },
-    {
-      "label": "chính phủ",
-      "n": 296,
-      "slug": "chinh-phu"
     },
     {
       "label": "chip",
@@ -968,7 +968,7 @@
     },
     {
       "label": "lãi suất",
-      "n": 197,
+      "n": 198,
       "slug": "lai-suat"
     },
     {
@@ -993,7 +993,7 @@
     },
     {
       "label": "xung đột",
-      "n": 156,
+      "n": 157,
       "slug": "xung-dot"
     },
     {
@@ -1088,7 +1088,7 @@
     },
     {
       "label": "xe điện",
-      "n": 27,
+      "n": 28,
       "slug": "xe-dien"
     },
     {
