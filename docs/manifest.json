@@ -907,18 +907,18 @@
     {
       "d": "2026-09-29",
       "months": "2026-09",
-      "n": 74
+      "n": 79
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2660,
+      "n": 2664,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 525,
+      "n": 526,
       "slug": "dau-tu"
     },
     {
@@ -928,12 +928,12 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 388,
+      "n": 389,
       "slug": "doanh-nghiep"
     },
     {
       "label": "dữ liệu",
-      "n": 329,
+      "n": 330,
       "slug": "du-lieu"
     },
     {
@@ -948,7 +948,7 @@
     },
     {
       "label": "chính phủ",
-      "n": 295,
+      "n": 296,
       "slug": "chinh-phu"
     },
     {
@@ -993,7 +993,7 @@
     },
     {
       "label": "xung đột",
-      "n": 155,
+      "n": 156,
       "slug": "xung-dot"
     },
     {
@@ -1017,14 +1017,14 @@
       "slug": "nang-luong"
     },
     {
+      "label": "chứng khoán",
+      "n": 96,
+      "slug": "chung-khoan"
+    },
+    {
       "label": "trừng phạt",
       "n": 96,
       "slug": "trung-phat"
-    },
-    {
-      "label": "chứng khoán",
-      "n": 94,
-      "slug": "chung-khoan"
     },
     {
       "label": "nghị định",
@@ -1057,14 +1057,14 @@
       "slug": "startup"
     },
     {
+      "label": "trí tuệ nhân tạo",
+      "n": 56,
+      "slug": "tri-tue-nhan-tao"
+    },
+    {
       "label": "bảo hiểm",
       "n": 55,
       "slug": "bao-hiem"
-    },
-    {
-      "label": "trí tuệ nhân tạo",
-      "n": 55,
-      "slug": "tri-tue-nhan-tao"
     },
     {
       "label": "cải cách",
@@ -1797,7 +1797,12 @@
     6092,
     6157,
     6156,
-    6155
+    6155,
+    6217,
+    6215,
+    6213,
+    6216,
+    6214
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
