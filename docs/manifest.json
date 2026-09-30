@@ -912,18 +912,18 @@
     {
       "d": "2026-09-30",
       "months": "2026-09",
-      "n": 99
+      "n": 101
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2695,
+      "n": 2697,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 529,
+      "n": 530,
       "slug": "dau-tu"
     },
     {
@@ -933,22 +933,22 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 392,
+      "n": 393,
       "slug": "doanh-nghiep"
     },
     {
       "label": "dữ liệu",
-      "n": 331,
+      "n": 333,
       "slug": "du-lieu"
     },
     {
       "label": "công nghệ",
-      "n": 320,
+      "n": 321,
       "slug": "cong-nghe"
     },
     {
       "label": "thuế",
-      "n": 300,
+      "n": 301,
       "slug": "thue"
     },
     {
@@ -978,7 +978,7 @@
     },
     {
       "label": "chính sách",
-      "n": 185,
+      "n": 186,
       "slug": "chinh-sach"
     },
     {
@@ -988,7 +988,7 @@
     },
     {
       "label": "xuất khẩu",
-      "n": 173,
+      "n": 174,
       "slug": "xuat-khau"
     },
     {
@@ -1048,7 +1048,7 @@
     },
     {
       "label": "thuế quan",
-      "n": 74,
+      "n": 75,
       "slug": "thue-quan"
     },
     {
@@ -1807,7 +1807,9 @@
     6215,
     6213,
     6216,
-    6214
+    6214,
+    6289,
+    6288
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
