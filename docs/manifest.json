@@ -917,18 +917,18 @@
     {
       "d": "2026-10-01",
       "months": "2026-10",
-      "n": 84
+      "n": 112
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2721,
+      "n": 2722,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 532,
+      "n": 533,
       "slug": "dau-tu"
     },
     {
@@ -938,12 +938,12 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 397,
+      "n": 398,
       "slug": "doanh-nghiep"
     },
     {
       "label": "dữ liệu",
-      "n": 333,
+      "n": 334,
       "slug": "du-lieu"
     },
     {
@@ -963,12 +963,12 @@
     },
     {
       "label": "chip",
-      "n": 271,
+      "n": 272,
       "slug": "chip"
     },
     {
       "label": "ngân hàng",
-      "n": 242,
+      "n": 244,
       "slug": "ngan-hang"
     },
     {
@@ -978,7 +978,7 @@
     },
     {
       "label": "lãi suất",
-      "n": 202,
+      "n": 204,
       "slug": "lai-suat"
     },
     {
@@ -993,12 +993,12 @@
     },
     {
       "label": "xuất khẩu",
-      "n": 176,
+      "n": 177,
       "slug": "xuat-khau"
     },
     {
       "label": "lạm phát",
-      "n": 162,
+      "n": 164,
       "slug": "lam-phat"
     },
     {
@@ -1008,12 +1008,12 @@
     },
     {
       "label": "trung ương",
-      "n": 153,
+      "n": 155,
       "slug": "trung-uong"
     },
     {
       "label": "chiến tranh",
-      "n": 151,
+      "n": 152,
       "slug": "chien-tranh"
     },
     {
