@@ -3,10 +3,17 @@
   "home_page_url": "https://baronguyen001.github.io/news-vault",
   "items": [
     {
+      "date_published": "2026-10-01T00:00:00+07:00",
+      "id": "urn:news-vault:day:2026-10-01",
+      "summary": "Công nghệ/AI 13 · Xung đột/Chiến tranh 10 · Chính trị/Chính sách 9 · Kinh tế/Tài chính 4 · Chứng khoán 3 · Crypto 2 · Pháp luật/Nghị định 2",
+      "title": "01/10/2026 — 72 tin",
+      "url": "https://baronguyen001.github.io/news-vault/d/2026-10-01/"
+    },
+    {
       "date_published": "2026-09-30T00:00:00+07:00",
       "id": "urn:news-vault:day:2026-09-30",
       "summary": "Chính trị/Chính sách 14 · Kinh tế/Tài chính 12 · Công nghệ/AI 11 · Xung đột/Chiến tranh 9 · Pháp luật/Nghị định 8 · Crypto 3 · Chứng khoán 2 · Văn hóa/Xã hội 2",
-      "title": "30/09/2026 — 142 tin",
+      "title": "30/09/2026 — 173 tin",
       "url": "https://baronguyen001.github.io/news-vault/d/2026-09-30/"
     },
     {
@@ -414,13 +421,6 @@
       "summary": "Kinh tế/Tài chính 34 · Chính trị/Chính sách 24 · Công nghệ/AI 16 · Pháp luật/Nghị định 15 · Xung đột/Chiến tranh 11",
       "title": "03/08/2026 — 106 tin",
       "url": "https://baronguyen001.github.io/news-vault/d/2026-08-03/"
-    },
-    {
-      "date_published": "2026-08-02T00:00:00+07:00",
-      "id": "urn:news-vault:day:2026-08-02",
-      "summary": "Kinh tế/Tài chính 30 · Chính trị/Chính sách 16 · Công nghệ/AI 12 · Xung đột/Chiến tranh 7 · Pháp luật/Nghị định 5",
-      "title": "02/08/2026 — 77 tin",
-      "url": "https://baronguyen001.github.io/news-vault/d/2026-08-02/"
     }
   ],
   "title": "Kho tin",
