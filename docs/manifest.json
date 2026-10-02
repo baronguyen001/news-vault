@@ -922,13 +922,13 @@
     {
       "d": "2026-10-02",
       "months": "2026-10",
-      "n": 81
+      "n": 83
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2759,
+      "n": 2760,
       "slug": "ai"
     },
     {
@@ -943,7 +943,7 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 401,
+      "n": 402,
       "slug": "doanh-nghiep"
     },
     {
@@ -953,7 +953,7 @@
     },
     {
       "label": "công nghệ",
-      "n": 324,
+      "n": 325,
       "slug": "cong-nghe"
     },
     {
@@ -1023,7 +1023,7 @@
     },
     {
       "label": "năng lượng",
-      "n": 141,
+      "n": 142,
       "slug": "nang-luong"
     },
     {
@@ -1822,7 +1822,9 @@
     6289,
     6288,
     6337,
-    6336
+    6336,
+    6409,
+    6410
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
