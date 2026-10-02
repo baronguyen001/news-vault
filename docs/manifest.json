@@ -922,7 +922,7 @@
     {
       "d": "2026-10-02",
       "months": "2026-10",
-      "n": 83
+      "n": 101
     }
   ],
   "entities": [
@@ -943,7 +943,7 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 402,
+      "n": 403,
       "slug": "doanh-nghiep"
     },
     {
@@ -953,7 +953,7 @@
     },
     {
       "label": "công nghệ",
-      "n": 325,
+      "n": 324,
       "slug": "cong-nghe"
     },
     {
@@ -963,7 +963,7 @@
     },
     {
       "label": "thuế",
-      "n": 302,
+      "n": 303,
       "slug": "thue"
     },
     {
@@ -973,7 +973,7 @@
     },
     {
       "label": "ngân hàng",
-      "n": 248,
+      "n": 249,
       "slug": "ngan-hang"
     },
     {
@@ -983,7 +983,7 @@
     },
     {
       "label": "lãi suất",
-      "n": 208,
+      "n": 209,
       "slug": "lai-suat"
     },
     {
@@ -1003,7 +1003,7 @@
     },
     {
       "label": "lạm phát",
-      "n": 167,
+      "n": 168,
       "slug": "lam-phat"
     },
     {
@@ -1018,7 +1018,7 @@
     },
     {
       "label": "trung ương",
-      "n": 156,
+      "n": 157,
       "slug": "trung-uong"
     },
     {
@@ -1053,7 +1053,7 @@
     },
     {
       "label": "pháp lý",
-      "n": 80,
+      "n": 81,
       "slug": "phap-ly"
     },
     {
