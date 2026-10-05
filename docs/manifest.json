@@ -937,13 +937,13 @@
     {
       "d": "2026-10-05",
       "months": "2026-10",
-      "n": 68
+      "n": 73
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2824,
+      "n": 2827,
       "slug": "ai"
     },
     {
@@ -958,17 +958,17 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 406,
+      "n": 407,
       "slug": "doanh-nghiep"
     },
     {
       "label": "dữ liệu",
-      "n": 344,
+      "n": 345,
       "slug": "du-lieu"
     },
     {
       "label": "công nghệ",
-      "n": 331,
+      "n": 333,
       "slug": "cong-nghe"
     },
     {
@@ -998,12 +998,12 @@
     },
     {
       "label": "lãi suất",
-      "n": 215,
+      "n": 217,
       "slug": "lai-suat"
     },
     {
       "label": "chính sách",
-      "n": 192,
+      "n": 193,
       "slug": "chinh-sach"
     },
     {
@@ -1018,7 +1018,7 @@
     },
     {
       "label": "lạm phát",
-      "n": 172,
+      "n": 173,
       "slug": "lam-phat"
     },
     {
@@ -1038,7 +1038,7 @@
     },
     {
       "label": "năng lượng",
-      "n": 147,
+      "n": 148,
       "slug": "nang-luong"
     },
     {
@@ -1839,7 +1839,12 @@
     6337,
     6336,
     6409,
-    6410
+    6410,
+    6545,
+    6546,
+    6543,
+    6544,
+    6547
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
