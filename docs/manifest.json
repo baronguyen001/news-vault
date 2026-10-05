@@ -932,13 +932,18 @@
     {
       "d": "2026-10-04",
       "months": "2026-10",
-      "n": 63
+      "n": 102
+    },
+    {
+      "d": "2026-10-05",
+      "months": "2026-10",
+      "n": 68
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2810,
+      "n": 2824,
       "slug": "ai"
     },
     {
@@ -948,7 +953,7 @@
     },
     {
       "label": "luật",
-      "n": 483,
+      "n": 486,
       "slug": "luat"
     },
     {
@@ -958,42 +963,42 @@
     },
     {
       "label": "dữ liệu",
-      "n": 341,
+      "n": 344,
       "slug": "du-lieu"
     },
     {
       "label": "công nghệ",
-      "n": 330,
+      "n": 331,
       "slug": "cong-nghe"
     },
     {
       "label": "chính phủ",
-      "n": 308,
+      "n": 310,
       "slug": "chinh-phu"
     },
     {
       "label": "thuế",
-      "n": 306,
+      "n": 307,
       "slug": "thue"
     },
     {
       "label": "chip",
-      "n": 280,
+      "n": 281,
       "slug": "chip"
     },
     {
       "label": "ngân hàng",
-      "n": 253,
+      "n": 255,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 230,
+      "n": 231,
       "slug": "quoc-hoi"
     },
     {
       "label": "lãi suất",
-      "n": 214,
+      "n": 215,
       "slug": "lai-suat"
     },
     {
@@ -1003,17 +1008,17 @@
     },
     {
       "label": "đảng",
-      "n": 186,
+      "n": 190,
       "slug": "dang"
     },
     {
       "label": "xuất khẩu",
-      "n": 184,
+      "n": 185,
       "slug": "xuat-khau"
     },
     {
       "label": "lạm phát",
-      "n": 171,
+      "n": 172,
       "slug": "lam-phat"
     },
     {
@@ -1023,17 +1028,17 @@
     },
     {
       "label": "trung ương",
-      "n": 160,
+      "n": 161,
       "slug": "trung-uong"
     },
     {
       "label": "chiến tranh",
-      "n": 159,
+      "n": 160,
       "slug": "chien-tranh"
     },
     {
       "label": "năng lượng",
-      "n": 146,
+      "n": 147,
       "slug": "nang-luong"
     },
     {
@@ -1043,7 +1048,7 @@
     },
     {
       "label": "chứng khoán",
-      "n": 101,
+      "n": 102,
       "slug": "chung-khoan"
     },
     {
@@ -1052,14 +1057,14 @@
       "slug": "nghi-dinh"
     },
     {
+      "label": "nhập khẩu",
+      "n": 100,
+      "slug": "nhap-khau"
+    },
+    {
       "label": "trừng phạt",
       "n": 99,
       "slug": "trung-phat"
-    },
-    {
-      "label": "nhập khẩu",
-      "n": 98,
-      "slug": "nhap-khau"
     },
     {
       "label": "pháp lý",
@@ -1083,7 +1088,7 @@
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 59,
+      "n": 60,
       "slug": "tri-tue-nhan-tao"
     },
     {
@@ -1108,12 +1113,12 @@
     },
     {
       "label": "bộ chính trị",
-      "n": 33,
+      "n": 34,
       "slug": "bo-chinh-tri"
     },
     {
       "label": "xe điện",
-      "n": 28,
+      "n": 30,
       "slug": "xe-dien"
     },
     {
@@ -1377,7 +1382,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-10-04T23:59:59+07:00",
+  "generated_at": "2026-10-05T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
@@ -1839,6 +1844,33 @@
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
   "substack": [
+    "1135",
+    "1136",
+    "1133",
+    "1134",
+    "1118",
+    "1114",
+    "1122",
+    "1117",
+    "1121",
+    "1125",
+    "1128",
+    "1115",
+    "1111",
+    "1123",
+    "1131",
+    "1113",
+    "1112",
+    "1120",
+    "1116",
+    "1137",
+    "1130",
+    "1129",
+    "1124",
+    "1127",
+    "1132",
+    "1126",
+    "1119",
     "1101",
     "1105",
     "1106",
@@ -3008,6 +3040,11 @@
       "e": "2026-10-04",
       "s": "2026-09-28",
       "w": "2026-W40"
+    },
+    {
+      "e": "2026-10-11",
+      "s": "2026-10-05",
+      "w": "2026-W41"
     }
   ]
 }
