@@ -947,13 +947,13 @@
     {
       "d": "2026-10-07",
       "months": "2026-10",
-      "n": 81
+      "n": 83
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2882,
+      "n": 2883,
       "slug": "ai"
     },
     {
@@ -968,7 +968,7 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 411,
+      "n": 412,
       "slug": "doanh-nghiep"
     },
     {
@@ -983,7 +983,7 @@
     },
     {
       "label": "chính phủ",
-      "n": 317,
+      "n": 319,
       "slug": "chinh-phu"
     },
     {
@@ -1012,14 +1012,14 @@
       "slug": "lai-suat"
     },
     {
+      "label": "chính sách",
+      "n": 195,
+      "slug": "chinh-sach"
+    },
+    {
       "label": "đảng",
       "n": 195,
       "slug": "dang"
-    },
-    {
-      "label": "chính sách",
-      "n": 194,
-      "slug": "chinh-sach"
     },
     {
       "label": "xuất khẩu",
@@ -1098,7 +1098,7 @@
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 60,
+      "n": 61,
       "slug": "tri-tue-nhan-tao"
     },
     {
@@ -1857,7 +1857,9 @@
     6547,
     6601,
     6602,
-    6603
+    6603,
+    6652,
+    6651
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
