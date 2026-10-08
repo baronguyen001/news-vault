@@ -952,33 +952,33 @@
     {
       "d": "2026-10-08",
       "months": "2026-10",
-      "n": 79
+      "n": 88
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2902,
+      "n": 2908,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 546,
+      "n": 549,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 491,
+      "n": 493,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 413,
+      "n": 417,
       "slug": "doanh-nghiep"
     },
     {
       "label": "dữ liệu",
-      "n": 349,
+      "n": 352,
       "slug": "du-lieu"
     },
     {
@@ -993,7 +993,7 @@
     },
     {
       "label": "thuế",
-      "n": 311,
+      "n": 312,
       "slug": "thue"
     },
     {
@@ -1003,7 +1003,7 @@
     },
     {
       "label": "ngân hàng",
-      "n": 261,
+      "n": 262,
       "slug": "ngan-hang"
     },
     {
@@ -1018,7 +1018,7 @@
     },
     {
       "label": "chính sách",
-      "n": 195,
+      "n": 196,
       "slug": "chinh-sach"
     },
     {
@@ -1033,7 +1033,7 @@
     },
     {
       "label": "lạm phát",
-      "n": 174,
+      "n": 175,
       "slug": "lam-phat"
     },
     {
@@ -1042,14 +1042,14 @@
       "slug": "xung-dot"
     },
     {
-      "label": "trung ương",
-      "n": 166,
-      "slug": "trung-uong"
+      "label": "chiến tranh",
+      "n": 167,
+      "slug": "chien-tranh"
     },
     {
-      "label": "chiến tranh",
-      "n": 165,
-      "slug": "chien-tranh"
+      "label": "trung ương",
+      "n": 167,
+      "slug": "trung-uong"
     },
     {
       "label": "năng lượng",
@@ -1078,7 +1078,7 @@
     },
     {
       "label": "trừng phạt",
-      "n": 100,
+      "n": 101,
       "slug": "trung-phat"
     },
     {
@@ -1103,12 +1103,12 @@
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 61,
+      "n": 63,
       "slug": "tri-tue-nhan-tao"
     },
     {
       "label": "bảo hiểm",
-      "n": 55,
+      "n": 56,
       "slug": "bao-hiem"
     },
     {
@@ -1864,7 +1864,16 @@
     6602,
     6603,
     6652,
-    6651
+    6651,
+    6691,
+    6692,
+    6693,
+    6699,
+    6696,
+    6695,
+    6698,
+    6694,
+    6697
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
