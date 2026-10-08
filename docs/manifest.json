@@ -947,13 +947,18 @@
     {
       "d": "2026-10-07",
       "months": "2026-10",
-      "n": 132
+      "n": 160
+    },
+    {
+      "d": "2026-10-08",
+      "months": "2026-10",
+      "n": 79
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2883,
+      "n": 2902,
       "slug": "ai"
     },
     {
@@ -963,12 +968,12 @@
     },
     {
       "label": "luật",
-      "n": 489,
+      "n": 491,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 412,
+      "n": 413,
       "slug": "doanh-nghiep"
     },
     {
@@ -978,12 +983,12 @@
     },
     {
       "label": "công nghệ",
-      "n": 338,
+      "n": 339,
       "slug": "cong-nghe"
     },
     {
       "label": "chính phủ",
-      "n": 319,
+      "n": 322,
       "slug": "chinh-phu"
     },
     {
@@ -993,17 +998,17 @@
     },
     {
       "label": "chip",
-      "n": 287,
+      "n": 291,
       "slug": "chip"
     },
     {
       "label": "ngân hàng",
-      "n": 259,
+      "n": 261,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 234,
+      "n": 235,
       "slug": "quoc-hoi"
     },
     {
@@ -1023,7 +1028,7 @@
     },
     {
       "label": "xuất khẩu",
-      "n": 187,
+      "n": 190,
       "slug": "xuat-khau"
     },
     {
@@ -1032,23 +1037,23 @@
       "slug": "lam-phat"
     },
     {
+      "label": "xung đột",
+      "n": 171,
+      "slug": "xung-dot"
+    },
+    {
       "label": "trung ương",
-      "n": 165,
+      "n": 166,
       "slug": "trung-uong"
     },
     {
       "label": "chiến tranh",
-      "n": 164,
+      "n": 165,
       "slug": "chien-tranh"
     },
     {
-      "label": "xung đột",
-      "n": 164,
-      "slug": "xung-dot"
-    },
-    {
       "label": "năng lượng",
-      "n": 150,
+      "n": 154,
       "slug": "nang-luong"
     },
     {
@@ -1088,7 +1093,7 @@
     },
     {
       "label": "bán dẫn",
-      "n": 72,
+      "n": 73,
       "slug": "ban-dan"
     },
     {
@@ -1113,7 +1118,7 @@
     },
     {
       "label": "cải cách",
-      "n": 44,
+      "n": 45,
       "slug": "cai-cach"
     },
     {
@@ -1392,7 +1397,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-10-07T23:59:59+07:00",
+  "generated_at": "2026-10-08T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
@@ -1864,6 +1869,32 @@
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
   "substack": [
+    "1206",
+    "1192",
+    "1194",
+    "1188",
+    "1187",
+    "1210",
+    "1189",
+    "1208",
+    "1203",
+    "1198",
+    "1190",
+    "1200",
+    "1185",
+    "1193",
+    "1195",
+    "1199",
+    "1186",
+    "1191",
+    "1209",
+    "1205",
+    "1204",
+    "1201",
+    "1207",
+    "1197",
+    "1202",
+    "1196",
     "1178",
     "1180",
     "1179",
