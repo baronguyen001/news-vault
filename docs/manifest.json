@@ -952,7 +952,7 @@
     {
       "d": "2026-10-08",
       "months": "2026-10",
-      "n": 88
+      "n": 97
     }
   ],
   "entities": [
@@ -1003,7 +1003,7 @@
     },
     {
       "label": "ngân hàng",
-      "n": 262,
+      "n": 263,
       "slug": "ngan-hang"
     },
     {
@@ -1013,7 +1013,7 @@
     },
     {
       "label": "lãi suất",
-      "n": 219,
+      "n": 220,
       "slug": "lai-suat"
     },
     {
@@ -1033,7 +1033,7 @@
     },
     {
       "label": "lạm phát",
-      "n": 175,
+      "n": 176,
       "slug": "lam-phat"
     },
     {
@@ -1042,14 +1042,14 @@
       "slug": "xung-dot"
     },
     {
+      "label": "trung ương",
+      "n": 168,
+      "slug": "trung-uong"
+    },
+    {
       "label": "chiến tranh",
       "n": 167,
       "slug": "chien-tranh"
-    },
-    {
-      "label": "trung ương",
-      "n": 167,
-      "slug": "trung-uong"
     },
     {
       "label": "năng lượng",
