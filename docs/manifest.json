@@ -967,18 +967,18 @@
     {
       "d": "2026-10-11",
       "months": "2026-10",
-      "n": 111
+      "n": 144
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 3011,
+      "n": 3017,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 582,
+      "n": 583,
       "slug": "dau-tu"
     },
     {
@@ -998,7 +998,7 @@
     },
     {
       "label": "công nghệ",
-      "n": 362,
+      "n": 363,
       "slug": "cong-nghe"
     },
     {
@@ -1013,7 +1013,7 @@
     },
     {
       "label": "chip",
-      "n": 296,
+      "n": 298,
       "slug": "chip"
     },
     {
@@ -1107,18 +1107,18 @@
       "slug": "thue-quan"
     },
     {
+      "label": "bán dẫn",
+      "n": 77,
+      "slug": "ban-dan"
+    },
+    {
       "label": "trí tuệ nhân tạo",
       "n": 77,
       "slug": "tri-tue-nhan-tao"
     },
     {
-      "label": "bán dẫn",
-      "n": 76,
-      "slug": "ban-dan"
-    },
-    {
       "label": "startup",
-      "n": 71,
+      "n": 72,
       "slug": "startup"
     },
     {
@@ -1163,7 +1163,7 @@
     },
     {
       "label": "khởi nghiệp",
-      "n": 19,
+      "n": 22,
       "slug": "khoi-nghiep"
     },
     {
