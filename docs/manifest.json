@@ -967,48 +967,48 @@
     {
       "d": "2026-10-11",
       "months": "2026-10",
-      "n": 85
+      "n": 106
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 2994,
+      "n": 3011,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 572,
+      "n": 582,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 499,
+      "n": 500,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 427,
+      "n": 435,
       "slug": "doanh-nghiep"
     },
     {
       "label": "dữ liệu",
-      "n": 367,
+      "n": 369,
       "slug": "du-lieu"
     },
     {
       "label": "công nghệ",
-      "n": 353,
+      "n": 362,
       "slug": "cong-nghe"
     },
     {
       "label": "chính phủ",
-      "n": 334,
+      "n": 339,
       "slug": "chinh-phu"
     },
     {
       "label": "thuế",
-      "n": 319,
+      "n": 321,
       "slug": "thue"
     },
     {
@@ -1018,7 +1018,7 @@
     },
     {
       "label": "ngân hàng",
-      "n": 272,
+      "n": 273,
       "slug": "ngan-hang"
     },
     {
@@ -1028,17 +1028,17 @@
     },
     {
       "label": "lãi suất",
-      "n": 230,
+      "n": 232,
       "slug": "lai-suat"
     },
     {
       "label": "chính sách",
-      "n": 208,
+      "n": 214,
       "slug": "chinh-sach"
     },
     {
       "label": "đảng",
-      "n": 200,
+      "n": 201,
       "slug": "dang"
     },
     {
@@ -1048,27 +1048,27 @@
     },
     {
       "label": "lạm phát",
-      "n": 181,
+      "n": 182,
       "slug": "lam-phat"
     },
     {
       "label": "trung ương",
-      "n": 179,
+      "n": 180,
       "slug": "trung-uong"
     },
     {
       "label": "xung đột",
-      "n": 176,
+      "n": 179,
       "slug": "xung-dot"
     },
     {
       "label": "chiến tranh",
-      "n": 172,
+      "n": 173,
       "slug": "chien-tranh"
     },
     {
       "label": "năng lượng",
-      "n": 160,
+      "n": 162,
       "slug": "nang-luong"
     },
     {
@@ -1078,17 +1078,17 @@
     },
     {
       "label": "chứng khoán",
-      "n": 108,
+      "n": 109,
       "slug": "chung-khoan"
     },
     {
       "label": "trừng phạt",
-      "n": 106,
+      "n": 107,
       "slug": "trung-phat"
     },
     {
       "label": "nhập khẩu",
-      "n": 103,
+      "n": 104,
       "slug": "nhap-khau"
     },
     {
@@ -1098,8 +1098,18 @@
     },
     {
       "label": "pháp lý",
-      "n": 86,
+      "n": 87,
       "slug": "phap-ly"
+    },
+    {
+      "label": "thuế quan",
+      "n": 78,
+      "slug": "thue-quan"
+    },
+    {
+      "label": "trí tuệ nhân tạo",
+      "n": 77,
+      "slug": "tri-tue-nhan-tao"
     },
     {
       "label": "bán dẫn",
@@ -1107,34 +1117,24 @@
       "slug": "ban-dan"
     },
     {
-      "label": "thuế quan",
-      "n": 76,
-      "slug": "thue-quan"
-    },
-    {
       "label": "startup",
       "n": 71,
       "slug": "startup"
     },
     {
-      "label": "trí tuệ nhân tạo",
-      "n": 69,
-      "slug": "tri-tue-nhan-tao"
+      "label": "bảo hiểm",
+      "n": 57,
+      "slug": "bao-hiem"
     },
     {
-      "label": "bảo hiểm",
-      "n": 56,
-      "slug": "bao-hiem"
+      "label": "hành chính",
+      "n": 49,
+      "slug": "hanh-chinh"
     },
     {
       "label": "cải cách",
       "n": 48,
       "slug": "cai-cach"
-    },
-    {
-      "label": "hành chính",
-      "n": 48,
-      "slug": "hanh-chinh"
     },
     {
       "label": "bất động sản",
@@ -1158,7 +1158,7 @@
     },
     {
       "label": "FDI",
-      "n": 26,
+      "n": 27,
       "slug": "fdi"
     },
     {
@@ -1168,7 +1168,7 @@
     },
     {
       "label": "chuyển đổi số",
-      "n": 17,
+      "n": 18,
       "slug": "chuyen-doi-so"
     },
     {
@@ -1913,7 +1913,28 @@
     6810,
     6813,
     6798,
-    6794
+    6794,
+    6867,
+    6880,
+    6864,
+    6866,
+    6879,
+    6881,
+    6882,
+    6863,
+    6875,
+    6868,
+    6869,
+    6862,
+    6878,
+    6865,
+    6870,
+    6872,
+    6873,
+    6871,
+    6877,
+    6876,
+    6874
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
