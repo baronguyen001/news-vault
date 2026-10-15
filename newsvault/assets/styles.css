@@ -434,7 +434,7 @@ button {
 
 .cards {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-md);
   /* It is a <ul> for screen readers; the markers must not show. */
   list-style: none;
@@ -1009,7 +1009,7 @@ code {
 
 @media (min-width: 1200px) {
   .cards {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -4829,9 +4829,9 @@ body.modal-open {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
-.fpost__body { margin: var(--space-xs) 0 0; color: var(--text); font-size: .9375rem; line-height: 1.6; white-space: pre-line; }
-.fpost__h { margin: var(--space-md) 0 var(--space-xs); font-size: 1rem; }
-.fpost__bullets { margin: var(--space-xs) 0 0; padding-inline-start: 1.25rem; line-height: 1.6; }
+.fpost__body { margin: var(--space-xs) 0 0; color: var(--text); font-size: .9375rem; line-height: 1.6; white-space: pre-line; overflow-wrap: anywhere; }
+.fpost__h { margin: var(--space-md) 0 var(--space-xs); font-size: 1rem; overflow-wrap: anywhere; }
+.fpost__bullets { margin: var(--space-xs) 0 0; padding-inline-start: 1.25rem; line-height: 1.6; overflow-wrap: anywhere; }
 .fpost__footer { display: flex; justify-content: flex-end; margin-top: var(--space-xs); font-size: .8125rem; }
 .fpost__link { min-height: 32px; display: inline-flex; align-items: center; color: var(--accent); }
 .app--flist { max-width: 76rem; margin-inline: auto; padding-inline: var(--space-md); }

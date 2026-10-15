@@ -10,7 +10,7 @@ const CACHE_NAME = "nv-cache-v1";
 // reader gets the new stylesheet instead of last week's from cache.
 // Bump whenever a shell asset changes.  Without this, an already-open archive can
 // decrypt newly shaped payloads with an old renderer and silently miss new controls.
-const SHELL_CACHE = "nv-shell-v11";
+const SHELL_CACHE = "nv-shell-v12";
 const RUNTIME_CACHE = "nv-runtime-v2";
 const MAX_RUNTIME = 400;
 
