@@ -982,452 +982,237 @@
     {
       "d": "2026-10-14",
       "months": "2026-10",
-      "n": 95
+      "n": 123
+    },
+    {
+      "d": "2026-10-15",
+      "months": "2026-10",
+      "n": 99
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 3020,
+      "n": 944,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 583,
+      "n": 155,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 500,
+      "n": 133,
       "slug": "luat"
     },
     {
-      "label": "doanh nghiệp",
-      "n": 436,
-      "slug": "doanh-nghiep"
-    },
-    {
       "label": "dữ liệu",
-      "n": 371,
+      "n": 124,
       "slug": "du-lieu"
     },
     {
       "label": "công nghệ",
-      "n": 364,
+      "n": 123,
       "slug": "cong-nghe"
     },
     {
+      "label": "doanh nghiệp",
+      "n": 120,
+      "slug": "doanh-nghiep"
+    },
+    {
       "label": "chính phủ",
-      "n": 339,
+      "n": 108,
       "slug": "chinh-phu"
     },
     {
-      "label": "thuế",
-      "n": 321,
-      "slug": "thue"
-    },
-    {
       "label": "chip",
-      "n": 298,
+      "n": 84,
       "slug": "chip"
     },
     {
       "label": "ngân hàng",
-      "n": 273,
+      "n": 79,
       "slug": "ngan-hang"
     },
     {
+      "label": "chiến tranh",
+      "n": 75,
+      "slug": "chien-tranh"
+    },
+    {
       "label": "quốc hội",
-      "n": 235,
+      "n": 70,
       "slug": "quoc-hoi"
     },
     {
+      "label": "đảng",
+      "n": 67,
+      "slug": "dang"
+    },
+    {
       "label": "lãi suất",
-      "n": 232,
+      "n": 67,
       "slug": "lai-suat"
     },
     {
       "label": "chính sách",
-      "n": 215,
+      "n": 65,
       "slug": "chinh-sach"
     },
     {
-      "label": "đảng",
-      "n": 201,
-      "slug": "dang"
+      "label": "năng lượng",
+      "n": 65,
+      "slug": "nang-luong"
+    },
+    {
+      "label": "xung đột",
+      "n": 59,
+      "slug": "xung-dot"
+    },
+    {
+      "label": "thuế",
+      "n": 57,
+      "slug": "thue"
+    },
+    {
+      "label": "trí tuệ nhân tạo",
+      "n": 57,
+      "slug": "tri-tue-nhan-tao"
+    },
+    {
+      "label": "trung ương",
+      "n": 55,
+      "slug": "trung-uong"
     },
     {
       "label": "xuất khẩu",
-      "n": 195,
+      "n": 55,
       "slug": "xuat-khau"
     },
     {
       "label": "lạm phát",
-      "n": 182,
+      "n": 45,
       "slug": "lam-phat"
     },
     {
-      "label": "trung ương",
-      "n": 180,
-      "slug": "trung-uong"
-    },
-    {
-      "label": "xung đột",
-      "n": 179,
-      "slug": "xung-dot"
-    },
-    {
-      "label": "chiến tranh",
-      "n": 173,
-      "slug": "chien-tranh"
-    },
-    {
-      "label": "năng lượng",
-      "n": 162,
-      "slug": "nang-luong"
-    },
-    {
-      "label": "nghị quyết",
-      "n": 144,
-      "slug": "nghi-quyet"
-    },
-    {
-      "label": "chứng khoán",
-      "n": 109,
-      "slug": "chung-khoan"
-    },
-    {
       "label": "trừng phạt",
-      "n": 107,
+      "n": 33,
       "slug": "trung-phat"
     },
     {
-      "label": "nhập khẩu",
-      "n": 104,
-      "slug": "nhap-khau"
+      "label": "chứng khoán",
+      "n": 29,
+      "slug": "chung-khoan"
     },
     {
-      "label": "nghị định",
-      "n": 102,
-      "slug": "nghi-dinh"
+      "label": "nghị quyết",
+      "n": 29,
+      "slug": "nghi-quyet"
     },
     {
       "label": "pháp lý",
-      "n": 87,
+      "n": 28,
       "slug": "phap-ly"
     },
     {
-      "label": "thuế quan",
-      "n": 78,
-      "slug": "thue-quan"
-    },
-    {
       "label": "bán dẫn",
-      "n": 77,
+      "n": 22,
       "slug": "ban-dan"
     },
     {
-      "label": "trí tuệ nhân tạo",
-      "n": 77,
-      "slug": "tri-tue-nhan-tao"
+      "label": "nghị định",
+      "n": 22,
+      "slug": "nghi-dinh"
+    },
+    {
+      "label": "nhập khẩu",
+      "n": 22,
+      "slug": "nhap-khau"
     },
     {
       "label": "startup",
-      "n": 72,
+      "n": 19,
       "slug": "startup"
     },
     {
       "label": "bảo hiểm",
-      "n": 57,
+      "n": 16,
       "slug": "bao-hiem"
     },
     {
       "label": "hành chính",
-      "n": 49,
+      "n": 15,
       "slug": "hanh-chinh"
     },
     {
-      "label": "cải cách",
-      "n": 48,
-      "slug": "cai-cach"
+      "label": "thuế quan",
+      "n": 14,
+      "slug": "thue-quan"
     },
     {
       "label": "bất động sản",
-      "n": 44,
+      "n": 12,
       "slug": "bat-dong-san"
     },
     {
-      "label": "bộ chính trị",
-      "n": 34,
-      "slug": "bo-chinh-tri"
-    },
-    {
-      "label": "xe điện",
-      "n": 32,
-      "slug": "xe-dien"
+      "label": "cải cách",
+      "n": 10,
+      "slug": "cai-cach"
     },
     {
       "label": "thông tư",
-      "n": 28,
+      "n": 10,
       "slug": "thong-tu"
     },
     {
-      "label": "FDI",
-      "n": 27,
-      "slug": "fdi"
-    },
-    {
-      "label": "khởi nghiệp",
-      "n": 22,
-      "slug": "khoi-nghiep"
-    },
-    {
-      "label": "chuyển đổi số",
-      "n": 18,
-      "slug": "chuyen-doi-so"
-    },
-    {
       "label": "blockchain",
-      "n": 16,
+      "n": 8,
       "slug": "blockchain"
     },
     {
-      "label": "chỉ thị",
-      "n": 12,
-      "slug": "chi-thi"
+      "label": "khởi nghiệp",
+      "n": 7,
+      "slug": "khoi-nghiep"
+    },
+    {
+      "label": "xe điện",
+      "n": 7,
+      "slug": "xe-dien"
+    },
+    {
+      "label": "bộ chính trị",
+      "n": 6,
+      "slug": "bo-chinh-tri"
+    },
+    {
+      "label": "chuyển đổi số",
+      "n": 6,
+      "slug": "chuyen-doi-so"
     },
     {
       "label": "điện toán đám mây",
-      "n": 12,
+      "n": 4,
       "slug": "dien-toan-dam-may"
     },
     {
+      "label": "FDI",
+      "n": 4,
+      "slug": "fdi"
+    },
+    {
+      "label": "chỉ thị",
+      "n": 3,
+      "slug": "chi-thi"
+    },
+    {
       "label": "kinh tế vĩ mô",
-      "n": 10,
+      "n": 3,
       "slug": "kinh-te-vi-mo"
-    },
-    {
-      "label": "Địa chính trị",
-      "n": 7,
-      "slug": "dia-chinh-tri"
-    },
-    {
-      "label": "kinh tế",
-      "n": 7,
-      "slug": "kinh-te"
-    },
-    {
-      "label": "dầu mỏ",
-      "n": 6,
-      "slug": "dau-mo"
-    },
-    {
-      "label": "Hàn Quốc",
-      "n": 6,
-      "slug": "han-quoc"
-    },
-    {
-      "label": "Iran",
-      "n": 6,
-      "slug": "iran"
-    },
-    {
-      "label": "Mỹ",
-      "n": 6,
-      "slug": "my"
-    },
-    {
-      "label": "Việt Nam",
-      "n": 6,
-      "slug": "viet-nam"
-    },
-    {
-      "label": "Trung Đông",
-      "n": 5,
-      "slug": "trung-dong"
-    },
-    {
-      "label": "Trung Quốc",
-      "n": 5,
-      "slug": "trung-quoc"
-    },
-    {
-      "label": "Ấn Độ",
-      "n": 4,
-      "slug": "an-do"
-    },
-    {
-      "label": "Argentina",
-      "n": 4,
-      "slug": "argentina"
-    },
-    {
-      "label": "Bóng đá",
-      "n": 4,
-      "slug": "bong-da"
-    },
-    {
-      "label": "châu Âu",
-      "n": 4,
-      "slug": "chau-au"
-    },
-    {
-      "label": "Chính trị",
-      "n": 4,
-      "slug": "chinh-tri"
-    },
-    {
-      "label": "Nhật Bản",
-      "n": 4,
-      "slug": "nhat-ban"
-    },
-    {
-      "label": "tăng trưởng kinh tế",
-      "n": 4,
-      "slug": "tang-truong-kinh-te"
-    },
-    {
-      "label": "Tây Ban Nha",
-      "n": 4,
-      "slug": "tay-ban-nha"
-    },
-    {
-      "label": "Tô Lâm",
-      "n": 4,
-      "slug": "to-lam"
-    },
-    {
-      "label": "World Cup 2026",
-      "n": 4,
-      "slug": "world-cup-2026"
-    },
-    {
-      "label": "Âm nhạc",
-      "n": 3,
-      "slug": "am-nhac"
-    },
-    {
-      "label": "Bảo vệ dữ liệu cá nhân",
-      "n": 3,
-      "slug": "bao-ve-du-lieu-ca-nhan"
-    },
-    {
-      "label": "biến đổi khí hậu",
-      "n": 3,
-      "slug": "bien-doi-khi-hau"
-    },
-    {
-      "label": "Đổi mới sáng tạo",
-      "n": 3,
-      "slug": "doi-moi-sang-tao"
-    },
-    {
-      "label": "Donald Trump",
-      "n": 3,
-      "slug": "donald-trump"
-    },
-    {
-      "label": "Du lịch",
-      "n": 3,
-      "slug": "du-lich"
-    },
-    {
-      "label": "eo biển Hormuz",
-      "n": 3,
-      "slug": "eo-bien-hormuz"
-    },
-    {
-      "label": "giá dầu",
-      "n": 3,
-      "slug": "gia-dau"
-    },
-    {
-      "label": "giá vàng",
-      "n": 3,
-      "slug": "gia-vang"
-    },
-    {
-      "label": "hạ tầng",
-      "n": 3,
-      "slug": "ha-tang"
-    },
-    {
-      "label": "Hong Kong",
-      "n": 3,
-      "slug": "hong-kong"
-    },
-    {
-      "label": "Lai Châu",
-      "n": 3,
-      "slug": "lai-chau"
-    },
-    {
-      "label": "lợi nhuận",
-      "n": 3,
-      "slug": "loi-nhuan"
-    },
-    {
-      "label": "lũ quét",
-      "n": 3,
-      "slug": "lu-quet"
-    },
-    {
-      "label": "nắng nóng",
-      "n": 3,
-      "slug": "nang-nong"
-    },
-    {
-      "label": "Nga",
-      "n": 3,
-      "slug": "nga"
-    },
-    {
-      "label": "Ninh Bình",
-      "n": 3,
-      "slug": "ninh-binh"
-    },
-    {
-      "label": "Phát triển kinh tế",
-      "n": 3,
-      "slug": "phat-trien-kinh-te"
-    },
-    {
-      "label": "Quảng Trị",
-      "n": 3,
-      "slug": "quang-tri"
-    },
-    {
-      "label": "thị trường chứng khoán",
-      "n": 3,
-      "slug": "thi-truong-chung-khoan"
-    },
-    {
-      "label": "thị trường tài chính",
-      "n": 3,
-      "slug": "thi-truong-tai-chinh"
-    },
-    {
-      "label": "thiên tai",
-      "n": 3,
-      "slug": "thien-tai"
-    },
-    {
-      "label": "Ukraine",
-      "n": 3,
-      "slug": "ukraine"
-    },
-    {
-      "label": "Vietstock",
-      "n": 3,
-      "slug": "vietstock"
-    },
-    {
-      "label": "Xây dựng Đảng",
-      "n": 3,
-      "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-10-14T23:59:59+07:00",
+  "generated_at": "2026-10-15T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
@@ -1441,311 +1226,6 @@
     "2026-10"
   ],
   "reports": [
-    784,
-    782,
-    783,
-    789,
-    785,
-    788,
-    786,
-    790,
-    787,
-    791,
-    864,
-    860,
-    859,
-    975,
-    978,
-    980,
-    861,
-    977,
-    858,
-    976,
-    863,
-    866,
-    979,
-    865,
-    862,
-    1155,
-    1157,
-    1154,
-    1158,
-    1156,
-    1159,
-    2395,
-    2394,
-    2393,
-    2963,
-    2962,
-    2961,
-    2958,
-    2959,
-    2960,
-    2970,
-    2966,
-    2964,
-    2957,
-    2967,
-    2969,
-    2965,
-    2968,
-    3280,
-    3277,
-    3278,
-    3287,
-    3292,
-    3288,
-    3291,
-    3290,
-    3285,
-    3297,
-    3286,
-    3281,
-    3279,
-    3382,
-    3282,
-    3301,
-    3300,
-    3295,
-    3293,
-    3299,
-    3284,
-    3298,
-    3296,
-    3294,
-    3289,
-    3283,
-    3685,
-    3684,
-    3692,
-    3683,
-    3701,
-    3688,
-    3687,
-    3705,
-    3695,
-    3698,
-    3686,
-    3689,
-    3704,
-    3703,
-    3700,
-    3693,
-    3691,
-    3690,
-    3699,
-    3702,
-    3696,
-    3694,
-    3697,
-    3855,
-    3861,
-    3846,
-    3862,
-    3860,
-    3850,
-    3851,
-    3847,
-    3848,
-    3857,
-    3845,
-    3852,
-    3849,
-    3859,
-    3854,
-    3853,
-    3864,
-    3863,
-    3858,
-    3856,
-    3875,
-    3884,
-    3874,
-    3885,
-    3873,
-    3886,
-    3890,
-    3882,
-    3883,
-    3877,
-    3888,
-    3876,
-    3872,
-    3881,
-    3878,
-    3880,
-    3879,
-    3889,
-    3887,
-    3936,
-    3926,
-    3924,
-    3922,
-    3932,
-    3939,
-    3935,
-    3930,
-    3928,
-    3938,
-    3931,
-    3934,
-    3925,
-    3937,
-    3933,
-    3929,
-    3923,
-    3927,
-    3940,
-    4142,
-    4133,
-    4150,
-    4137,
-    4149,
-    4135,
-    4148,
-    4132,
-    4128,
-    4129,
-    4138,
-    4146,
-    4140,
-    4143,
-    4131,
-    4147,
-    4145,
-    4130,
-    4144,
-    4141,
-    4139,
-    4136,
-    4134,
-    4234,
-    4245,
-    4246,
-    4250,
-    4233,
-    4242,
-    4235,
-    4240,
-    4239,
-    4237,
-    4241,
-    4238,
-    4249,
-    4254,
-    4243,
-    4230,
-    4248,
-    4231,
-    4251,
-    4244,
-    4232,
-    4247,
-    4236,
-    4255,
-    4229,
-    4310,
-    4315,
-    4309,
-    4311,
-    4320,
-    4314,
-    4308,
-    4317,
-    4318,
-    4325,
-    4324,
-    4323,
-    4307,
-    4312,
-    4313,
-    4322,
-    4321,
-    4319,
-    4316,
-    4417,
-    4430,
-    4429,
-    4423,
-    4421,
-    4424,
-    4419,
-    4418,
-    4427,
-    4425,
-    4420,
-    4416,
-    4426,
-    4432,
-    4428,
-    4433,
-    4431,
-    4422,
-    4513,
-    4512,
-    4514,
-    4661,
-    4770,
-    4764,
-    4757,
-    4760,
-    4759,
-    4761,
-    4758,
-    4775,
-    4773,
-    4752,
-    4753,
-    4769,
-    4763,
-    4771,
-    4756,
-    4754,
-    4762,
-    4767,
-    4766,
-    4772,
-    4768,
-    4774,
-    4755,
-    4765,
-    4841,
-    4840,
-    4938,
-    4937,
-    4941,
-    5017,
-    5091,
-    5104,
-    5087,
-    5102,
-    5088,
-    5084,
-    5100,
-    5099,
-    5089,
-    5086,
-    5090,
-    5098,
-    5083,
-    5092,
-    5103,
-    5085,
-    5093,
-    5095,
-    5096,
-    5097,
-    5101,
-    5094,
-    5191,
-    5186,
-    5184,
-    5185,
-    5187,
-    5189,
-    5190,
-    5183,
-    5188,
     5215,
     5216,
     5214,
@@ -1959,6 +1439,36 @@
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
   "substack": [
+    "1380",
+    "1383",
+    "1381",
+    "1389",
+    "1370",
+    "1372",
+    "1388",
+    "1363",
+    "1362",
+    "1373",
+    "1387",
+    "1364",
+    "1377",
+    "1375",
+    "1366",
+    "1360",
+    "1374",
+    "1368",
+    "1361",
+    "1376",
+    "1365",
+    "1385",
+    "1382",
+    "1371",
+    "1384",
+    "1378",
+    "1379",
+    "1369",
+    "1386",
+    "1367",
     "1352",
     "1347",
     "1336",
@@ -3316,76 +2826,5 @@
   ],
   "v": 1,
   "version": "0.11.3",
-  "weeks": [
-    {
-      "e": "2026-07-19",
-      "s": "2026-07-13",
-      "w": "2026-W29"
-    },
-    {
-      "e": "2026-07-26",
-      "s": "2026-07-20",
-      "w": "2026-W30"
-    },
-    {
-      "e": "2026-08-02",
-      "s": "2026-07-27",
-      "w": "2026-W31"
-    },
-    {
-      "e": "2026-08-09",
-      "s": "2026-08-03",
-      "w": "2026-W32"
-    },
-    {
-      "e": "2026-08-16",
-      "s": "2026-08-10",
-      "w": "2026-W33"
-    },
-    {
-      "e": "2026-08-23",
-      "s": "2026-08-17",
-      "w": "2026-W34"
-    },
-    {
-      "e": "2026-08-30",
-      "s": "2026-08-24",
-      "w": "2026-W35"
-    },
-    {
-      "e": "2026-09-06",
-      "s": "2026-08-31",
-      "w": "2026-W36"
-    },
-    {
-      "e": "2026-09-13",
-      "s": "2026-09-07",
-      "w": "2026-W37"
-    },
-    {
-      "e": "2026-09-20",
-      "s": "2026-09-14",
-      "w": "2026-W38"
-    },
-    {
-      "e": "2026-09-27",
-      "s": "2026-09-21",
-      "w": "2026-W39"
-    },
-    {
-      "e": "2026-10-04",
-      "s": "2026-09-28",
-      "w": "2026-W40"
-    },
-    {
-      "e": "2026-10-11",
-      "s": "2026-10-05",
-      "w": "2026-W41"
-    },
-    {
-      "e": "2026-10-18",
-      "s": "2026-10-12",
-      "w": "2026-W42"
-    }
-  ]
+  "weeks": []
 }
