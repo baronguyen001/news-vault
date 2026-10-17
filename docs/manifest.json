@@ -997,18 +997,18 @@
     {
       "d": "2026-10-17",
       "months": "2026-10",
-      "n": 151
+      "n": 187
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 3194,
+      "n": 3195,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 615,
+      "n": 616,
       "slug": "dau-tu"
     },
     {
@@ -1108,7 +1108,7 @@
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 123,
+      "n": 126,
       "slug": "tri-tue-nhan-tao"
     },
     {
@@ -1137,18 +1137,18 @@
       "slug": "phap-ly"
     },
     {
-      "label": "bán dẫn",
-      "n": 81,
-      "slug": "ban-dan"
-    },
-    {
       "label": "thuế quan",
       "n": 81,
       "slug": "thue-quan"
     },
     {
+      "label": "bán dẫn",
+      "n": 80,
+      "slug": "ban-dan"
+    },
+    {
       "label": "startup",
-      "n": 73,
+      "n": 74,
       "slug": "startup"
     },
     {
