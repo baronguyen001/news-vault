@@ -3,17 +3,24 @@
   "home_page_url": "https://baronguyen001.github.io/news-vault",
   "items": [
     {
+      "date_published": "2026-10-17T00:00:00+07:00",
+      "id": "urn:news-vault:day:2026-10-17",
+      "summary": "Xung đột/Chiến tranh 26 · Kinh tế/Tài chính 21 · Chính trị/Chính sách 18 · Công nghệ/AI 14 · Chứng khoán 4 · Crypto 3 · Pháp luật/Nghị định 2",
+      "title": "17/10/2026 — 126 tin",
+      "url": "https://baronguyen001.github.io/news-vault/d/2026-10-17/"
+    },
+    {
       "date_published": "2026-10-16T00:00:00+07:00",
       "id": "urn:news-vault:day:2026-10-16",
       "summary": "Xung đột/Chiến tranh 26 · Kinh tế/Tài chính 22 · Công nghệ/AI 18 · Chính trị/Chính sách 15 · Crypto 6 · Chứng khoán 2 · Pháp luật/Nghị định 2",
-      "title": "16/10/2026 — 181 tin",
+      "title": "16/10/2026 — 208 tin",
       "url": "https://baronguyen001.github.io/news-vault/d/2026-10-16/"
     },
     {
       "date_published": "2026-10-15T00:00:00+07:00",
       "id": "urn:news-vault:day:2026-10-15",
       "summary": "Xung đột/Chiến tranh 17 · Chính trị/Chính sách 12 · Công nghệ/AI 9 · Kinh tế/Tài chính 6 · Chứng khoán 3 · Pháp luật/Nghị định 1",
-      "title": "15/10/2026 — 170 tin",
+      "title": "15/10/2026 — 178 tin",
       "url": "https://baronguyen001.github.io/news-vault/d/2026-10-15/"
     },
     {
@@ -414,13 +421,6 @@
       "summary": "Chính trị/Chính sách 22 · Công nghệ/AI 19 · Kinh tế/Tài chính 10 · Xung đột/Chiến tranh 9 · Pháp luật/Nghị định 5 · Văn hóa/Xã hội 5 · Crypto 3 · Chứng khoán 2",
       "title": "19/08/2026 — 112 tin",
       "url": "https://baronguyen001.github.io/news-vault/d/2026-08-19/"
-    },
-    {
-      "date_published": "2026-08-18T00:00:00+07:00",
-      "id": "urn:news-vault:day:2026-08-18",
-      "summary": "Chính trị/Chính sách 25 · Công nghệ/AI 20 · Xung đột/Chiến tranh 18 · Kinh tế/Tài chính 13 · Pháp luật/Nghị định 5 · Văn hóa/Xã hội 3 · Crypto 2",
-      "title": "18/08/2026 — 120 tin",
-      "url": "https://baronguyen001.github.io/news-vault/d/2026-08-18/"
     }
   ],
   "title": "Kho tin",
