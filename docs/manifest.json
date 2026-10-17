@@ -997,18 +997,18 @@
     {
       "d": "2026-10-17",
       "months": "2026-10",
-      "n": 126
+      "n": 147
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 3179,
+      "n": 3194,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 611,
+      "n": 615,
       "slug": "dau-tu"
     },
     {
@@ -1018,22 +1018,22 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 459,
+      "n": 460,
       "slug": "doanh-nghiep"
     },
     {
-      "label": "dữ liệu",
-      "n": 386,
-      "slug": "du-lieu"
-    },
-    {
       "label": "công nghệ",
-      "n": 380,
+      "n": 387,
       "slug": "cong-nghe"
     },
     {
+      "label": "dữ liệu",
+      "n": 387,
+      "slug": "du-lieu"
+    },
+    {
       "label": "chính phủ",
-      "n": 350,
+      "n": 352,
       "slug": "chinh-phu"
     },
     {
@@ -1043,12 +1043,12 @@
     },
     {
       "label": "chip",
-      "n": 312,
+      "n": 313,
       "slug": "chip"
     },
     {
       "label": "ngân hàng",
-      "n": 287,
+      "n": 288,
       "slug": "ngan-hang"
     },
     {
@@ -1063,7 +1063,7 @@
     },
     {
       "label": "chính sách",
-      "n": 227,
+      "n": 230,
       "slug": "chinh-sach"
     },
     {
@@ -1078,17 +1078,17 @@
     },
     {
       "label": "trung ương",
-      "n": 196,
+      "n": 197,
       "slug": "trung-uong"
     },
     {
       "label": "lạm phát",
-      "n": 190,
+      "n": 192,
       "slug": "lam-phat"
     },
     {
       "label": "xung đột",
-      "n": 185,
+      "n": 187,
       "slug": "xung-dot"
     },
     {
@@ -1108,17 +1108,17 @@
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 116,
+      "n": 123,
       "slug": "tri-tue-nhan-tao"
     },
     {
       "label": "trừng phạt",
-      "n": 113,
+      "n": 114,
       "slug": "trung-phat"
     },
     {
       "label": "chứng khoán",
-      "n": 112,
+      "n": 113,
       "slug": "chung-khoan"
     },
     {
@@ -1133,7 +1133,7 @@
     },
     {
       "label": "pháp lý",
-      "n": 94,
+      "n": 97,
       "slug": "phap-ly"
     },
     {
@@ -1212,14 +1212,14 @@
       "slug": "dien-toan-dam-may"
     },
     {
+      "label": "kinh tế vĩ mô",
+      "n": 13,
+      "slug": "kinh-te-vi-mo"
+    },
+    {
       "label": "chỉ thị",
       "n": 12,
       "slug": "chi-thi"
-    },
-    {
-      "label": "kinh tế vĩ mô",
-      "n": 12,
-      "slug": "kinh-te-vi-mo"
     },
     {
       "label": "Địa chính trị",
@@ -2022,7 +2022,28 @@
     7076,
     7092,
     7087,
-    7075
+    7075,
+    7186,
+    7200,
+    7192,
+    7188,
+    7187,
+    7202,
+    7206,
+    7193,
+    7190,
+    7196,
+    7201,
+    7199,
+    7189,
+    7204,
+    7195,
+    7205,
+    7191,
+    7198,
+    7194,
+    7197,
+    7203
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
