@@ -997,153 +997,158 @@
     {
       "d": "2026-10-17",
       "months": "2026-10",
-      "n": 187
+      "n": 197
+    },
+    {
+      "d": "2026-10-18",
+      "months": "2026-10",
+      "n": 115
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 3195,
+      "n": 3232,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 616,
+      "n": 623,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 514,
+      "n": 523,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 460,
+      "n": 464,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 387,
+      "n": 391,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 387,
+      "n": 391,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 352,
+      "n": 359,
       "slug": "chinh-phu"
     },
     {
       "label": "thuế",
-      "n": 329,
+      "n": 334,
       "slug": "thue"
     },
     {
       "label": "chip",
-      "n": 313,
+      "n": 315,
       "slug": "chip"
     },
     {
       "label": "ngân hàng",
-      "n": 288,
+      "n": 293,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 243,
+      "n": 248,
       "slug": "quoc-hoi"
     },
     {
       "label": "lãi suất",
-      "n": 241,
+      "n": 247,
       "slug": "lai-suat"
     },
     {
       "label": "chính sách",
-      "n": 230,
+      "n": 232,
       "slug": "chinh-sach"
     },
     {
       "label": "đảng",
-      "n": 217,
+      "n": 218,
       "slug": "dang"
     },
     {
       "label": "xuất khẩu",
-      "n": 200,
+      "n": 202,
       "slug": "xuat-khau"
     },
     {
       "label": "trung ương",
-      "n": 197,
+      "n": 201,
       "slug": "trung-uong"
     },
     {
       "label": "lạm phát",
-      "n": 192,
+      "n": 194,
       "slug": "lam-phat"
     },
     {
       "label": "xung đột",
-      "n": 187,
+      "n": 192,
       "slug": "xung-dot"
     },
     {
       "label": "chiến tranh",
-      "n": 181,
+      "n": 183,
       "slug": "chien-tranh"
     },
     {
       "label": "năng lượng",
-      "n": 174,
+      "n": 183,
       "slug": "nang-luong"
     },
     {
       "label": "nghị quyết",
-      "n": 152,
+      "n": 154,
       "slug": "nghi-quyet"
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 126,
+      "n": 136,
       "slug": "tri-tue-nhan-tao"
     },
     {
       "label": "trừng phạt",
-      "n": 114,
+      "n": 118,
       "slug": "trung-phat"
     },
     {
       "label": "chứng khoán",
-      "n": 113,
+      "n": 115,
       "slug": "chung-khoan"
     },
     {
       "label": "nhập khẩu",
-      "n": 105,
+      "n": 106,
       "slug": "nhap-khau"
     },
     {
       "label": "nghị định",
-      "n": 102,
+      "n": 103,
       "slug": "nghi-dinh"
     },
     {
       "label": "pháp lý",
-      "n": 97,
+      "n": 98,
       "slug": "phap-ly"
     },
     {
       "label": "thuế quan",
-      "n": 81,
+      "n": 83,
       "slug": "thue-quan"
     },
     {
       "label": "bán dẫn",
-      "n": 80,
+      "n": 81,
       "slug": "ban-dan"
     },
     {
@@ -1168,18 +1173,18 @@
     },
     {
       "label": "bất động sản",
-      "n": 45,
+      "n": 46,
       "slug": "bat-dong-san"
+    },
+    {
+      "label": "xe điện",
+      "n": 36,
+      "slug": "xe-dien"
     },
     {
       "label": "bộ chính trị",
       "n": 34,
       "slug": "bo-chinh-tri"
-    },
-    {
-      "label": "xe điện",
-      "n": 34,
-      "slug": "xe-dien"
     },
     {
       "label": "thông tư",
@@ -1208,7 +1213,7 @@
     },
     {
       "label": "điện toán đám mây",
-      "n": 13,
+      "n": 14,
       "slug": "dien-toan-dam-may"
     },
     {
@@ -1442,7 +1447,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-10-17T23:59:59+07:00",
+  "generated_at": "2026-10-18T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
@@ -2048,6 +2053,17 @@
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
   "substack": [
+    "1447",
+    "1444",
+    "1443",
+    "1448",
+    "1452",
+    "1451",
+    "1450",
+    "1446",
+    "1442",
+    "1449",
+    "1445",
     "1421",
     "1426",
     "1428",
