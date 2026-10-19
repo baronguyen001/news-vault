@@ -1007,18 +1007,18 @@
     {
       "d": "2026-10-19",
       "months": "2026-10",
-      "n": 101
+      "n": 120
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 3276,
+      "n": 3288,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 634,
+      "n": 637,
       "slug": "dau-tu"
     },
     {
@@ -1028,22 +1028,22 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 474,
+      "n": 478,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 400,
+      "n": 404,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 398,
+      "n": 401,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 366,
+      "n": 371,
       "slug": "chinh-phu"
     },
     {
@@ -1058,7 +1058,7 @@
     },
     {
       "label": "ngân hàng",
-      "n": 299,
+      "n": 300,
       "slug": "ngan-hang"
     },
     {
@@ -1073,7 +1073,7 @@
     },
     {
       "label": "chính sách",
-      "n": 237,
+      "n": 241,
       "slug": "chinh-sach"
     },
     {
@@ -1098,12 +1098,12 @@
     },
     {
       "label": "xung đột",
-      "n": 196,
+      "n": 197,
       "slug": "xung-dot"
     },
     {
       "label": "chiến tranh",
-      "n": 187,
+      "n": 188,
       "slug": "chien-tranh"
     },
     {
@@ -1118,12 +1118,12 @@
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 149,
+      "n": 152,
       "slug": "tri-tue-nhan-tao"
     },
     {
       "label": "trừng phạt",
-      "n": 121,
+      "n": 123,
       "slug": "trung-phat"
     },
     {
@@ -1143,7 +1143,7 @@
     },
     {
       "label": "pháp lý",
-      "n": 100,
+      "n": 101,
       "slug": "phap-ly"
     },
     {
@@ -1173,7 +1173,7 @@
     },
     {
       "label": "cải cách",
-      "n": 49,
+      "n": 50,
       "slug": "cai-cach"
     },
     {
@@ -1218,7 +1218,7 @@
     },
     {
       "label": "kinh tế vĩ mô",
-      "n": 15,
+      "n": 16,
       "slug": "kinh-te-vi-mo"
     },
     {
@@ -2073,7 +2073,26 @@
     7300,
     7291,
     7301,
-    7310
+    7310,
+    7389,
+    7386,
+    7388,
+    7394,
+    7391,
+    7398,
+    7385,
+    7396,
+    7387,
+    7401,
+    7399,
+    7392,
+    7395,
+    7384,
+    7390,
+    7400,
+    7397,
+    7393,
+    7402
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
