@@ -1012,13 +1012,13 @@
     {
       "d": "2026-10-20",
       "months": "2026-10",
-      "n": 131
+      "n": 166
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 3342,
+      "n": 3343,
       "slug": "ai"
     },
     {
@@ -1043,12 +1043,12 @@
     },
     {
       "label": "dữ liệu",
-      "n": 410,
+      "n": 411,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 376,
+      "n": 378,
       "slug": "chinh-phu"
     },
     {
@@ -1108,7 +1108,7 @@
     },
     {
       "label": "chiến tranh",
-      "n": 193,
+      "n": 194,
       "slug": "chien-tranh"
     },
     {
