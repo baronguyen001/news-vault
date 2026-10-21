@@ -1012,83 +1012,88 @@
     {
       "d": "2026-10-20",
       "months": "2026-10",
-      "n": 166
+      "n": 189
+    },
+    {
+      "d": "2026-10-21",
+      "months": "2026-10",
+      "n": 122
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 3343,
+      "n": 3381,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 642,
+      "n": 649,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 534,
+      "n": 542,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 484,
+      "n": 485,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 415,
+      "n": 419,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 411,
+      "n": 418,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 378,
+      "n": 384,
       "slug": "chinh-phu"
     },
     {
       "label": "thuế",
-      "n": 342,
+      "n": 345,
       "slug": "thue"
     },
     {
       "label": "chip",
-      "n": 320,
+      "n": 324,
       "slug": "chip"
     },
     {
       "label": "ngân hàng",
-      "n": 302,
+      "n": 304,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 256,
+      "n": 261,
       "slug": "quoc-hoi"
     },
     {
       "label": "lãi suất",
-      "n": 253,
+      "n": 255,
       "slug": "lai-suat"
     },
     {
       "label": "chính sách",
-      "n": 245,
+      "n": 248,
       "slug": "chinh-sach"
     },
     {
       "label": "đảng",
-      "n": 218,
+      "n": 221,
       "slug": "dang"
     },
     {
       "label": "xuất khẩu",
-      "n": 213,
+      "n": 215,
       "slug": "xuat-khau"
     },
     {
@@ -1098,32 +1103,32 @@
     },
     {
       "label": "trung ương",
-      "n": 203,
+      "n": 204,
       "slug": "trung-uong"
     },
     {
       "label": "xung đột",
-      "n": 200,
+      "n": 201,
       "slug": "xung-dot"
     },
     {
       "label": "chiến tranh",
-      "n": 194,
+      "n": 196,
       "slug": "chien-tranh"
     },
     {
       "label": "năng lượng",
-      "n": 189,
+      "n": 192,
       "slug": "nang-luong"
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 162,
+      "n": 166,
       "slug": "tri-tue-nhan-tao"
     },
     {
       "label": "nghị quyết",
-      "n": 155,
+      "n": 156,
       "slug": "nghi-quyet"
     },
     {
@@ -1133,7 +1138,7 @@
     },
     {
       "label": "chứng khoán",
-      "n": 119,
+      "n": 120,
       "slug": "chung-khoan"
     },
     {
@@ -1143,22 +1148,22 @@
     },
     {
       "label": "pháp lý",
-      "n": 106,
+      "n": 107,
       "slug": "phap-ly"
     },
     {
       "label": "nghị định",
-      "n": 105,
+      "n": 106,
       "slug": "nghi-dinh"
     },
     {
       "label": "thuế quan",
-      "n": 86,
+      "n": 87,
       "slug": "thue-quan"
     },
     {
       "label": "bán dẫn",
-      "n": 82,
+      "n": 83,
       "slug": "ban-dan"
     },
     {
@@ -1168,12 +1173,12 @@
     },
     {
       "label": "bảo hiểm",
-      "n": 62,
+      "n": 63,
       "slug": "bao-hiem"
     },
     {
       "label": "hành chính",
-      "n": 53,
+      "n": 54,
       "slug": "hanh-chinh"
     },
     {
@@ -1187,14 +1192,14 @@
       "slug": "bat-dong-san"
     },
     {
+      "label": "bộ chính trị",
+      "n": 36,
+      "slug": "bo-chinh-tri"
+    },
+    {
       "label": "xe điện",
       "n": 36,
       "slug": "xe-dien"
-    },
-    {
-      "label": "bộ chính trị",
-      "n": 35,
-      "slug": "bo-chinh-tri"
     },
     {
       "label": "thông tư",
@@ -1208,7 +1213,7 @@
     },
     {
       "label": "khởi nghiệp",
-      "n": 26,
+      "n": 27,
       "slug": "khoi-nghiep"
     },
     {
@@ -1457,7 +1462,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-10-20T23:59:59+07:00",
+  "generated_at": "2026-10-21T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
@@ -2127,6 +2132,34 @@
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
   "substack": [
+    "1505",
+    "1520",
+    "1508",
+    "1515",
+    "1510",
+    "1512",
+    "1518",
+    "1521",
+    "1527",
+    "1504",
+    "1525",
+    "1528",
+    "1501",
+    "1507",
+    "1523",
+    "1503",
+    "1502",
+    "1526",
+    "1506",
+    "1514",
+    "1516",
+    "1524",
+    "1522",
+    "1511",
+    "1519",
+    "1509",
+    "1517",
+    "1513",
     "1479",
     "1491",
     "1489",
