@@ -1022,18 +1022,18 @@
     {
       "d": "2026-10-22",
       "months": "2026-10",
-      "n": 97
+      "n": 118
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 3424,
+      "n": 3438,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 657,
+      "n": 661,
       "slug": "dau-tu"
     },
     {
@@ -1043,22 +1043,22 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 496,
+      "n": 499,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 432,
+      "n": 439,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 424,
+      "n": 427,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 391,
+      "n": 392,
       "slug": "chinh-phu"
     },
     {
@@ -1082,14 +1082,14 @@
       "slug": "quoc-hoi"
     },
     {
+      "label": "chính sách",
+      "n": 260,
+      "slug": "chinh-sach"
+    },
+    {
       "label": "lãi suất",
       "n": 257,
       "slug": "lai-suat"
-    },
-    {
-      "label": "chính sách",
-      "n": 255,
-      "slug": "chinh-sach"
     },
     {
       "label": "đảng",
@@ -1098,7 +1098,7 @@
     },
     {
       "label": "xuất khẩu",
-      "n": 216,
+      "n": 217,
       "slug": "xuat-khau"
     },
     {
@@ -1107,28 +1107,28 @@
       "slug": "lam-phat"
     },
     {
-      "label": "trung ương",
-      "n": 207,
-      "slug": "trung-uong"
-    },
-    {
       "label": "xung đột",
-      "n": 207,
+      "n": 209,
       "slug": "xung-dot"
     },
     {
+      "label": "trung ương",
+      "n": 208,
+      "slug": "trung-uong"
+    },
+    {
       "label": "chiến tranh",
-      "n": 196,
+      "n": 200,
       "slug": "chien-tranh"
     },
     {
       "label": "năng lượng",
-      "n": 195,
+      "n": 199,
       "slug": "nang-luong"
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 178,
+      "n": 184,
       "slug": "tri-tue-nhan-tao"
     },
     {
@@ -1153,7 +1153,7 @@
     },
     {
       "label": "pháp lý",
-      "n": 108,
+      "n": 109,
       "slug": "phap-ly"
     },
     {
@@ -1193,7 +1193,7 @@
     },
     {
       "label": "bất động sản",
-      "n": 48,
+      "n": 49,
       "slug": "bat-dong-san"
     },
     {
@@ -1203,7 +1203,7 @@
     },
     {
       "label": "xe điện",
-      "n": 36,
+      "n": 37,
       "slug": "xe-dien"
     },
     {
@@ -2152,7 +2152,28 @@
     7584,
     7599,
     7600,
-    7595
+    7595,
+    7676,
+    7672,
+    7687,
+    7686,
+    7677,
+    7673,
+    7690,
+    7675,
+    7683,
+    7689,
+    7674,
+    7671,
+    7691,
+    7678,
+    7685,
+    7679,
+    7681,
+    7688,
+    7680,
+    7682,
+    7684
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
