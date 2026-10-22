@@ -1022,13 +1022,13 @@
     {
       "d": "2026-10-22",
       "months": "2026-10",
-      "n": 124
+      "n": 163
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 3439,
+      "n": 3440,
       "slug": "ai"
     },
     {
@@ -1102,14 +1102,14 @@
       "slug": "xuat-khau"
     },
     {
+      "label": "xung đột",
+      "n": 210,
+      "slug": "xung-dot"
+    },
+    {
       "label": "lạm phát",
       "n": 209,
       "slug": "lam-phat"
-    },
-    {
-      "label": "xung đột",
-      "n": 209,
-      "slug": "xung-dot"
     },
     {
       "label": "trung ương",
@@ -1118,7 +1118,7 @@
     },
     {
       "label": "chiến tranh",
-      "n": 200,
+      "n": 201,
       "slug": "chien-tranh"
     },
     {
