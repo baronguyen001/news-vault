@@ -1037,53 +1037,53 @@
     {
       "d": "2026-10-25",
       "months": "2026-10",
-      "n": 87
+      "n": 106
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 3582,
+      "n": 3595,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 687,
+      "n": 694,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 561,
+      "n": 562,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 512,
+      "n": 514,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 462,
+      "n": 469,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 440,
+      "n": 442,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 418,
+      "n": 419,
       "slug": "chinh-phu"
     },
     {
       "label": "thuế",
-      "n": 355,
+      "n": 356,
       "slug": "thue"
     },
     {
       "label": "chip",
-      "n": 340,
+      "n": 341,
       "slug": "chip"
     },
     {
@@ -1093,17 +1093,17 @@
     },
     {
       "label": "chính sách",
-      "n": 271,
+      "n": 272,
       "slug": "chinh-sach"
     },
     {
       "label": "quốc hội",
-      "n": 270,
+      "n": 271,
       "slug": "quoc-hoi"
     },
     {
       "label": "lãi suất",
-      "n": 263,
+      "n": 264,
       "slug": "lai-suat"
     },
     {
@@ -1122,28 +1122,28 @@
       "slug": "xung-dot"
     },
     {
+      "label": "lạm phát",
+      "n": 219,
+      "slug": "lam-phat"
+    },
+    {
       "label": "trung ương",
       "n": 217,
       "slug": "trung-uong"
     },
     {
-      "label": "lạm phát",
-      "n": 216,
-      "slug": "lam-phat"
-    },
-    {
-      "label": "chiến tranh",
-      "n": 211,
-      "slug": "chien-tranh"
-    },
-    {
       "label": "trí tuệ nhân tạo",
-      "n": 210,
+      "n": 214,
       "slug": "tri-tue-nhan-tao"
     },
     {
+      "label": "chiến tranh",
+      "n": 212,
+      "slug": "chien-tranh"
+    },
+    {
       "label": "năng lượng",
-      "n": 209,
+      "n": 210,
       "slug": "nang-luong"
     },
     {
@@ -1162,14 +1162,14 @@
       "slug": "chung-khoan"
     },
     {
+      "label": "pháp lý",
+      "n": 112,
+      "slug": "phap-ly"
+    },
+    {
       "label": "nhập khẩu",
       "n": 111,
       "slug": "nhap-khau"
-    },
-    {
-      "label": "pháp lý",
-      "n": 111,
-      "slug": "phap-ly"
     },
     {
       "label": "nghị định",
@@ -1203,7 +1203,7 @@
     },
     {
       "label": "cải cách",
-      "n": 56,
+      "n": 57,
       "slug": "cai-cach"
     },
     {
@@ -1237,14 +1237,14 @@
       "slug": "fdi"
     },
     {
-      "label": "kinh tế vĩ mô",
-      "n": 20,
-      "slug": "kinh-te-vi-mo"
+      "label": "blockchain",
+      "n": 21,
+      "slug": "blockchain"
     },
     {
-      "label": "blockchain",
-      "n": 19,
-      "slug": "blockchain"
+      "label": "kinh tế vĩ mô",
+      "n": 21,
+      "slug": "kinh-te-vi-mo"
     },
     {
       "label": "chuyển đổi số",
@@ -2225,7 +2225,26 @@
     7873,
     7879,
     7882,
-    7887
+    7887,
+    7976,
+    7975,
+    7970,
+    7969,
+    7968,
+    7966,
+    7965,
+    7967,
+    7964,
+    7958,
+    7962,
+    7961,
+    7972,
+    7959,
+    7973,
+    7974,
+    7960,
+    7971,
+    7963
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
