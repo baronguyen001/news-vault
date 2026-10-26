@@ -1042,13 +1042,13 @@
     {
       "d": "2026-10-26",
       "months": "2026-10",
-      "n": 123
+      "n": 153
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 3646,
+      "n": 3647,
       "slug": "ai"
     },
     {
@@ -1063,7 +1063,7 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 521,
+      "n": 520,
       "slug": "doanh-nghiep"
     },
     {
@@ -1088,7 +1088,7 @@
     },
     {
       "label": "chip",
-      "n": 343,
+      "n": 344,
       "slug": "chip"
     },
     {
@@ -1118,7 +1118,7 @@
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 228,
+      "n": 227,
       "slug": "tri-tue-nhan-tao"
     },
     {
@@ -1128,7 +1128,7 @@
     },
     {
       "label": "lạm phát",
-      "n": 223,
+      "n": 224,
       "slug": "lam-phat"
     },
     {
