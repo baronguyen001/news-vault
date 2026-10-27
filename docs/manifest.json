@@ -1047,53 +1047,53 @@
     {
       "d": "2026-10-27",
       "months": "2026-10",
-      "n": 96
+      "n": 113
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 3671,
+      "n": 3682,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 715,
+      "n": 716,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 575,
+      "n": 576,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 521,
+      "n": 526,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 488,
+      "n": 492,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 452,
+      "n": 453,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 429,
+      "n": 430,
       "slug": "chinh-phu"
     },
     {
       "label": "thuế",
-      "n": 361,
+      "n": 362,
       "slug": "thue"
     },
     {
       "label": "chip",
-      "n": 347,
+      "n": 348,
       "slug": "chip"
     },
     {
@@ -1103,12 +1103,12 @@
     },
     {
       "label": "quốc hội",
-      "n": 284,
+      "n": 285,
       "slug": "quoc-hoi"
     },
     {
       "label": "chính sách",
-      "n": 276,
+      "n": 278,
       "slug": "chinh-sach"
     },
     {
@@ -1118,7 +1118,7 @@
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 239,
+      "n": 240,
       "slug": "tri-tue-nhan-tao"
     },
     {
@@ -1138,7 +1138,7 @@
     },
     {
       "label": "xung đột",
-      "n": 223,
+      "n": 224,
       "slug": "xung-dot"
     },
     {
@@ -1163,7 +1163,7 @@
     },
     {
       "label": "trừng phạt",
-      "n": 138,
+      "n": 139,
       "slug": "trung-phat"
     },
     {
@@ -1173,12 +1173,12 @@
     },
     {
       "label": "pháp lý",
-      "n": 116,
+      "n": 120,
       "slug": "phap-ly"
     },
     {
       "label": "nhập khẩu",
-      "n": 113,
+      "n": 114,
       "slug": "nhap-khau"
     },
     {
@@ -1188,7 +1188,7 @@
     },
     {
       "label": "thuế quan",
-      "n": 93,
+      "n": 94,
       "slug": "thue-quan"
     },
     {
@@ -1218,7 +1218,7 @@
     },
     {
       "label": "bất động sản",
-      "n": 51,
+      "n": 52,
       "slug": "bat-dong-san"
     },
     {
@@ -2271,7 +2271,24 @@
     8077,
     8076,
     8069,
-    8070
+    8070,
+    8159,
+    8158,
+    8157,
+    8154,
+    8153,
+    8148,
+    8145,
+    8147,
+    8155,
+    8156,
+    8150,
+    8160,
+    8149,
+    8152,
+    8161,
+    8146,
+    8151
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
