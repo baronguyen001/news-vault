@@ -1052,48 +1052,48 @@
     {
       "d": "2026-10-28",
       "months": "2026-10",
-      "n": 55
+      "n": 77
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 3702,
+      "n": 3718,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 721,
+      "n": 726,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 577,
+      "n": 579,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 526,
+      "n": 529,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 493,
+      "n": 498,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 457,
+      "n": 460,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 431,
+      "n": 432,
       "slug": "chinh-phu"
     },
     {
       "label": "thuế",
-      "n": 363,
+      "n": 365,
       "slug": "thue"
     },
     {
@@ -1108,12 +1108,12 @@
     },
     {
       "label": "quốc hội",
-      "n": 284,
+      "n": 286,
       "slug": "quoc-hoi"
     },
     {
       "label": "chính sách",
-      "n": 278,
+      "n": 285,
       "slug": "chinh-sach"
     },
     {
@@ -1122,24 +1122,24 @@
       "slug": "lai-suat"
     },
     {
+      "label": "trí tuệ nhân tạo",
+      "n": 245,
+      "slug": "tri-tue-nhan-tao"
+    },
+    {
       "label": "đảng",
       "n": 241,
       "slug": "dang"
     },
     {
-      "label": "trí tuệ nhân tạo",
-      "n": 239,
-      "slug": "tri-tue-nhan-tao"
+      "label": "lạm phát",
+      "n": 228,
+      "slug": "lam-phat"
     },
     {
       "label": "xuất khẩu",
       "n": 228,
       "slug": "xuat-khau"
-    },
-    {
-      "label": "lạm phát",
-      "n": 226,
-      "slug": "lam-phat"
     },
     {
       "label": "xung đột",
@@ -1153,7 +1153,7 @@
     },
     {
       "label": "chiến tranh",
-      "n": 215,
+      "n": 218,
       "slug": "chien-tranh"
     },
     {
@@ -1183,7 +1183,7 @@
     },
     {
       "label": "nhập khẩu",
-      "n": 116,
+      "n": 117,
       "slug": "nhap-khau"
     },
     {
@@ -1193,7 +1193,7 @@
     },
     {
       "label": "thuế quan",
-      "n": 94,
+      "n": 96,
       "slug": "thue-quan"
     },
     {
@@ -1253,7 +1253,7 @@
     },
     {
       "label": "kinh tế vĩ mô",
-      "n": 22,
+      "n": 23,
       "slug": "kinh-te-vi-mo"
     },
     {
@@ -2293,7 +2293,29 @@
     8158,
     8161,
     8146,
-    8151
+    8151,
+    8199,
+    8201,
+    8211,
+    8198,
+    8197,
+    8196,
+    8206,
+    8194,
+    8193,
+    8200,
+    8205,
+    8195,
+    8208,
+    8213,
+    8209,
+    8202,
+    8204,
+    8207,
+    8203,
+    8210,
+    8212,
+    8214
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
