@@ -1057,18 +1057,18 @@
     {
       "d": "2026-10-29",
       "months": "2026-10",
-      "n": 121
+      "n": 140
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 3762,
+      "n": 3776,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 730,
+      "n": 736,
       "slug": "dau-tu"
     },
     {
@@ -1078,37 +1078,37 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 531,
+      "n": 532,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 501,
+      "n": 504,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 464,
+      "n": 468,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 434,
+      "n": 435,
       "slug": "chinh-phu"
     },
     {
       "label": "thuế",
-      "n": 366,
+      "n": 367,
       "slug": "thue"
     },
     {
       "label": "chip",
-      "n": 358,
+      "n": 359,
       "slug": "chip"
     },
     {
       "label": "ngân hàng",
-      "n": 327,
+      "n": 330,
       "slug": "ngan-hang"
     },
     {
@@ -1118,27 +1118,27 @@
     },
     {
       "label": "chính sách",
-      "n": 286,
+      "n": 287,
       "slug": "chinh-sach"
     },
     {
       "label": "lãi suất",
-      "n": 272,
+      "n": 273,
       "slug": "lai-suat"
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 246,
+      "n": 247,
       "slug": "tri-tue-nhan-tao"
     },
     {
       "label": "đảng",
-      "n": 242,
+      "n": 244,
       "slug": "dang"
     },
     {
       "label": "lạm phát",
-      "n": 231,
+      "n": 232,
       "slug": "lam-phat"
     },
     {
@@ -1158,12 +1158,12 @@
     },
     {
       "label": "chiến tranh",
-      "n": 220,
+      "n": 221,
       "slug": "chien-tranh"
     },
     {
       "label": "năng lượng",
-      "n": 218,
+      "n": 219,
       "slug": "nang-luong"
     },
     {
@@ -1213,7 +1213,7 @@
     },
     {
       "label": "bảo hiểm",
-      "n": 67,
+      "n": 68,
       "slug": "bao-hiem"
     },
     {
@@ -2320,7 +2320,26 @@
     8203,
     8210,
     8212,
-    8214
+    8214,
+    8305,
+    8313,
+    8316,
+    8310,
+    8321,
+    8307,
+    8318,
+    8312,
+    8308,
+    8309,
+    8319,
+    8314,
+    8320,
+    8317,
+    8315,
+    8304,
+    8306,
+    8311,
+    8303
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
