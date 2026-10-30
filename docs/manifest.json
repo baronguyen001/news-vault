@@ -1057,63 +1057,68 @@
     {
       "d": "2026-10-29",
       "months": "2026-10",
-      "n": 183
+      "n": 205
+    },
+    {
+      "d": "2026-10-30",
+      "months": "2026-10",
+      "n": 119
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 3777,
+      "n": 3814,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 737,
+      "n": 745,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 586,
+      "n": 589,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 532,
+      "n": 536,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 504,
+      "n": 507,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 468,
+      "n": 472,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 435,
+      "n": 440,
       "slug": "chinh-phu"
     },
     {
       "label": "thuế",
-      "n": 367,
+      "n": 370,
       "slug": "thue"
     },
     {
       "label": "chip",
-      "n": 360,
+      "n": 366,
       "slug": "chip"
     },
     {
       "label": "ngân hàng",
-      "n": 330,
+      "n": 334,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 288,
+      "n": 293,
       "slug": "quoc-hoi"
     },
     {
@@ -1123,8 +1128,13 @@
     },
     {
       "label": "lãi suất",
-      "n": 273,
+      "n": 278,
       "slug": "lai-suat"
+    },
+    {
+      "label": "đảng",
+      "n": 248,
+      "slug": "dang"
     },
     {
       "label": "trí tuệ nhân tạo",
@@ -1132,19 +1142,19 @@
       "slug": "tri-tue-nhan-tao"
     },
     {
-      "label": "đảng",
-      "n": 244,
-      "slug": "dang"
-    },
-    {
       "label": "lạm phát",
-      "n": 232,
+      "n": 235,
       "slug": "lam-phat"
     },
     {
       "label": "xuất khẩu",
-      "n": 230,
+      "n": 232,
       "slug": "xuat-khau"
+    },
+    {
+      "label": "trung ương",
+      "n": 226,
+      "slug": "trung-uong"
     },
     {
       "label": "xung đột",
@@ -1152,18 +1162,13 @@
       "slug": "xung-dot"
     },
     {
-      "label": "trung ương",
-      "n": 222,
-      "slug": "trung-uong"
-    },
-    {
       "label": "chiến tranh",
-      "n": 221,
+      "n": 223,
       "slug": "chien-tranh"
     },
     {
       "label": "năng lượng",
-      "n": 219,
+      "n": 220,
       "slug": "nang-luong"
     },
     {
@@ -1173,7 +1178,7 @@
     },
     {
       "label": "trừng phạt",
-      "n": 141,
+      "n": 142,
       "slug": "trung-phat"
     },
     {
@@ -1183,12 +1188,12 @@
     },
     {
       "label": "pháp lý",
-      "n": 121,
+      "n": 122,
       "slug": "phap-ly"
     },
     {
       "label": "nhập khẩu",
-      "n": 118,
+      "n": 119,
       "slug": "nhap-khau"
     },
     {
@@ -1198,17 +1203,17 @@
     },
     {
       "label": "thuế quan",
-      "n": 96,
+      "n": 97,
       "slug": "thue-quan"
     },
     {
       "label": "bán dẫn",
-      "n": 89,
+      "n": 91,
       "slug": "ban-dan"
     },
     {
       "label": "startup",
-      "n": 79,
+      "n": 80,
       "slug": "startup"
     },
     {
@@ -1232,14 +1237,14 @@
       "slug": "bat-dong-san"
     },
     {
+      "label": "bộ chính trị",
+      "n": 39,
+      "slug": "bo-chinh-tri"
+    },
+    {
       "label": "xe điện",
       "n": 39,
       "slug": "xe-dien"
-    },
-    {
-      "label": "bộ chính trị",
-      "n": 38,
-      "slug": "bo-chinh-tri"
     },
     {
       "label": "khởi nghiệp",
@@ -1263,7 +1268,7 @@
     },
     {
       "label": "blockchain",
-      "n": 21,
+      "n": 22,
       "slug": "blockchain"
     },
     {
@@ -1502,7 +1507,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-10-29T23:59:59+07:00",
+  "generated_at": "2026-10-30T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
@@ -2344,6 +2349,31 @@
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
   "substack": [
+    "1745",
+    "1759",
+    "1740",
+    "1753",
+    "1749",
+    "1758",
+    "1744",
+    "1739",
+    "1743",
+    "1747",
+    "1755",
+    "1750",
+    "1738",
+    "1736",
+    "1757",
+    "1737",
+    "1741",
+    "1756",
+    "1752",
+    "1751",
+    "1760",
+    "1748",
+    "1742",
+    "1754",
+    "1746",
     "1720",
     "1717",
     "1733",
