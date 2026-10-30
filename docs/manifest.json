@@ -1062,43 +1062,43 @@
     {
       "d": "2026-10-30",
       "months": "2026-10",
-      "n": 119
+      "n": 133
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 3814,
+      "n": 3825,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 745,
+      "n": 748,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 589,
+      "n": 590,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 536,
+      "n": 540,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 507,
+      "n": 508,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 472,
+      "n": 473,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 440,
+      "n": 444,
       "slug": "chinh-phu"
     },
     {
@@ -1123,33 +1123,38 @@
     },
     {
       "label": "chính sách",
-      "n": 287,
+      "n": 289,
       "slug": "chinh-sach"
     },
     {
       "label": "lãi suất",
-      "n": 278,
+      "n": 279,
       "slug": "lai-suat"
     },
     {
       "label": "đảng",
-      "n": 248,
+      "n": 249,
       "slug": "dang"
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 247,
+      "n": 248,
       "slug": "tri-tue-nhan-tao"
     },
     {
       "label": "lạm phát",
-      "n": 235,
+      "n": 236,
       "slug": "lam-phat"
     },
     {
       "label": "xuất khẩu",
-      "n": 232,
+      "n": 234,
       "slug": "xuat-khau"
+    },
+    {
+      "label": "xung đột",
+      "n": 227,
+      "slug": "xung-dot"
     },
     {
       "label": "trung ương",
@@ -1157,18 +1162,13 @@
       "slug": "trung-uong"
     },
     {
-      "label": "xung đột",
-      "n": 226,
-      "slug": "xung-dot"
-    },
-    {
       "label": "chiến tranh",
-      "n": 223,
+      "n": 225,
       "slug": "chien-tranh"
     },
     {
       "label": "năng lượng",
-      "n": 220,
+      "n": 221,
       "slug": "nang-luong"
     },
     {
@@ -1178,22 +1178,22 @@
     },
     {
       "label": "trừng phạt",
-      "n": 142,
+      "n": 143,
       "slug": "trung-phat"
     },
     {
       "label": "chứng khoán",
-      "n": 128,
+      "n": 129,
       "slug": "chung-khoan"
     },
     {
       "label": "pháp lý",
-      "n": 122,
+      "n": 123,
       "slug": "phap-ly"
     },
     {
       "label": "nhập khẩu",
-      "n": 119,
+      "n": 121,
       "slug": "nhap-khau"
     },
     {
@@ -2344,7 +2344,21 @@
     8304,
     8306,
     8311,
-    8303
+    8303,
+    8398,
+    8402,
+    8409,
+    8396,
+    8399,
+    8408,
+    8404,
+    8407,
+    8397,
+    8406,
+    8401,
+    8400,
+    8405,
+    8403
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
