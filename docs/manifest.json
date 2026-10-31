@@ -1067,18 +1067,18 @@
     {
       "d": "2026-10-31",
       "months": "2026-10",
-      "n": 104
+      "n": 136
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 3863,
+      "n": 3868,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 755,
+      "n": 756,
       "slug": "dau-tu"
     },
     {
@@ -1133,12 +1133,12 @@
     },
     {
       "label": "lãi suất",
-      "n": 281,
+      "n": 282,
       "slug": "lai-suat"
     },
     {
       "label": "đảng",
-      "n": 250,
+      "n": 251,
       "slug": "dang"
     },
     {
@@ -1162,14 +1162,14 @@
       "slug": "trung-uong"
     },
     {
+      "label": "xung đột",
+      "n": 230,
+      "slug": "xung-dot"
+    },
+    {
       "label": "chiến tranh",
       "n": 229,
       "slug": "chien-tranh"
-    },
-    {
-      "label": "xung đột",
-      "n": 229,
-      "slug": "xung-dot"
     },
     {
       "label": "năng lượng",
@@ -1178,12 +1178,12 @@
     },
     {
       "label": "nghị quyết",
-      "n": 162,
+      "n": 163,
       "slug": "nghi-quyet"
     },
     {
       "label": "trừng phạt",
-      "n": 143,
+      "n": 144,
       "slug": "trung-phat"
     },
     {
@@ -1193,7 +1193,7 @@
     },
     {
       "label": "pháp lý",
-      "n": 124,
+      "n": 125,
       "slug": "phap-ly"
     },
     {
@@ -1223,7 +1223,7 @@
     },
     {
       "label": "bảo hiểm",
-      "n": 68,
+      "n": 69,
       "slug": "bao-hiem"
     },
     {
