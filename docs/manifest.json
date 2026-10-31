@@ -1067,38 +1067,38 @@
     {
       "d": "2026-10-31",
       "months": "2026-10",
-      "n": 82
+      "n": 100
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 3847,
+      "n": 3863,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 752,
+      "n": 755,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 590,
+      "n": 593,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 545,
+      "n": 548,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 511,
+      "n": 512,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 473,
+      "n": 475,
       "slug": "du-lieu"
     },
     {
@@ -1108,7 +1108,7 @@
     },
     {
       "label": "thuế",
-      "n": 372,
+      "n": 373,
       "slug": "thue"
     },
     {
@@ -1128,7 +1128,7 @@
     },
     {
       "label": "chính sách",
-      "n": 290,
+      "n": 292,
       "slug": "chinh-sach"
     },
     {
@@ -1143,17 +1143,17 @@
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 249,
+      "n": 250,
       "slug": "tri-tue-nhan-tao"
     },
     {
       "label": "lạm phát",
-      "n": 238,
+      "n": 240,
       "slug": "lam-phat"
     },
     {
       "label": "xuất khẩu",
-      "n": 235,
+      "n": 236,
       "slug": "xuat-khau"
     },
     {
@@ -1162,18 +1162,18 @@
       "slug": "trung-uong"
     },
     {
+      "label": "chiến tranh",
+      "n": 229,
+      "slug": "chien-tranh"
+    },
+    {
       "label": "xung đột",
       "n": 229,
       "slug": "xung-dot"
     },
     {
-      "label": "chiến tranh",
-      "n": 228,
-      "slug": "chien-tranh"
-    },
-    {
       "label": "năng lượng",
-      "n": 221,
+      "n": 222,
       "slug": "nang-luong"
     },
     {
@@ -1193,12 +1193,12 @@
     },
     {
       "label": "pháp lý",
-      "n": 123,
+      "n": 124,
       "slug": "phap-ly"
     },
     {
       "label": "nhập khẩu",
-      "n": 122,
+      "n": 123,
       "slug": "nhap-khau"
     },
     {
@@ -2363,7 +2363,25 @@
     8401,
     8400,
     8405,
-    8403
+    8403,
+    8461,
+    8463,
+    8470,
+    8469,
+    8459,
+    8458,
+    8465,
+    8457,
+    8464,
+    8467,
+    8455,
+    8466,
+    8472,
+    8456,
+    8468,
+    8460,
+    8462,
+    8471
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
