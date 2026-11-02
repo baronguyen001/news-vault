@@ -1072,18 +1072,18 @@
     {
       "d": "2026-11-01",
       "months": "2026-11",
-      "n": 62
+      "n": 80
     },
     {
       "d": "2026-11-02",
       "months": "2026-11",
-      "n": 162
+      "n": 218
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 3944,
+      "n": 3949,
       "slug": "ai"
     },
     {
@@ -1108,7 +1108,7 @@
     },
     {
       "label": "dữ liệu",
-      "n": 486,
+      "n": 487,
       "slug": "du-lieu"
     },
     {
@@ -1143,12 +1143,12 @@
     },
     {
       "label": "lãi suất",
-      "n": 290,
+      "n": 291,
       "slug": "lai-suat"
     },
     {
       "label": "đảng",
-      "n": 260,
+      "n": 261,
       "slug": "dang"
     },
     {
@@ -1167,14 +1167,14 @@
       "slug": "xuat-khau"
     },
     {
+      "label": "trung ương",
+      "n": 234,
+      "slug": "trung-uong"
+    },
+    {
       "label": "chiến tranh",
       "n": 233,
       "slug": "chien-tranh"
-    },
-    {
-      "label": "trung ương",
-      "n": 233,
-      "slug": "trung-uong"
     },
     {
       "label": "xung đột",
@@ -1243,7 +1243,7 @@
     },
     {
       "label": "cải cách",
-      "n": 61,
+      "n": 62,
       "slug": "cai-cach"
     },
     {
@@ -1253,7 +1253,7 @@
     },
     {
       "label": "bộ chính trị",
-      "n": 39,
+      "n": 40,
       "slug": "bo-chinh-tri"
     },
     {
