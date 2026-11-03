@@ -1082,13 +1082,13 @@
     {
       "d": "2026-11-03",
       "months": "2026-11",
-      "n": 116
+      "n": 147
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 3997,
+      "n": 3996,
       "slug": "ai"
     },
     {
@@ -1108,7 +1108,7 @@
     },
     {
       "label": "công nghệ",
-      "n": 518,
+      "n": 516,
       "slug": "cong-nghe"
     },
     {
@@ -1118,7 +1118,7 @@
     },
     {
       "label": "chính phủ",
-      "n": 454,
+      "n": 453,
       "slug": "chinh-phu"
     },
     {
@@ -1133,7 +1133,7 @@
     },
     {
       "label": "ngân hàng",
-      "n": 347,
+      "n": 348,
       "slug": "ngan-hang"
     },
     {
@@ -1143,12 +1143,12 @@
     },
     {
       "label": "chính sách",
-      "n": 299,
+      "n": 300,
       "slug": "chinh-sach"
     },
     {
       "label": "lãi suất",
-      "n": 292,
+      "n": 293,
       "slug": "lai-suat"
     },
     {
@@ -1158,18 +1158,18 @@
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 252,
+      "n": 253,
       "slug": "tri-tue-nhan-tao"
+    },
+    {
+      "label": "lạm phát",
+      "n": 247,
+      "slug": "lam-phat"
     },
     {
       "label": "xuất khẩu",
       "n": 247,
       "slug": "xuat-khau"
-    },
-    {
-      "label": "lạm phát",
-      "n": 246,
-      "slug": "lam-phat"
     },
     {
       "label": "chiến tranh",
@@ -1178,7 +1178,7 @@
     },
     {
       "label": "trung ương",
-      "n": 234,
+      "n": 236,
       "slug": "trung-uong"
     },
     {
@@ -2399,7 +2399,6 @@
     8462,
     8471,
     8717,
-    8723,
     8734,
     8737,
     8732,
@@ -2410,6 +2409,7 @@
     8731,
     8739,
     8740,
+    8723,
     8724,
     8736,
     8729,
