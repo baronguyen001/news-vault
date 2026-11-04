@@ -1082,88 +1082,93 @@
     {
       "d": "2026-11-03",
       "months": "2026-11",
-      "n": 147
+      "n": 175
+    },
+    {
+      "d": "2026-11-04",
+      "months": "2026-11",
+      "n": 93
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 3996,
+      "n": 4025,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 776,
+      "n": 781,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 604,
+      "n": 607,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 556,
+      "n": 557,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 516,
+      "n": 518,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 497,
+      "n": 500,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 453,
+      "n": 454,
       "slug": "chinh-phu"
     },
     {
       "label": "chip",
-      "n": 387,
+      "n": 392,
       "slug": "chip"
     },
     {
       "label": "thuế",
-      "n": 385,
+      "n": 387,
       "slug": "thue"
     },
     {
       "label": "ngân hàng",
-      "n": 348,
+      "n": 351,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 310,
+      "n": 313,
       "slug": "quoc-hoi"
     },
     {
       "label": "chính sách",
-      "n": 300,
+      "n": 301,
       "slug": "chinh-sach"
     },
     {
       "label": "lãi suất",
-      "n": 293,
+      "n": 295,
       "slug": "lai-suat"
     },
     {
       "label": "đảng",
-      "n": 263,
+      "n": 271,
       "slug": "dang"
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 253,
+      "n": 256,
       "slug": "tri-tue-nhan-tao"
     },
     {
       "label": "lạm phát",
-      "n": 247,
+      "n": 248,
       "slug": "lam-phat"
     },
     {
@@ -1173,12 +1178,12 @@
     },
     {
       "label": "chiến tranh",
-      "n": 236,
+      "n": 240,
       "slug": "chien-tranh"
     },
     {
       "label": "trung ương",
-      "n": 236,
+      "n": 239,
       "slug": "trung-uong"
     },
     {
@@ -1188,7 +1193,7 @@
     },
     {
       "label": "năng lượng",
-      "n": 227,
+      "n": 229,
       "slug": "nang-luong"
     },
     {
@@ -1203,7 +1208,7 @@
     },
     {
       "label": "chứng khoán",
-      "n": 131,
+      "n": 132,
       "slug": "chung-khoan"
     },
     {
@@ -1218,18 +1223,18 @@
     },
     {
       "label": "nghị định",
-      "n": 115,
+      "n": 116,
       "slug": "nghi-dinh"
+    },
+    {
+      "label": "bán dẫn",
+      "n": 101,
+      "slug": "ban-dan"
     },
     {
       "label": "thuế quan",
       "n": 101,
       "slug": "thue-quan"
-    },
-    {
-      "label": "bán dẫn",
-      "n": 100,
-      "slug": "ban-dan"
     },
     {
       "label": "startup",
@@ -1253,7 +1258,7 @@
     },
     {
       "label": "bất động sản",
-      "n": 53,
+      "n": 54,
       "slug": "bat-dong-san"
     },
     {
@@ -1267,6 +1272,11 @@
       "slug": "xe-dien"
     },
     {
+      "label": "FDI",
+      "n": 34,
+      "slug": "fdi"
+    },
+    {
       "label": "khởi nghiệp",
       "n": 33,
       "slug": "khoi-nghiep"
@@ -1275,11 +1285,6 @@
       "label": "thông tư",
       "n": 33,
       "slug": "thong-tu"
-    },
-    {
-      "label": "FDI",
-      "n": 32,
-      "slug": "fdi"
     },
     {
       "label": "blockchain",
@@ -1527,7 +1532,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-11-03T23:59:59+07:00",
+  "generated_at": "2026-11-04T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
@@ -2426,6 +2431,35 @@
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
   "substack": [
+    "1851",
+    "1853",
+    "1867",
+    "1870",
+    "1848",
+    "1863",
+    "1844",
+    "1869",
+    "1846",
+    "1873",
+    "1845",
+    "1861",
+    "1866",
+    "1852",
+    "1843",
+    "1847",
+    "1850",
+    "1842",
+    "1872",
+    "1871",
+    "1868",
+    "1862",
+    "1860",
+    "1855",
+    "1854",
+    "1859",
+    "1857",
+    "1865",
+    "1858",
     "1838",
     "1821",
     "1832",
