@@ -1087,43 +1087,43 @@
     {
       "d": "2026-11-04",
       "months": "2026-11",
-      "n": 93
+      "n": 111
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 4025,
+      "n": 4034,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 781,
+      "n": 783,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 607,
+      "n": 608,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 557,
+      "n": 558,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 518,
+      "n": 519,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 500,
+      "n": 501,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 454,
+      "n": 455,
       "slug": "chinh-phu"
     },
     {
@@ -1133,7 +1133,7 @@
     },
     {
       "label": "thuế",
-      "n": 387,
+      "n": 388,
       "slug": "thue"
     },
     {
@@ -1148,7 +1148,7 @@
     },
     {
       "label": "chính sách",
-      "n": 301,
+      "n": 302,
       "slug": "chinh-sach"
     },
     {
@@ -1158,7 +1158,7 @@
     },
     {
       "label": "đảng",
-      "n": 271,
+      "n": 272,
       "slug": "dang"
     },
     {
@@ -1193,7 +1193,7 @@
     },
     {
       "label": "năng lượng",
-      "n": 229,
+      "n": 230,
       "slug": "nang-luong"
     },
     {
@@ -1212,14 +1212,14 @@
       "slug": "chung-khoan"
     },
     {
+      "label": "nhập khẩu",
+      "n": 127,
+      "slug": "nhap-khau"
+    },
+    {
       "label": "pháp lý",
       "n": 127,
       "slug": "phap-ly"
-    },
-    {
-      "label": "nhập khẩu",
-      "n": 126,
-      "slug": "nhap-khau"
     },
     {
       "label": "nghị định",
@@ -1243,7 +1243,7 @@
     },
     {
       "label": "bảo hiểm",
-      "n": 70,
+      "n": 71,
       "slug": "bao-hiem"
     },
     {
@@ -1253,7 +1253,7 @@
     },
     {
       "label": "cải cách",
-      "n": 63,
+      "n": 64,
       "slug": "cai-cach"
     },
     {
@@ -2426,7 +2426,25 @@
     8730,
     8733,
     8727,
-    8728
+    8728,
+    8809,
+    8821,
+    8817,
+    8819,
+    8807,
+    8806,
+    8812,
+    8816,
+    8823,
+    8815,
+    8820,
+    8814,
+    8811,
+    8813,
+    8822,
+    8810,
+    8818,
+    8808
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
