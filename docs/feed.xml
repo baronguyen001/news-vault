@@ -2,18 +2,25 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>https://baronguyen001.github.io/news-vault</id>
   <title>Kho tin</title>
-  <updated>2026-11-06T23:59:59+07:00</updated>
+  <updated>2026-11-07T23:59:59+07:00</updated>
   <link href="https://baronguyen001.github.io/news-vault"/>
   <entry>
+  <id>urn:news-vault:day:2026-11-07</id>
+  <title>07/11/2026 — 43 tin</title>
+  <updated>2026-11-07T00:00:00+07:00</updated>
+  <link href="https://baronguyen001.github.io/news-vault/d/2026-11-07/"/>
+  <summary>Kinh tế/Tài chính 8 · Chính trị/Chính sách 7 · Crypto 2 · Công nghệ/AI 2 · Văn hóa/Xã hội 1 · Xung đột/Chiến tranh 1</summary>
+</entry>
+<entry>
   <id>urn:news-vault:day:2026-11-06</id>
-  <title>06/11/2026 — 64 tin</title>
+  <title>06/11/2026 — 164 tin</title>
   <updated>2026-11-06T00:00:00+07:00</updated>
   <link href="https://baronguyen001.github.io/news-vault/d/2026-11-06/"/>
-  <summary></summary>
+  <summary>Chính trị/Chính sách 25 · Công nghệ/AI 21 · Kinh tế/Tài chính 19 · Xung đột/Chiến tranh 15 · Chứng khoán 12 · Pháp luật/Nghị định 2 · Crypto 1</summary>
 </entry>
 <entry>
   <id>urn:news-vault:day:2026-11-05</id>
-  <title>05/11/2026 — 60 tin</title>
+  <title>05/11/2026 — 82 tin</title>
   <updated>2026-11-05T00:00:00+07:00</updated>
   <link href="https://baronguyen001.github.io/news-vault/d/2026-11-05/"/>
   <summary></summary>
@@ -416,12 +423,5 @@
   <updated>2026-09-09T00:00:00+07:00</updated>
   <link href="https://baronguyen001.github.io/news-vault/d/2026-09-09/"/>
   <summary>Chính trị/Chính sách 27 · Công nghệ/AI 24 · Kinh tế/Tài chính 16 · Xung đột/Chiến tranh 14 · Crypto 8 · Văn hóa/Xã hội 3 · Chứng khoán 2 · Pháp luật/Nghị định 1</summary>
-</entry>
-<entry>
-  <id>urn:news-vault:day:2026-09-08</id>
-  <title>08/09/2026 — 236 tin</title>
-  <updated>2026-09-08T00:00:00+07:00</updated>
-  <link href="https://baronguyen001.github.io/news-vault/d/2026-09-08/"/>
-  <summary>Chính trị/Chính sách 51 · Kinh tế/Tài chính 44 · Công nghệ/AI 31 · Xung đột/Chiến tranh 21 · Pháp luật/Nghị định 8 · Chứng khoán 6 · Văn hóa/Xã hội 5 · Crypto 1 · Khác 1</summary>
 </entry>
 </feed>
