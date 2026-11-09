@@ -1097,158 +1097,163 @@
     {
       "d": "2026-11-06",
       "months": "2026-11",
-      "n": 164
+      "n": 180
     },
     {
       "d": "2026-11-07",
       "months": "2026-11",
-      "n": 54
+      "n": 75
     },
     {
       "d": "2026-11-08",
       "months": "2026-11",
-      "n": 60
+      "n": 96
+    },
+    {
+      "d": "2026-11-09",
+      "months": "2026-11",
+      "n": 148
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 4105,
+      "n": 4168,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 794,
+      "n": 801,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 615,
+      "n": 623,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 560,
+      "n": 565,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 525,
+      "n": 533,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 512,
+      "n": 517,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 463,
+      "n": 469,
       "slug": "chinh-phu"
     },
     {
       "label": "chip",
-      "n": 402,
+      "n": 410,
       "slug": "chip"
     },
     {
       "label": "thuế",
-      "n": 390,
+      "n": 396,
       "slug": "thue"
     },
     {
       "label": "ngân hàng",
-      "n": 357,
+      "n": 361,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 320,
+      "n": 330,
       "slug": "quoc-hoi"
     },
     {
       "label": "chính sách",
-      "n": 304,
+      "n": 308,
       "slug": "chinh-sach"
     },
     {
       "label": "lãi suất",
-      "n": 300,
+      "n": 304,
       "slug": "lai-suat"
     },
     {
       "label": "đảng",
-      "n": 284,
+      "n": 290,
       "slug": "dang"
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 256,
+      "n": 258,
       "slug": "tri-tue-nhan-tao"
     },
     {
-      "label": "lạm phát",
-      "n": 251,
-      "slug": "lam-phat"
-    },
-    {
       "label": "xuất khẩu",
-      "n": 251,
+      "n": 256,
       "slug": "xuat-khau"
     },
     {
+      "label": "lạm phát",
+      "n": 252,
+      "slug": "lam-phat"
+    },
+    {
       "label": "chiến tranh",
-      "n": 243,
+      "n": 248,
       "slug": "chien-tranh"
     },
     {
       "label": "trung ương",
-      "n": 243,
+      "n": 246,
       "slug": "trung-uong"
     },
     {
       "label": "xung đột",
-      "n": 234,
+      "n": 236,
       "slug": "xung-dot"
     },
     {
       "label": "năng lượng",
-      "n": 231,
+      "n": 233,
       "slug": "nang-luong"
     },
     {
       "label": "nghị quyết",
-      "n": 167,
+      "n": 172,
       "slug": "nghi-quyet"
     },
     {
       "label": "trừng phạt",
-      "n": 150,
+      "n": 151,
       "slug": "trung-phat"
     },
     {
       "label": "chứng khoán",
-      "n": 133,
+      "n": 135,
       "slug": "chung-khoan"
     },
     {
       "label": "nhập khẩu",
-      "n": 129,
+      "n": 131,
       "slug": "nhap-khau"
     },
     {
       "label": "pháp lý",
-      "n": 128,
+      "n": 129,
       "slug": "phap-ly"
     },
     {
       "label": "nghị định",
-      "n": 116,
+      "n": 119,
       "slug": "nghi-dinh"
     },
     {
       "label": "bán dẫn",
-      "n": 106,
+      "n": 108,
       "slug": "ban-dan"
     },
     {
@@ -1268,12 +1273,12 @@
     },
     {
       "label": "hành chính",
-      "n": 68,
+      "n": 69,
       "slug": "hanh-chinh"
     },
     {
       "label": "cải cách",
-      "n": 64,
+      "n": 65,
       "slug": "cai-cach"
     },
     {
@@ -1298,12 +1303,12 @@
     },
     {
       "label": "khởi nghiệp",
-      "n": 33,
+      "n": 34,
       "slug": "khoi-nghiep"
     },
     {
       "label": "thông tư",
-      "n": 33,
+      "n": 34,
       "slug": "thong-tu"
     },
     {
@@ -1313,7 +1318,7 @@
     },
     {
       "label": "kinh tế vĩ mô",
-      "n": 23,
+      "n": 24,
       "slug": "kinh-te-vi-mo"
     },
     {
@@ -1552,7 +1557,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-11-08T23:59:59+07:00",
+  "generated_at": "2026-11-09T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
@@ -2491,6 +2496,63 @@
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
   "substack": [
+    "1980",
+    "1972",
+    "1948",
+    "1953",
+    "1945",
+    "1933",
+    "1983",
+    "1928",
+    "1960",
+    "1982",
+    "1927",
+    "1937",
+    "1930",
+    "1986",
+    "1968",
+    "1959",
+    "1957",
+    "1966",
+    "1935",
+    "1940",
+    "1971",
+    "1949",
+    "1932",
+    "1929",
+    "1985",
+    "1964",
+    "1974",
+    "1944",
+    "1975",
+    "1981",
+    "1961",
+    "1952",
+    "1939",
+    "1925",
+    "1978",
+    "1958",
+    "1936",
+    "1955",
+    "1931",
+    "1976",
+    "1963",
+    "1984",
+    "1938",
+    "1962",
+    "1946",
+    "1942",
+    "1924",
+    "1965",
+    "1926",
+    "1979",
+    "1973",
+    "1967",
+    "1954",
+    "1970",
+    "1956",
+    "1951",
+    "1950",
     "1915",
     "1912",
     "1913",
@@ -4485,6 +4547,11 @@
       "e": "2026-11-08",
       "s": "2026-11-02",
       "w": "2026-W45"
+    },
+    {
+      "e": "2026-11-15",
+      "s": "2026-11-09",
+      "w": "2026-W46"
     }
   ]
 }
