@@ -1112,13 +1112,13 @@
     {
       "d": "2026-11-09",
       "months": "2026-11",
-      "n": 173
+      "n": 202
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 4178,
+      "n": 4177,
       "slug": "ai"
     },
     {
@@ -1138,7 +1138,7 @@
     },
     {
       "label": "công nghệ",
-      "n": 533,
+      "n": 532,
       "slug": "cong-nghe"
     },
     {
@@ -1188,7 +1188,7 @@
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 259,
+      "n": 260,
       "slug": "tri-tue-nhan-tao"
     },
     {
@@ -1213,7 +1213,7 @@
     },
     {
       "label": "xung đột",
-      "n": 237,
+      "n": 236,
       "slug": "xung-dot"
     },
     {
@@ -1278,7 +1278,7 @@
     },
     {
       "label": "cải cách",
-      "n": 66,
+      "n": 65,
       "slug": "cai-cach"
     },
     {
@@ -1328,7 +1328,7 @@
     },
     {
       "label": "điện toán đám mây",
-      "n": 14,
+      "n": 15,
       "slug": "dien-toan-dam-may"
     },
     {
