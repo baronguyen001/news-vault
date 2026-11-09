@@ -1112,23 +1112,23 @@
     {
       "d": "2026-11-09",
       "months": "2026-11",
-      "n": 148
+      "n": 167
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 4168,
+      "n": 4178,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 801,
+      "n": 802,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 623,
+      "n": 624,
       "slug": "luat"
     },
     {
@@ -1158,12 +1158,12 @@
     },
     {
       "label": "thuế",
-      "n": 396,
+      "n": 397,
       "slug": "thue"
     },
     {
       "label": "ngân hàng",
-      "n": 361,
+      "n": 362,
       "slug": "ngan-hang"
     },
     {
@@ -1173,22 +1173,22 @@
     },
     {
       "label": "chính sách",
-      "n": 308,
+      "n": 309,
       "slug": "chinh-sach"
     },
     {
       "label": "lãi suất",
-      "n": 304,
+      "n": 307,
       "slug": "lai-suat"
     },
     {
       "label": "đảng",
-      "n": 290,
+      "n": 292,
       "slug": "dang"
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 258,
+      "n": 259,
       "slug": "tri-tue-nhan-tao"
     },
     {
@@ -1198,12 +1198,12 @@
     },
     {
       "label": "lạm phát",
-      "n": 252,
+      "n": 253,
       "slug": "lam-phat"
     },
     {
       "label": "chiến tranh",
-      "n": 248,
+      "n": 249,
       "slug": "chien-tranh"
     },
     {
@@ -1213,7 +1213,7 @@
     },
     {
       "label": "xung đột",
-      "n": 236,
+      "n": 237,
       "slug": "xung-dot"
     },
     {
@@ -1238,12 +1238,12 @@
     },
     {
       "label": "nhập khẩu",
-      "n": 131,
+      "n": 132,
       "slug": "nhap-khau"
     },
     {
       "label": "pháp lý",
-      "n": 129,
+      "n": 131,
       "slug": "phap-ly"
     },
     {
@@ -1278,7 +1278,7 @@
     },
     {
       "label": "cải cách",
-      "n": 65,
+      "n": 66,
       "slug": "cai-cach"
     },
     {
@@ -2491,7 +2491,26 @@
     8926,
     8929,
     8940,
-    8936
+    8936,
+    9077,
+    9070,
+    9079,
+    9078,
+    9073,
+    9084,
+    9085,
+    9087,
+    9069,
+    9080,
+    9075,
+    9072,
+    9082,
+    9086,
+    9074,
+    9083,
+    9071,
+    9076,
+    9081
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
