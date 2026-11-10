@@ -1,5 +1,7 @@
 {
   "curated": [
+    "E4fUDqj2H64",
+    "ynBmHeCz8DI",
     "8_qvtnUAxEY",
     "Bu0xNDLNORU",
     "ZlEceN_TqsQ",
@@ -1112,7 +1114,12 @@
     {
       "d": "2026-11-09",
       "months": "2026-11",
-      "n": 202
+      "n": 207
+    },
+    {
+      "d": "2026-11-10",
+      "months": "2026-11",
+      "n": 28
     }
   ],
   "entities": [
@@ -1557,7 +1564,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-11-09T23:59:59+07:00",
+  "generated_at": "2026-11-10T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
