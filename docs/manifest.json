@@ -1124,28 +1124,28 @@
     {
       "d": "2026-11-11",
       "months": "2026-11",
-      "n": 91
+      "n": 111
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 4217,
+      "n": 4228,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 815,
+      "n": 818,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 638,
+      "n": 639,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 570,
+      "n": 574,
       "slug": "doanh-nghiep"
     },
     {
@@ -1155,17 +1155,17 @@
     },
     {
       "label": "dữ liệu",
-      "n": 526,
+      "n": 527,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 476,
+      "n": 477,
       "slug": "chinh-phu"
     },
     {
       "label": "chip",
-      "n": 419,
+      "n": 420,
       "slug": "chip"
     },
     {
@@ -1175,28 +1175,33 @@
     },
     {
       "label": "ngân hàng",
-      "n": 371,
+      "n": 373,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 340,
+      "n": 341,
       "slug": "quoc-hoi"
     },
     {
-      "label": "lãi suất",
-      "n": 312,
-      "slug": "lai-suat"
-    },
-    {
       "label": "chính sách",
-      "n": 311,
+      "n": 314,
       "slug": "chinh-sach"
     },
     {
+      "label": "lãi suất",
+      "n": 314,
+      "slug": "lai-suat"
+    },
+    {
       "label": "đảng",
-      "n": 296,
+      "n": 298,
       "slug": "dang"
+    },
+    {
+      "label": "xuất khẩu",
+      "n": 263,
+      "slug": "xuat-khau"
     },
     {
       "label": "trí tuệ nhân tạo",
@@ -1204,33 +1209,28 @@
       "slug": "tri-tue-nhan-tao"
     },
     {
-      "label": "xuất khẩu",
-      "n": 261,
-      "slug": "xuat-khau"
-    },
-    {
-      "label": "chiến tranh",
-      "n": 253,
-      "slug": "chien-tranh"
-    },
-    {
       "label": "lạm phát",
-      "n": 253,
+      "n": 255,
       "slug": "lam-phat"
     },
     {
+      "label": "chiến tranh",
+      "n": 254,
+      "slug": "chien-tranh"
+    },
+    {
       "label": "trung ương",
-      "n": 248,
+      "n": 249,
       "slug": "trung-uong"
     },
     {
       "label": "xung đột",
-      "n": 237,
+      "n": 238,
       "slug": "xung-dot"
     },
     {
       "label": "năng lượng",
-      "n": 234,
+      "n": 235,
       "slug": "nang-luong"
     },
     {
@@ -1249,14 +1249,14 @@
       "slug": "chung-khoan"
     },
     {
+      "label": "pháp lý",
+      "n": 134,
+      "slug": "phap-ly"
+    },
+    {
       "label": "nhập khẩu",
       "n": 133,
       "slug": "nhap-khau"
-    },
-    {
-      "label": "pháp lý",
-      "n": 133,
-      "slug": "phap-ly"
     },
     {
       "label": "nghị định",
@@ -2542,7 +2542,27 @@
     9106,
     9088,
     9092,
-    9090
+    9090,
+    9183,
+    9193,
+    9189,
+    9181,
+    9187,
+    9186,
+    9198,
+    9182,
+    9194,
+    9192,
+    9180,
+    9195,
+    9185,
+    9190,
+    9184,
+    9196,
+    9179,
+    9197,
+    9191,
+    9188
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
