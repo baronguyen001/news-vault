@@ -1129,68 +1129,68 @@
     {
       "d": "2026-11-12",
       "months": "2026-11",
-      "n": 206
+      "n": 317
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 4355,
+      "n": 4398,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 840,
+      "n": 846,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 656,
+      "n": 661,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 597,
+      "n": 598,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 558,
+      "n": 559,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 540,
+      "n": 544,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 494,
+      "n": 495,
       "slug": "chinh-phu"
     },
     {
       "label": "chip",
-      "n": 437,
+      "n": 443,
       "slug": "chip"
     },
     {
       "label": "thuế",
-      "n": 410,
+      "n": 414,
       "slug": "thue"
     },
     {
       "label": "ngân hàng",
-      "n": 386,
+      "n": 391,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 356,
+      "n": 360,
       "slug": "quoc-hoi"
     },
     {
       "label": "lãi suất",
-      "n": 322,
+      "n": 327,
       "slug": "lai-suat"
     },
     {
@@ -1200,62 +1200,62 @@
     },
     {
       "label": "đảng",
-      "n": 311,
+      "n": 317,
       "slug": "dang"
     },
     {
       "label": "xuất khẩu",
-      "n": 273,
+      "n": 281,
       "slug": "xuat-khau"
     },
     {
-      "label": "trí tuệ nhân tạo",
-      "n": 264,
-      "slug": "tri-tue-nhan-tao"
-    },
-    {
       "label": "chiến tranh",
-      "n": 261,
+      "n": 263,
       "slug": "chien-tranh"
     },
     {
       "label": "lạm phát",
-      "n": 261,
+      "n": 263,
       "slug": "lam-phat"
     },
     {
+      "label": "trí tuệ nhân tạo",
+      "n": 263,
+      "slug": "tri-tue-nhan-tao"
+    },
+    {
       "label": "trung ương",
-      "n": 256,
+      "n": 258,
       "slug": "trung-uong"
     },
     {
       "label": "năng lượng",
-      "n": 242,
+      "n": 245,
       "slug": "nang-luong"
     },
     {
       "label": "xung đột",
-      "n": 239,
+      "n": 240,
       "slug": "xung-dot"
     },
     {
       "label": "nghị quyết",
-      "n": 184,
+      "n": 185,
       "slug": "nghi-quyet"
     },
     {
       "label": "trừng phạt",
-      "n": 158,
+      "n": 159,
       "slug": "trung-phat"
     },
     {
       "label": "chứng khoán",
-      "n": 142,
+      "n": 143,
       "slug": "chung-khoan"
     },
     {
       "label": "nhập khẩu",
-      "n": 137,
+      "n": 138,
       "slug": "nhap-khau"
     },
     {
@@ -1265,37 +1265,37 @@
     },
     {
       "label": "nghị định",
-      "n": 120,
+      "n": 121,
       "slug": "nghi-dinh"
     },
     {
       "label": "bán dẫn",
-      "n": 117,
+      "n": 118,
       "slug": "ban-dan"
     },
     {
       "label": "thuế quan",
-      "n": 107,
+      "n": 109,
       "slug": "thue-quan"
     },
     {
       "label": "startup",
-      "n": 84,
+      "n": 87,
       "slug": "startup"
     },
     {
       "label": "bảo hiểm",
-      "n": 74,
+      "n": 75,
       "slug": "bao-hiem"
     },
     {
       "label": "hành chính",
-      "n": 71,
+      "n": 72,
       "slug": "hanh-chinh"
     },
     {
       "label": "cải cách",
-      "n": 68,
+      "n": 69,
       "slug": "cai-cach"
     },
     {
@@ -1304,29 +1304,29 @@
       "slug": "bat-dong-san"
     },
     {
+      "label": "xe điện",
+      "n": 44,
+      "slug": "xe-dien"
+    },
+    {
       "label": "bộ chính trị",
       "n": 43,
       "slug": "bo-chinh-tri"
     },
     {
-      "label": "xe điện",
-      "n": 42,
-      "slug": "xe-dien"
+      "label": "thông tư",
+      "n": 37,
+      "slug": "thong-tu"
     },
     {
-      "label": "thông tư",
+      "label": "khởi nghiệp",
       "n": 36,
-      "slug": "thong-tu"
+      "slug": "khoi-nghiep"
     },
     {
       "label": "FDI",
       "n": 35,
       "slug": "fdi"
-    },
-    {
-      "label": "khởi nghiệp",
-      "n": 35,
-      "slug": "khoi-nghiep"
     },
     {
       "label": "blockchain",
@@ -1335,7 +1335,7 @@
     },
     {
       "label": "kinh tế vĩ mô",
-      "n": 25,
+      "n": 24,
       "slug": "kinh-te-vi-mo"
     },
     {
