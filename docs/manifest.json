@@ -1114,93 +1114,98 @@
     {
       "d": "2026-11-09",
       "months": "2026-11",
-      "n": 141
+      "n": 157
     },
     {
       "d": "2026-11-10",
       "months": "2026-11",
-      "n": 50
+      "n": 205
     },
     {
       "d": "2026-11-11",
       "months": "2026-11",
-      "n": 120
+      "n": 146
+    },
+    {
+      "d": "2026-11-12",
+      "months": "2026-11",
+      "n": 14
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 4228,
+      "n": 4282,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 818,
+      "n": 826,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 639,
+      "n": 647,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 575,
+      "n": 582,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 537,
+      "n": 542,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 527,
+      "n": 530,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 478,
+      "n": 482,
       "slug": "chinh-phu"
     },
     {
       "label": "chip",
-      "n": 420,
+      "n": 427,
       "slug": "chip"
     },
     {
       "label": "thuế",
-      "n": 400,
+      "n": 405,
       "slug": "thue"
     },
     {
       "label": "ngân hàng",
-      "n": 372,
+      "n": 379,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 341,
+      "n": 346,
       "slug": "quoc-hoi"
     },
     {
-      "label": "chính sách",
-      "n": 314,
-      "slug": "chinh-sach"
-    },
-    {
       "label": "lãi suất",
-      "n": 314,
+      "n": 320,
       "slug": "lai-suat"
     },
     {
+      "label": "chính sách",
+      "n": 315,
+      "slug": "chinh-sach"
+    },
+    {
       "label": "đảng",
-      "n": 298,
+      "n": 305,
       "slug": "dang"
     },
     {
       "label": "xuất khẩu",
-      "n": 264,
+      "n": 266,
       "slug": "xuat-khau"
     },
     {
@@ -1210,53 +1215,53 @@
     },
     {
       "label": "lạm phát",
-      "n": 255,
+      "n": 257,
       "slug": "lam-phat"
     },
     {
       "label": "chiến tranh",
-      "n": 254,
+      "n": 255,
       "slug": "chien-tranh"
     },
     {
       "label": "trung ương",
-      "n": 249,
+      "n": 253,
       "slug": "trung-uong"
     },
     {
-      "label": "xung đột",
-      "n": 238,
-      "slug": "xung-dot"
-    },
-    {
       "label": "năng lượng",
-      "n": 235,
+      "n": 239,
       "slug": "nang-luong"
     },
     {
+      "label": "xung đột",
+      "n": 239,
+      "slug": "xung-dot"
+    },
+    {
       "label": "nghị quyết",
-      "n": 176,
+      "n": 180,
       "slug": "nghi-quyet"
     },
     {
       "label": "trừng phạt",
-      "n": 154,
+      "n": 156,
       "slug": "trung-phat"
     },
     {
       "label": "chứng khoán",
-      "n": 137,
+      "n": 139,
       "slug": "chung-khoan"
+    },
+    {
+      "label": "nhập khẩu",
+      "n": 136,
+      "slug": "nhap-khau"
     },
     {
       "label": "pháp lý",
       "n": 134,
       "slug": "phap-ly"
-    },
-    {
-      "label": "nhập khẩu",
-      "n": 133,
-      "slug": "nhap-khau"
     },
     {
       "label": "nghị định",
@@ -1265,12 +1270,12 @@
     },
     {
       "label": "bán dẫn",
-      "n": 108,
+      "n": 111,
       "slug": "ban-dan"
     },
     {
       "label": "thuế quan",
-      "n": 105,
+      "n": 106,
       "slug": "thue-quan"
     },
     {
@@ -1280,33 +1285,38 @@
     },
     {
       "label": "bảo hiểm",
-      "n": 73,
+      "n": 74,
       "slug": "bao-hiem"
     },
     {
       "label": "hành chính",
-      "n": 69,
+      "n": 70,
       "slug": "hanh-chinh"
     },
     {
       "label": "cải cách",
-      "n": 67,
+      "n": 68,
       "slug": "cai-cach"
     },
     {
       "label": "bất động sản",
-      "n": 55,
+      "n": 56,
       "slug": "bat-dong-san"
     },
     {
       "label": "bộ chính trị",
-      "n": 41,
+      "n": 43,
       "slug": "bo-chinh-tri"
     },
     {
       "label": "xe điện",
-      "n": 39,
+      "n": 42,
       "slug": "xe-dien"
+    },
+    {
+      "label": "thông tư",
+      "n": 36,
+      "slug": "thong-tu"
     },
     {
       "label": "FDI",
@@ -1317,11 +1327,6 @@
       "label": "khởi nghiệp",
       "n": 34,
       "slug": "khoi-nghiep"
-    },
-    {
-      "label": "thông tư",
-      "n": 34,
-      "slug": "thong-tu"
     },
     {
       "label": "blockchain",
@@ -1335,7 +1340,7 @@
     },
     {
       "label": "chuyển đổi số",
-      "n": 19,
+      "n": 20,
       "slug": "chuyen-doi-so"
     },
     {
@@ -1569,7 +1574,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-11-11T23:59:59+07:00",
+  "generated_at": "2026-11-12T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
@@ -2533,7 +2538,6 @@
     9089,
     9093,
     9095,
-    9107,
     9094,
     9101,
     9097,
@@ -2542,6 +2546,7 @@
     9106,
     9088,
     9092,
+    9107,
     9090,
     9183,
     9193,
@@ -2559,6 +2564,7 @@
     9184,
     9196,
     9179,
+    9200,
     9187,
     9197,
     9191,
@@ -2567,6 +2573,73 @@
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
   "substack": [
+    "2053",
+    "2056",
+    "2059",
+    "2063",
+    "2047",
+    "2048",
+    "2049",
+    "2057",
+    "2061",
+    "2058",
+    "2050",
+    "2044",
+    "2054",
+    "2045",
+    "2060",
+    "2062",
+    "2024",
+    "2036",
+    "2028",
+    "2009",
+    "1999",
+    "2017",
+    "2012",
+    "2038",
+    "2003",
+    "2008",
+    "2035",
+    "1992",
+    "2027",
+    "1995",
+    "2042",
+    "1989",
+    "1991",
+    "1994",
+    "1987",
+    "2032",
+    "2001",
+    "2041",
+    "2040",
+    "2020",
+    "2015",
+    "2006",
+    "2022",
+    "2025",
+    "2014",
+    "2005",
+    "2016",
+    "2021",
+    "2031",
+    "2043",
+    "2034",
+    "1993",
+    "2026",
+    "2018",
+    "2000",
+    "2023",
+    "1988",
+    "1990",
+    "2039",
+    "2033",
+    "2019",
+    "2010",
+    "2002",
+    "2037",
+    "2029",
+    "2011",
+    "2013",
     "1980",
     "1972",
     "1948",
