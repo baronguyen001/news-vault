@@ -1124,18 +1124,18 @@
     {
       "d": "2026-11-11",
       "months": "2026-11",
-      "n": 146
+      "n": 147
     },
     {
       "d": "2026-11-12",
       "months": "2026-11",
-      "n": 190
+      "n": 206
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 4351,
+      "n": 4355,
       "slug": "ai"
     },
     {
@@ -1150,12 +1150,12 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 596,
+      "n": 597,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 556,
+      "n": 558,
       "slug": "cong-nghe"
     },
     {
@@ -1170,7 +1170,7 @@
     },
     {
       "label": "chip",
-      "n": 436,
+      "n": 437,
       "slug": "chip"
     },
     {
@@ -1180,12 +1180,12 @@
     },
     {
       "label": "ngân hàng",
-      "n": 385,
+      "n": 386,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 355,
+      "n": 356,
       "slug": "quoc-hoi"
     },
     {
@@ -1205,23 +1205,23 @@
     },
     {
       "label": "xuất khẩu",
-      "n": 272,
+      "n": 273,
       "slug": "xuat-khau"
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 263,
+      "n": 264,
       "slug": "tri-tue-nhan-tao"
+    },
+    {
+      "label": "chiến tranh",
+      "n": 261,
+      "slug": "chien-tranh"
     },
     {
       "label": "lạm phát",
       "n": 261,
       "slug": "lam-phat"
-    },
-    {
-      "label": "chiến tranh",
-      "n": 260,
-      "slug": "chien-tranh"
     },
     {
       "label": "trung ương",
@@ -1250,7 +1250,7 @@
     },
     {
       "label": "chứng khoán",
-      "n": 141,
+      "n": 142,
       "slug": "chung-khoan"
     },
     {
