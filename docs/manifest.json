@@ -1129,63 +1129,63 @@
     {
       "d": "2026-11-12",
       "months": "2026-11",
-      "n": 14
+      "n": 83
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 4282,
+      "n": 4300,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 826,
+      "n": 830,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 647,
+      "n": 650,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 582,
+      "n": 589,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 542,
+      "n": 545,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 530,
+      "n": 534,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 482,
+      "n": 487,
       "slug": "chinh-phu"
     },
     {
       "label": "chip",
-      "n": 427,
+      "n": 430,
       "slug": "chip"
     },
     {
       "label": "thuế",
-      "n": 405,
+      "n": 407,
       "slug": "thue"
     },
     {
       "label": "ngân hàng",
-      "n": 379,
+      "n": 380,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 346,
+      "n": 348,
       "slug": "quoc-hoi"
     },
     {
@@ -1195,33 +1195,33 @@
     },
     {
       "label": "chính sách",
-      "n": 315,
+      "n": 317,
       "slug": "chinh-sach"
     },
     {
       "label": "đảng",
-      "n": 305,
+      "n": 306,
       "slug": "dang"
     },
     {
       "label": "xuất khẩu",
-      "n": 266,
+      "n": 267,
       "slug": "xuat-khau"
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 261,
+      "n": 262,
       "slug": "tri-tue-nhan-tao"
+    },
+    {
+      "label": "chiến tranh",
+      "n": 257,
+      "slug": "chien-tranh"
     },
     {
       "label": "lạm phát",
       "n": 257,
       "slug": "lam-phat"
-    },
-    {
-      "label": "chiến tranh",
-      "n": 255,
-      "slug": "chien-tranh"
     },
     {
       "label": "trung ương",
@@ -1240,7 +1240,7 @@
     },
     {
       "label": "nghị quyết",
-      "n": 180,
+      "n": 182,
       "slug": "nghi-quyet"
     },
     {
@@ -1270,7 +1270,7 @@
     },
     {
       "label": "bán dẫn",
-      "n": 111,
+      "n": 114,
       "slug": "ban-dan"
     },
     {
