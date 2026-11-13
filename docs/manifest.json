@@ -1134,18 +1134,18 @@
     {
       "d": "2026-11-13",
       "months": "2026-11",
-      "n": 105
+      "n": 119
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 4433,
+      "n": 4437,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 852,
+      "n": 853,
       "slug": "dau-tu"
     },
     {
@@ -1160,22 +1160,22 @@
     },
     {
       "label": "công nghệ",
-      "n": 564,
+      "n": 562,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 548,
+      "n": 549,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 497,
+      "n": 496,
       "slug": "chinh-phu"
     },
     {
       "label": "chip",
-      "n": 446,
+      "n": 445,
       "slug": "chip"
     },
     {
@@ -1185,7 +1185,7 @@
     },
     {
       "label": "ngân hàng",
-      "n": 396,
+      "n": 397,
       "slug": "ngan-hang"
     },
     {
@@ -1195,7 +1195,7 @@
     },
     {
       "label": "lãi suất",
-      "n": 328,
+      "n": 329,
       "slug": "lai-suat"
     },
     {
@@ -1214,18 +1214,18 @@
       "slug": "xuat-khau"
     },
     {
+      "label": "chiến tranh",
+      "n": 268,
+      "slug": "chien-tranh"
+    },
+    {
       "label": "lạm phát",
       "n": 268,
       "slug": "lam-phat"
     },
     {
-      "label": "chiến tranh",
-      "n": 266,
-      "slug": "chien-tranh"
-    },
-    {
       "label": "trí tuệ nhân tạo",
-      "n": 263,
+      "n": 262,
       "slug": "tri-tue-nhan-tao"
     },
     {
@@ -1275,7 +1275,7 @@
     },
     {
       "label": "bán dẫn",
-      "n": 119,
+      "n": 117,
       "slug": "ban-dan"
     },
     {
