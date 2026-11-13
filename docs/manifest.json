@@ -1134,38 +1134,38 @@
     {
       "d": "2026-11-13",
       "months": "2026-11",
-      "n": 85
+      "n": 105
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 4424,
+      "n": 4433,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 849,
+      "n": 852,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 667,
+      "n": 668,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 600,
+      "n": 604,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 560,
+      "n": 564,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 546,
+      "n": 548,
       "slug": "du-lieu"
     },
     {
@@ -1175,52 +1175,52 @@
     },
     {
       "label": "chip",
-      "n": 444,
+      "n": 446,
       "slug": "chip"
     },
     {
       "label": "thuế",
-      "n": 417,
+      "n": 418,
       "slug": "thue"
     },
     {
       "label": "ngân hàng",
-      "n": 394,
+      "n": 396,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 364,
+      "n": 365,
       "slug": "quoc-hoi"
     },
     {
       "label": "lãi suất",
-      "n": 327,
+      "n": 328,
       "slug": "lai-suat"
     },
     {
       "label": "chính sách",
-      "n": 321,
+      "n": 323,
       "slug": "chinh-sach"
     },
     {
       "label": "đảng",
-      "n": 319,
+      "n": 320,
       "slug": "dang"
     },
     {
       "label": "xuất khẩu",
-      "n": 282,
+      "n": 283,
       "slug": "xuat-khau"
     },
     {
       "label": "lạm phát",
-      "n": 266,
+      "n": 268,
       "slug": "lam-phat"
     },
     {
       "label": "chiến tranh",
-      "n": 265,
+      "n": 266,
       "slug": "chien-tranh"
     },
     {
@@ -1230,7 +1230,7 @@
     },
     {
       "label": "trung ương",
-      "n": 259,
+      "n": 260,
       "slug": "trung-uong"
     },
     {
@@ -1250,7 +1250,7 @@
     },
     {
       "label": "trừng phạt",
-      "n": 161,
+      "n": 162,
       "slug": "trung-phat"
     },
     {
@@ -1275,12 +1275,12 @@
     },
     {
       "label": "bán dẫn",
-      "n": 118,
+      "n": 119,
       "slug": "ban-dan"
     },
     {
       "label": "thuế quan",
-      "n": 110,
+      "n": 111,
       "slug": "thue-quan"
     },
     {
@@ -1295,12 +1295,12 @@
     },
     {
       "label": "hành chính",
-      "n": 72,
+      "n": 73,
       "slug": "hanh-chinh"
     },
     {
       "label": "cải cách",
-      "n": 69,
+      "n": 70,
       "slug": "cai-cach"
     },
     {
@@ -2589,7 +2589,27 @@
     9437,
     9430,
     9449,
-    9429
+    9429,
+    9626,
+    9637,
+    9634,
+    9628,
+    9633,
+    9641,
+    9635,
+    9639,
+    9629,
+    9625,
+    9631,
+    9640,
+    9627,
+    9624,
+    9632,
+    9638,
+    9630,
+    9642,
+    9643,
+    9636
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
