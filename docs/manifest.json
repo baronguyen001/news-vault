@@ -1134,118 +1134,123 @@
     {
       "d": "2026-11-13",
       "months": "2026-11",
-      "n": 141
+      "n": 160
+    },
+    {
+      "d": "2026-11-14",
+      "months": "2026-11",
+      "n": 112
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 4437,
+      "n": 4464,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 853,
+      "n": 855,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 668,
+      "n": 672,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 604,
+      "n": 606,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 562,
+      "n": 564,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 549,
+      "n": 554,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 496,
+      "n": 498,
       "slug": "chinh-phu"
     },
     {
       "label": "chip",
-      "n": 445,
+      "n": 450,
       "slug": "chip"
     },
     {
       "label": "thuế",
-      "n": 418,
+      "n": 421,
       "slug": "thue"
     },
     {
       "label": "ngân hàng",
-      "n": 397,
+      "n": 399,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 365,
+      "n": 369,
       "slug": "quoc-hoi"
     },
     {
       "label": "lãi suất",
-      "n": 329,
+      "n": 331,
       "slug": "lai-suat"
     },
     {
       "label": "chính sách",
-      "n": 323,
+      "n": 325,
       "slug": "chinh-sach"
     },
     {
       "label": "đảng",
-      "n": 320,
+      "n": 322,
       "slug": "dang"
     },
     {
       "label": "xuất khẩu",
-      "n": 283,
+      "n": 285,
       "slug": "xuat-khau"
     },
     {
       "label": "chiến tranh",
-      "n": 268,
+      "n": 270,
       "slug": "chien-tranh"
     },
     {
       "label": "lạm phát",
-      "n": 268,
+      "n": 270,
       "slug": "lam-phat"
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 262,
+      "n": 264,
       "slug": "tri-tue-nhan-tao"
     },
     {
       "label": "trung ương",
-      "n": 260,
+      "n": 261,
       "slug": "trung-uong"
     },
     {
       "label": "năng lượng",
-      "n": 247,
+      "n": 248,
       "slug": "nang-luong"
     },
     {
       "label": "xung đột",
-      "n": 241,
+      "n": 242,
       "slug": "xung-dot"
     },
     {
       "label": "nghị quyết",
-      "n": 186,
+      "n": 187,
       "slug": "nghi-quyet"
     },
     {
@@ -1255,7 +1260,7 @@
     },
     {
       "label": "chứng khoán",
-      "n": 147,
+      "n": 149,
       "slug": "chung-khoan"
     },
     {
@@ -1280,12 +1285,12 @@
     },
     {
       "label": "thuế quan",
-      "n": 111,
+      "n": 112,
       "slug": "thue-quan"
     },
     {
       "label": "startup",
-      "n": 87,
+      "n": 88,
       "slug": "startup"
     },
     {
@@ -1295,7 +1300,7 @@
     },
     {
       "label": "hành chính",
-      "n": 73,
+      "n": 74,
       "slug": "hanh-chinh"
     },
     {
@@ -1309,24 +1314,24 @@
       "slug": "bat-dong-san"
     },
     {
+      "label": "bộ chính trị",
+      "n": 45,
+      "slug": "bo-chinh-tri"
+    },
+    {
       "label": "xe điện",
       "n": 44,
       "slug": "xe-dien"
     },
     {
-      "label": "bộ chính trị",
-      "n": 43,
-      "slug": "bo-chinh-tri"
+      "label": "khởi nghiệp",
+      "n": 38,
+      "slug": "khoi-nghiep"
     },
     {
       "label": "thông tư",
       "n": 37,
       "slug": "thong-tu"
-    },
-    {
-      "label": "khởi nghiệp",
-      "n": 36,
-      "slug": "khoi-nghiep"
     },
     {
       "label": "FDI",
@@ -1579,7 +1584,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-11-13T23:59:59+07:00",
+  "generated_at": "2026-11-14T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
@@ -2614,6 +2619,29 @@
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
   "substack": [
+    "2100",
+    "2120",
+    "2103",
+    "2118",
+    "2109",
+    "2098",
+    "2113",
+    "2114",
+    "2110",
+    "2108",
+    "2112",
+    "2102",
+    "2104",
+    "2097",
+    "2096",
+    "2107",
+    "2101",
+    "2119",
+    "2117",
+    "2111",
+    "2115",
+    "2116",
+    "2106",
     "2074",
     "2083",
     "2078",
