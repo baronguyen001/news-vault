@@ -1139,13 +1139,13 @@
     {
       "d": "2026-11-14",
       "months": "2026-11",
-      "n": 112
+      "n": 126
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 4464,
+      "n": 4473,
       "slug": "ai"
     },
     {
@@ -1160,7 +1160,7 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 606,
+      "n": 608,
       "slug": "doanh-nghiep"
     },
     {
@@ -1210,7 +1210,7 @@
     },
     {
       "label": "đảng",
-      "n": 322,
+      "n": 323,
       "slug": "dang"
     },
     {
@@ -1219,14 +1219,14 @@
       "slug": "xuat-khau"
     },
     {
+      "label": "lạm phát",
+      "n": 271,
+      "slug": "lam-phat"
+    },
+    {
       "label": "chiến tranh",
       "n": 270,
       "slug": "chien-tranh"
-    },
-    {
-      "label": "lạm phát",
-      "n": 270,
-      "slug": "lam-phat"
     },
     {
       "label": "trí tuệ nhân tạo",
@@ -1240,12 +1240,12 @@
     },
     {
       "label": "năng lượng",
-      "n": 248,
+      "n": 249,
       "slug": "nang-luong"
     },
     {
       "label": "xung đột",
-      "n": 242,
+      "n": 243,
       "slug": "xung-dot"
     },
     {
@@ -1255,7 +1255,7 @@
     },
     {
       "label": "trừng phạt",
-      "n": 162,
+      "n": 163,
       "slug": "trung-phat"
     },
     {
@@ -1295,7 +1295,7 @@
     },
     {
       "label": "bảo hiểm",
-      "n": 75,
+      "n": 76,
       "slug": "bao-hiem"
     },
     {
@@ -1305,7 +1305,7 @@
     },
     {
       "label": "cải cách",
-      "n": 70,
+      "n": 71,
       "slug": "cai-cach"
     },
     {
@@ -2614,7 +2614,21 @@
     9630,
     9642,
     9643,
-    9636
+    9636,
+    9727,
+    9715,
+    9714,
+    9724,
+    9726,
+    9716,
+    9723,
+    9720,
+    9719,
+    9721,
+    9725,
+    9718,
+    9717,
+    9722
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
