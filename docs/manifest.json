@@ -1214,33 +1214,33 @@
     {
       "d": "2026-11-15",
       "months": "2026-11",
-      "n": 87
+      "n": 102
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 4507,
+      "n": 4516,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 860,
+      "n": 863,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 682,
+      "n": 683,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 609,
+      "n": 611,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 569,
+      "n": 571,
       "slug": "cong-nghe"
     },
     {
@@ -1250,17 +1250,17 @@
     },
     {
       "label": "chính phủ",
-      "n": 503,
+      "n": 506,
       "slug": "chinh-phu"
     },
     {
       "label": "chip",
-      "n": 450,
+      "n": 452,
       "slug": "chip"
     },
     {
       "label": "thuế",
-      "n": 424,
+      "n": 426,
       "slug": "thue"
     },
     {
@@ -1270,7 +1270,7 @@
     },
     {
       "label": "quốc hội",
-      "n": 374,
+      "n": 375,
       "slug": "quoc-hoi"
     },
     {
@@ -1280,7 +1280,7 @@
     },
     {
       "label": "đảng",
-      "n": 329,
+      "n": 331,
       "slug": "dang"
     },
     {
@@ -1290,7 +1290,7 @@
     },
     {
       "label": "xuất khẩu",
-      "n": 286,
+      "n": 287,
       "slug": "xuat-khau"
     },
     {
@@ -1300,7 +1300,7 @@
     },
     {
       "label": "chiến tranh",
-      "n": 271,
+      "n": 272,
       "slug": "chien-tranh"
     },
     {
@@ -1320,12 +1320,12 @@
     },
     {
       "label": "xung đột",
-      "n": 244,
+      "n": 245,
       "slug": "xung-dot"
     },
     {
       "label": "nghị quyết",
-      "n": 188,
+      "n": 189,
       "slug": "nghi-quyet"
     },
     {
@@ -1360,7 +1360,7 @@
     },
     {
       "label": "thuế quan",
-      "n": 113,
+      "n": 114,
       "slug": "thue-quan"
     },
     {
@@ -2706,7 +2706,22 @@
     9725,
     9718,
     9717,
-    9722
+    9722,
+    9801,
+    9803,
+    9794,
+    9796,
+    9797,
+    9798,
+    9805,
+    9804,
+    9802,
+    9800,
+    9793,
+    9806,
+    9807,
+    9799,
+    9795
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
