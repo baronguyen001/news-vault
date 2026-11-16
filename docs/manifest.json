@@ -1219,18 +1219,18 @@
     {
       "d": "2026-11-16",
       "months": "2026-11",
-      "n": 86
+      "n": 97
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 4547,
+      "n": 4552,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 868,
+      "n": 869,
       "slug": "dau-tu"
     },
     {
@@ -1240,17 +1240,17 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 615,
+      "n": 616,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 574,
+      "n": 576,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 560,
+      "n": 561,
       "slug": "du-lieu"
     },
     {
@@ -1280,22 +1280,22 @@
     },
     {
       "label": "lãi suất",
-      "n": 334,
+      "n": 335,
       "slug": "lai-suat"
     },
     {
       "label": "đảng",
-      "n": 333,
+      "n": 334,
       "slug": "dang"
     },
     {
       "label": "chính sách",
-      "n": 326,
+      "n": 328,
       "slug": "chinh-sach"
     },
     {
       "label": "xuất khẩu",
-      "n": 290,
+      "n": 291,
       "slug": "xuat-khau"
     },
     {
@@ -2726,7 +2726,18 @@
     9806,
     9807,
     9799,
-    9795
+    9795,
+    9871,
+    9870,
+    9867,
+    9869,
+    9868,
+    9874,
+    9873,
+    9876,
+    9872,
+    9866,
+    9875
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
