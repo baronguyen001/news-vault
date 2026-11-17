@@ -1219,53 +1219,58 @@
     {
       "d": "2026-11-16",
       "months": "2026-11",
-      "n": 128
+      "n": 148
+    },
+    {
+      "d": "2026-11-17",
+      "months": "2026-11",
+      "n": 110
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 4553,
+      "n": 4587,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 870,
+      "n": 872,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 685,
+      "n": 690,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 615,
+      "n": 618,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 575,
+      "n": 580,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 561,
+      "n": 566,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 511,
+      "n": 514,
       "slug": "chinh-phu"
     },
     {
       "label": "chip",
-      "n": 457,
+      "n": 467,
       "slug": "chip"
     },
     {
       "label": "thuế",
-      "n": 427,
+      "n": 429,
       "slug": "thue"
     },
     {
@@ -1279,23 +1284,23 @@
       "slug": "quoc-hoi"
     },
     {
-      "label": "lãi suất",
-      "n": 335,
-      "slug": "lai-suat"
-    },
-    {
       "label": "đảng",
-      "n": 334,
+      "n": 340,
       "slug": "dang"
     },
     {
+      "label": "lãi suất",
+      "n": 338,
+      "slug": "lai-suat"
+    },
+    {
       "label": "chính sách",
-      "n": 328,
+      "n": 329,
       "slug": "chinh-sach"
     },
     {
       "label": "xuất khẩu",
-      "n": 292,
+      "n": 295,
       "slug": "xuat-khau"
     },
     {
@@ -1305,22 +1310,22 @@
     },
     {
       "label": "chiến tranh",
-      "n": 274,
+      "n": 275,
       "slug": "chien-tranh"
     },
     {
-      "label": "trung ương",
-      "n": 265,
-      "slug": "trung-uong"
-    },
-    {
       "label": "trí tuệ nhân tạo",
-      "n": 264,
+      "n": 268,
       "slug": "tri-tue-nhan-tao"
     },
     {
+      "label": "trung ương",
+      "n": 266,
+      "slug": "trung-uong"
+    },
+    {
       "label": "năng lượng",
-      "n": 252,
+      "n": 255,
       "slug": "nang-luong"
     },
     {
@@ -1330,7 +1335,7 @@
     },
     {
       "label": "nghị quyết",
-      "n": 190,
+      "n": 191,
       "slug": "nghi-quyet"
     },
     {
@@ -1355,27 +1360,27 @@
     },
     {
       "label": "nghị định",
-      "n": 127,
+      "n": 128,
       "slug": "nghi-dinh"
     },
     {
       "label": "bán dẫn",
-      "n": 120,
+      "n": 121,
       "slug": "ban-dan"
     },
     {
       "label": "thuế quan",
-      "n": 114,
+      "n": 115,
       "slug": "thue-quan"
     },
     {
       "label": "startup",
-      "n": 88,
+      "n": 89,
       "slug": "startup"
     },
     {
       "label": "bảo hiểm",
-      "n": 77,
+      "n": 78,
       "slug": "bao-hiem"
     },
     {
@@ -1385,7 +1390,7 @@
     },
     {
       "label": "cải cách",
-      "n": 71,
+      "n": 73,
       "slug": "cai-cach"
     },
     {
@@ -1404,14 +1409,14 @@
       "slug": "xe-dien"
     },
     {
+      "label": "thông tư",
+      "n": 39,
+      "slug": "thong-tu"
+    },
+    {
       "label": "khởi nghiệp",
       "n": 38,
       "slug": "khoi-nghiep"
-    },
-    {
-      "label": "thông tư",
-      "n": 38,
-      "slug": "thong-tu"
     },
     {
       "label": "FDI",
@@ -1425,7 +1430,7 @@
     },
     {
       "label": "kinh tế vĩ mô",
-      "n": 24,
+      "n": 25,
       "slug": "kinh-te-vi-mo"
     },
     {
@@ -1664,7 +1669,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-11-16T23:59:59+07:00",
+  "generated_at": "2026-11-17T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
@@ -2742,6 +2747,26 @@
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
   "substack": [
+    "2174",
+    "2185",
+    "2178",
+    "2179",
+    "2169",
+    "2180",
+    "2177",
+    "2183",
+    "2167",
+    "2188",
+    "2171",
+    "2168",
+    "2187",
+    "2182",
+    "2172",
+    "2181",
+    "2184",
+    "2175",
+    "2176",
+    "2186",
     "2143",
     "2165",
     "2153",
