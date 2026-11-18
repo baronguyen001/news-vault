@@ -1229,18 +1229,18 @@
     {
       "d": "2026-11-18",
       "months": "2026-11",
-      "n": 92
+      "n": 114
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 4631,
+      "n": 4641,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 878,
+      "n": 883,
       "slug": "dau-tu"
     },
     {
@@ -1250,22 +1250,22 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 623,
+      "n": 625,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 585,
+      "n": 587,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 569,
+      "n": 574,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 517,
+      "n": 518,
       "slug": "chinh-phu"
     },
     {
@@ -1275,12 +1275,12 @@
     },
     {
       "label": "thuế",
-      "n": 432,
+      "n": 433,
       "slug": "thue"
     },
     {
       "label": "ngân hàng",
-      "n": 408,
+      "n": 409,
       "slug": "ngan-hang"
     },
     {
@@ -1295,7 +1295,7 @@
     },
     {
       "label": "lãi suất",
-      "n": 341,
+      "n": 342,
       "slug": "lai-suat"
     },
     {
@@ -1310,12 +1310,12 @@
     },
     {
       "label": "lạm phát",
-      "n": 277,
+      "n": 278,
       "slug": "lam-phat"
     },
     {
       "label": "chiến tranh",
-      "n": 276,
+      "n": 277,
       "slug": "chien-tranh"
     },
     {
@@ -1335,7 +1335,7 @@
     },
     {
       "label": "xung đột",
-      "n": 247,
+      "n": 249,
       "slug": "xung-dot"
     },
     {
@@ -1350,18 +1350,18 @@
     },
     {
       "label": "chứng khoán",
-      "n": 151,
+      "n": 152,
       "slug": "chung-khoan"
+    },
+    {
+      "label": "pháp lý",
+      "n": 140,
+      "slug": "phap-ly"
     },
     {
       "label": "nhập khẩu",
       "n": 139,
       "slug": "nhap-khau"
-    },
-    {
-      "label": "pháp lý",
-      "n": 138,
-      "slug": "phap-ly"
     },
     {
       "label": "nghị định",
@@ -1375,7 +1375,7 @@
     },
     {
       "label": "thuế quan",
-      "n": 115,
+      "n": 116,
       "slug": "thue-quan"
     },
     {
@@ -1385,7 +1385,7 @@
     },
     {
       "label": "bảo hiểm",
-      "n": 79,
+      "n": 80,
       "slug": "bao-hiem"
     },
     {
@@ -2765,7 +2765,29 @@
     9965,
     9950,
     9948,
-    9956
+    9956,
+    10034,
+    10032,
+    10047,
+    10043,
+    10029,
+    10042,
+    10048,
+    10037,
+    10044,
+    10041,
+    10049,
+    10046,
+    10031,
+    10033,
+    10035,
+    10036,
+    10039,
+    10045,
+    10030,
+    10040,
+    10038,
+    10050
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
