@@ -1239,13 +1239,13 @@
     {
       "d": "2026-11-20",
       "months": "2026-11",
-      "n": 90
+      "n": 108
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 4706,
+      "n": 4718,
       "slug": "ai"
     },
     {
@@ -1255,27 +1255,27 @@
     },
     {
       "label": "luật",
-      "n": 709,
+      "n": 710,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 634,
+      "n": 636,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 594,
+      "n": 597,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 583,
+      "n": 587,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 527,
+      "n": 528,
       "slug": "chinh-phu"
     },
     {
@@ -1285,7 +1285,7 @@
     },
     {
       "label": "thuế",
-      "n": 438,
+      "n": 440,
       "slug": "thue"
     },
     {
@@ -1300,12 +1300,12 @@
     },
     {
       "label": "đảng",
-      "n": 351,
+      "n": 352,
       "slug": "dang"
     },
     {
       "label": "lãi suất",
-      "n": 347,
+      "n": 349,
       "slug": "lai-suat"
     },
     {
@@ -1315,7 +1315,7 @@
     },
     {
       "label": "xuất khẩu",
-      "n": 305,
+      "n": 307,
       "slug": "xuat-khau"
     },
     {
@@ -1325,7 +1325,7 @@
     },
     {
       "label": "lạm phát",
-      "n": 280,
+      "n": 281,
       "slug": "lam-phat"
     },
     {
@@ -1345,7 +1345,7 @@
     },
     {
       "label": "xung đột",
-      "n": 251,
+      "n": 252,
       "slug": "xung-dot"
     },
     {
@@ -1355,7 +1355,7 @@
     },
     {
       "label": "trừng phạt",
-      "n": 165,
+      "n": 166,
       "slug": "trung-phat"
     },
     {
@@ -1365,7 +1365,7 @@
     },
     {
       "label": "nhập khẩu",
-      "n": 140,
+      "n": 141,
       "slug": "nhap-khau"
     },
     {
@@ -1380,12 +1380,12 @@
     },
     {
       "label": "bán dẫn",
-      "n": 121,
+      "n": 122,
       "slug": "ban-dan"
     },
     {
       "label": "thuế quan",
-      "n": 118,
+      "n": 119,
       "slug": "thue-quan"
     },
     {
@@ -1399,14 +1399,14 @@
       "slug": "bao-hiem"
     },
     {
+      "label": "cải cách",
+      "n": 75,
+      "slug": "cai-cach"
+    },
+    {
       "label": "hành chính",
       "n": 75,
       "slug": "hanh-chinh"
-    },
-    {
-      "label": "cải cách",
-      "n": 74,
-      "slug": "cai-cach"
     },
     {
       "label": "bất động sản",
@@ -2812,7 +2812,25 @@
     10122,
     10121,
     10123,
-    10126
+    10126,
+    10192,
+    10191,
+    10196,
+    10194,
+    10199,
+    10206,
+    10207,
+    10190,
+    10203,
+    10205,
+    10200,
+    10201,
+    10198,
+    10202,
+    10204,
+    10197,
+    10193,
+    10195
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
