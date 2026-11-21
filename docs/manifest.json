@@ -1244,43 +1244,43 @@
     {
       "d": "2026-11-21",
       "months": "2026-11",
-      "n": 79
+      "n": 94
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 4741,
+      "n": 4751,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 900,
+      "n": 901,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 720,
+      "n": 721,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 642,
+      "n": 644,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 599,
+      "n": 601,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 589,
+      "n": 591,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 529,
+      "n": 531,
       "slug": "chinh-phu"
     },
     {
@@ -1295,12 +1295,12 @@
     },
     {
       "label": "ngân hàng",
-      "n": 417,
+      "n": 418,
       "slug": "ngan-hang"
     },
     {
       "label": "quốc hội",
-      "n": 408,
+      "n": 409,
       "slug": "quoc-hoi"
     },
     {
@@ -1325,7 +1325,7 @@
     },
     {
       "label": "chiến tranh",
-      "n": 284,
+      "n": 286,
       "slug": "chien-tranh"
     },
     {
@@ -1350,7 +1350,7 @@
     },
     {
       "label": "xung đột",
-      "n": 253,
+      "n": 254,
       "slug": "xung-dot"
     },
     {
@@ -1405,7 +1405,7 @@
     },
     {
       "label": "cải cách",
-      "n": 75,
+      "n": 76,
       "slug": "cai-cach"
     },
     {
@@ -2835,7 +2835,22 @@
     10204,
     10197,
     10193,
-    10195
+    10195,
+    10261,
+    10267,
+    10270,
+    10265,
+    10259,
+    10272,
+    10260,
+    10273,
+    10264,
+    10263,
+    10268,
+    10271,
+    10262,
+    10269,
+    10266
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
