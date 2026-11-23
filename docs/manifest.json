@@ -1250,73 +1250,73 @@
     {
       "d": "2026-11-22",
       "months": "2026-11",
-      "n": 277
+      "n": 278
     },
     {
       "d": "2026-11-23",
       "months": "2026-11",
-      "n": 118
+      "n": 189
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 4864,
+      "n": 4892,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 920,
+      "n": 924,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 752,
+      "n": 758,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 660,
+      "n": 663,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 612,
+      "n": 618,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 603,
+      "n": 606,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 541,
+      "n": 545,
       "slug": "chinh-phu"
     },
     {
       "label": "chip",
-      "n": 504,
+      "n": 509,
       "slug": "chip"
     },
     {
       "label": "thuế",
-      "n": 455,
+      "n": 457,
       "slug": "thue"
     },
     {
       "label": "quốc hội",
-      "n": 441,
+      "n": 450,
       "slug": "quoc-hoi"
     },
     {
       "label": "ngân hàng",
-      "n": 420,
+      "n": 421,
       "slug": "ngan-hang"
     },
     {
       "label": "đảng",
-      "n": 360,
+      "n": 362,
       "slug": "dang"
     },
     {
@@ -1326,12 +1326,12 @@
     },
     {
       "label": "chính sách",
-      "n": 345,
+      "n": 346,
       "slug": "chinh-sach"
     },
     {
       "label": "xuất khẩu",
-      "n": 321,
+      "n": 324,
       "slug": "xuat-khau"
     },
     {
@@ -1345,18 +1345,18 @@
       "slug": "lam-phat"
     },
     {
-      "label": "trung ương",
-      "n": 272,
-      "slug": "trung-uong"
-    },
-    {
       "label": "trí tuệ nhân tạo",
-      "n": 271,
+      "n": 274,
       "slug": "tri-tue-nhan-tao"
     },
     {
+      "label": "trung ương",
+      "n": 273,
+      "slug": "trung-uong"
+    },
+    {
       "label": "năng lượng",
-      "n": 264,
+      "n": 265,
       "slug": "nang-luong"
     },
     {
@@ -1366,7 +1366,7 @@
     },
     {
       "label": "nghị quyết",
-      "n": 203,
+      "n": 204,
       "slug": "nghi-quyet"
     },
     {
@@ -1380,23 +1380,23 @@
       "slug": "chung-khoan"
     },
     {
+      "label": "nhập khẩu",
+      "n": 145,
+      "slug": "nhap-khau"
+    },
+    {
       "label": "pháp lý",
       "n": 145,
       "slug": "phap-ly"
     },
     {
-      "label": "nhập khẩu",
-      "n": 144,
-      "slug": "nhap-khau"
-    },
-    {
       "label": "nghị định",
-      "n": 133,
+      "n": 134,
       "slug": "nghi-dinh"
     },
     {
       "label": "bán dẫn",
-      "n": 126,
+      "n": 128,
       "slug": "ban-dan"
     },
     {
@@ -1406,7 +1406,7 @@
     },
     {
       "label": "startup",
-      "n": 93,
+      "n": 94,
       "slug": "startup"
     },
     {
@@ -1466,7 +1466,7 @@
     },
     {
       "label": "chuyển đổi số",
-      "n": 20,
+      "n": 21,
       "slug": "chuyen-doi-so"
     },
     {
