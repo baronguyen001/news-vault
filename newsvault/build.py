@@ -367,6 +367,7 @@ def _brief_for(
     """
     cache = Path(options.cache_dir) / "brief" / f"{day}.json"
     fingerprint = _brief_fingerprint(articles, posts)
+    stale_good: BriefResult | None = None
     if cache.exists():
         try:
             stored = json.loads(cache.read_text(encoding="utf-8"))
@@ -385,6 +386,11 @@ def _brief_for(
                 )
             elif bullets and cached_fp and cached_fp != fingerprint:
                 logger.info("brief của %s: ngày đã có thêm tin, sinh lại", day)
+                # Giữ bản LLM cũ làm đường lui: nếu sinh lại rơi xuống fallback thì dùng lại
+                # bản này thay vì ghi đè brief tốt bằng văn bản tự sinh.
+                stale_good = BriefResult(
+                    bullets=bullets, source=str(stored.get("source", "cache")), error=""
+                )
             elif bullets:
                 if not cached_fp:
                     # File từ thời chưa có vân tay. NHẬN NUÔI thay vì sinh lại: job đêm chạy
@@ -405,6 +411,18 @@ def _brief_for(
         if not options.use_brief
         else generate_brief(day, articles, posts=posts)
     )
+    if (
+        stale_good is not None
+        and result.source not in LLM_SOURCES
+        and stale_good.source in LLM_SOURCES
+    ):
+        logger.warning(
+            "brief của %s: sinh lại thất bại (%s) — giữ brief cũ, không ghi đè cache; "
+            "lần chạy sau sẽ thử lại",
+            day,
+            result.error or result.source,
+        )
+        return stale_good
     # Cache anything a language model actually wrote, whichever engine wrote it. Pinning
     # this to "gemini" meant a hub-written brief was regenerated on every single build.
     # Thắt lưng lẫn dây đeo: `generate_brief` lẽ ra đã chặn câu từ chối rồi, nhưng cache là

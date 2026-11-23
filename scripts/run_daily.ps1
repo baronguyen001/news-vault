@@ -79,7 +79,8 @@ function Format-RunMessage {
         [string]$SiteUrl = "",
         [int]$ExitCode = 0,
         [string]$Stamp = "",
-        [string]$Mode = ""
+        [string]$Mode = "",
+        [string]$BriefWarning = ""
     )
 
     $lines = @()
@@ -104,6 +105,10 @@ function Format-RunMessage {
         "pushfail" {
             $lines += "❌ Kho tin: dựng xong nhưng PUSH HỎNG (exit $ExitCode)"
         }
+    }
+
+    if ($BriefWarning -and ($Outcome -eq "published" -or $Outcome -eq "nochange")) {
+        $lines += "⚠️ $BriefWarning"
     }
 
     if ($Stamp -or $Mode) {
@@ -176,6 +181,26 @@ if (-not $env:NEWSVAULT_SOURCING_ONLY) {
     if ($TodayOnly) { $runMode = "chỉ hôm nay" }
     if ($isFinalizeRun) { $runMode += " · chốt cuối ngày" }
 
+    # Daily, the weekly report task and NewsHunterRetry all call this script, and two
+    # overlapping runs would build into the same docs/ and race on git commit/push. Serialise
+    # them on a machine-wide named mutex; a run that cannot get it in time skips (the holder
+    # publishes everything on disk anyway, and the next trigger picks up the rest).
+    $runMutex = New-Object System.Threading.Mutex($false, "Global\NewsVaultRun")
+    $haveMutex = $false
+    try {
+        $haveMutex = $runMutex.WaitOne([TimeSpan]::FromMinutes(10))
+    }
+    catch [System.Threading.AbandonedMutexException] {
+        # The previous holder died without releasing; we own it now.
+        $haveMutex = $true
+    }
+    if (-not $haveMutex) {
+        Write-Log "bo qua: mot lan chay NewsVault khac van dang giu khoa sau 10 phut"
+        $runMutex.Dispose()
+        exit 0
+    }
+    try {
+
     Write-Log "build start (todayOnly=$TodayOnly, finalizeToday=$isFinalizeRun)"
 
     # Every day, not just the newest one. A video is filed under the day it was UPLOADED, so a
@@ -201,6 +226,14 @@ if (-not $env:NEWSVAULT_SOURCING_ONLY) {
     }
     $buildExit = $LASTEXITCODE
     $ErrorActionPreference = $previousEAP
+    # The summary lists the days whose brief fell back to the score-ordered text. Only warn
+    # when TODAY is among them (an old backfilled day is not worth a phone alert).
+    $briefWarning = ""
+    if ($buildSummary -match "brief fallback \d+ ngày: ([0-9,\- ]+)") {
+        if ($Matches[1] -match [regex]::Escape($stamp)) {
+            $briefWarning = "Tóm tắt hôm nay đang dùng bản tự sinh (AI Hub lỗi), chưa phải brief LLM"
+        }
+    }
     if ($buildExit -ne 0) {
         Write-Log "BUILD FAILED exit=$buildExit"
         # A nightly job that dies quietly is how this task once sat dead for a week.
@@ -264,7 +297,7 @@ if (-not $env:NEWSVAULT_SOURCING_ONLY) {
     if (-not $changes) {
         Write-Log "no changes to publish"
         Send-Telegram (Format-RunMessage -Outcome "nochange" -Summary $buildSummary `
-            -Stamp $runStamp -Mode $runMode)
+            -BriefWarning $briefWarning -Stamp $runStamp -Mode $runMode)
         exit 0
     }
 
@@ -279,7 +312,7 @@ if (-not $env:NEWSVAULT_SOURCING_ONLY) {
     $pushAttempts = 3
     for ($attempt = 1; $attempt -le $pushAttempts; $attempt++) {
         if ($attempt -gt 1) {
-            $delay = 5 * ($attempt - 1)
+            $delay = 15 * ($attempt - 1)
             Write-Log "push thu lai $attempt/$pushAttempts sau ${delay}s"
             Start-Sleep -Seconds $delay
         }
@@ -325,5 +358,11 @@ if (-not $env:NEWSVAULT_SOURCING_ONLY) {
 
     Send-Telegram (Format-RunMessage -Outcome "published" -Summary $buildSummary `
         -NewestDay $newestDay -NewestCount $newestCount -SiteUrl $siteUrl `
-        -Stamp $runStamp -Mode $runMode)
+        -BriefWarning $briefWarning -Stamp $runStamp -Mode $runMode)
+
+    }
+    finally {
+        if ($haveMutex) { $runMutex.ReleaseMutex() }
+        $runMutex.Dispose()
+    }
 }

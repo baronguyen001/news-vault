@@ -23,6 +23,8 @@ def brief_prompt(day: str, items: Sequence[Mapping[str, object]]) -> str:
         f"Write exactly five concise news-bullet points in Vietnamese (tiếng Việt) for {day}.",
         "Base every bullet only on the supplied items. Do not invent facts.",
         "Do not add numbers, dates, or statistics that are not present in the items.",
+        "Không tự tính/suy ra số liệu mới (khoảng thời gian, chênh lệch, %); chỉ dùng số có trong tin.",
+        "Không thêm chi tiết không có trong tin.",
         "Prefer the consequence, meaning, or likely impact of each event over the raw event.",
         "One sentence per bullet. No emoji. No preamble. No numbering. Return exactly five strings.",
         "",

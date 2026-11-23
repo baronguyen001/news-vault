@@ -110,3 +110,111 @@ def test_brief_module_has_no_gemini_endpoint() -> None:
     src = pathlib.Path("newsvault/brief.py").read_text(encoding="utf-8")
     assert "generativelanguage.googleapis.com" not in src
     assert "GEMINI_API_KEY" not in src
+
+
+# --- Chất lượng brief: cắt fallback, số liệu lạ, guard ký tự ---------------------------
+
+from newsvault.brief import (  # noqa: E402
+    _truncate_at_boundary,
+    bullet_output_issue,
+    unsupported_numbers,
+)
+from newsvault.prompts import brief_prompt  # noqa: E402
+
+
+def test_fallback_truncates_at_word_boundary_with_ellipsis() -> None:
+    long_summary = " ".join(["thiênhà"] * 80)
+    result = fallback_brief([_article(summary_vi=long_summary)], limit=1)
+    line = result.bullets[0]
+    assert len(line) <= 220
+    assert line.endswith("…")
+    assert line[:-1].endswith("thiênhà")  # không đứt giữa từ
+
+
+def test_truncate_prefers_sentence_boundary_and_keeps_short_text() -> None:
+    assert _truncate_at_boundary("Ngắn gọn.") == "Ngắn gọn."
+    text = ("a" * 150) + ". " + ("b " * 60)
+    cut = _truncate_at_boundary(text)
+    assert cut.endswith(".") and len(cut) == 151
+
+
+def test_fallback_is_not_cached_so_next_run_retries(tmp_path, monkeypatch) -> None:
+    from newsvault.build import BuildOptions, _brief_for
+
+    reset_provider_state()
+    monkeypatch.setattr("newsvault.brief.ai_hub.is_available", lambda: False)
+    options = BuildOptions(
+        db_path=tmp_path / "x.db", out_dir=tmp_path / "out", password="x",
+        cache_dir=tmp_path / "cache",
+    )
+    first = _brief_for("2026-08-04", [_article()], options)
+    assert first.source == "fallback"
+    assert not (tmp_path / "cache" / "brief" / "2026-08-04.json").exists()
+
+    monkeypatch.setattr("newsvault.brief.ai_hub.is_available", lambda: True)
+    monkeypatch.setattr("newsvault.brief.ai_hub.chat_json",
+                        lambda *a, **k: {"bullets": list("ABCDE")})
+    second = _brief_for("2026-08-04", [_article()], options)
+    assert second.source == "aihub"
+
+
+def test_prompt_forbids_derived_numbers_and_extra_details() -> None:
+    prompt = brief_prompt("2026-08-04", [])
+    assert "Không tự tính/suy ra số liệu mới" in prompt
+    assert "Không thêm chi tiết không có trong tin" in prompt
+
+
+def test_unsupported_numbers_flags_only_new_numbers(monkeypatch, caplog) -> None:
+    articles = [_article(summary_vi="Lạm phát 2,5% trong 1.200 ngày.")]
+    assert unsupported_numbers(["Lạm phát 2,5%", "Sau 1200 ngày"], articles) == []
+    assert unsupported_numbers(["Kéo dài 37 tháng"], articles) == ["37"]
+
+    reset_provider_state()
+    monkeypatch.setattr("newsvault.brief.ai_hub.is_available", lambda: True)
+    monkeypatch.setattr("newsvault.brief.ai_hub.chat_json",
+                        lambda *a, **k: {"bullets": ["Tăng 99%", "B", "C", "D", "E"]})
+    with caplog.at_level("WARNING"):
+        result = generate_brief("2026-08-04", articles)
+    assert result.source == "aihub"  # chỉ cảnh báo, không chặn
+    assert "99" in caplog.text
+
+
+@pytest.mark.parametrize("bad", [
+    "Giá dầu 上涨 mạnh", "Сбербанк tăng lãi", "Giá tăngFed lãi suất", "FEDtăng lãi suất",
+])
+def test_bullet_output_issue_detects_bad_text(bad: str) -> None:
+    assert bullet_output_issue(bad)
+
+
+@pytest.mark.parametrize("ok", [
+    "Fed giữ nguyên lãi suất, iPhone bán chạy", "Thị trường tăng mạnh nhờ OpenAI", "ChatGPT ra mắt",
+])
+def test_bullet_output_issue_accepts_good_text(ok: str) -> None:
+    assert bullet_output_issue(ok) == ""
+
+
+def test_guard_regenerates_once_then_drops_bad_bullet(monkeypatch) -> None:
+    reset_provider_state()
+    calls: list[int] = []
+    good = ["Một", "Hai", "Ba", "Bốn"]
+
+    def _hub(*_a: object, **_k: object) -> dict[str, object]:
+        calls.append(1)
+        return {"bullets": good + ["Năm 上涨"]}
+
+    monkeypatch.setattr("newsvault.brief.ai_hub.is_available", lambda: True)
+    monkeypatch.setattr("newsvault.brief.ai_hub.chat_json", _hub)
+    result = generate_brief("2026-08-04", [_article()])
+    assert len(calls) == 2  # đúng một lần sinh lại
+    assert result.source == "aihub"
+    assert result.bullets == tuple(good)
+
+
+def test_guard_accepts_clean_regeneration(monkeypatch) -> None:
+    reset_provider_state()
+    replies = iter([["A", "B", "C", "D", "Сбер"], list("VWXYZ")])
+    monkeypatch.setattr("newsvault.brief.ai_hub.is_available", lambda: True)
+    monkeypatch.setattr("newsvault.brief.ai_hub.chat_json",
+                        lambda *a, **k: {"bullets": next(replies)})
+    result = generate_brief("2026-08-04", [_article()])
+    assert result.bullets == tuple("VWXYZ")

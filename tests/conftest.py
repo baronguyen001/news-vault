@@ -14,6 +14,10 @@ _AI_HUB_VARS = (
     "AI_HUB_MODEL",
     "AI_HUB_TIMEOUT",
     "AI_HUB_ENABLED",
+    # The direct-Ollama safety net must stay off unless a test turns it on.
+    "OLLAMA_API_KEY",
+    "OLLAMA_BASE_URL",
+    "NEWSVAULT_CODEX_FALLBACK",
 )
 
 
@@ -36,6 +40,8 @@ def _no_ai_hub() -> Iterator[None]:
     restoring the variables by hand keeps this fixture out of everyone else's ordering.
     """
     saved = {name: os.environ.pop(name, None) for name in _AI_HUB_VARS}
+    # The Codex CLI last-resort tier must never spawn a real process during tests.
+    os.environ["NEWSVAULT_CODEX_FALLBACK"] = "0"
     try:
         yield
     finally:

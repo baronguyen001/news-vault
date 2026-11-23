@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import logging
+import os
+import re
+import unicodedata
 from collections.abc import Sequence
 from dataclasses import dataclass
 
@@ -108,6 +111,28 @@ def _first_sentence(text: str) -> str:
     return first.strip()
 
 
+FALLBACK_MAX_CHARS: int = 220
+
+
+def _truncate_at_boundary(text: str, limit: int = FALLBACK_MAX_CHARS) -> str:
+    """Cut `text` to at most `limit` chars at a sentence/word boundary, adding an ellipsis.
+
+    Trước đây cắt cứng `[:220]` nên fallback đứt giữa từ ("...ngân hà"). Ưu tiên ranh giới
+    câu nếu nó nằm ở nửa sau, ngược lại lùi về khoảng trắng gần nhất.
+    """
+    text = text.strip()
+    if len(text) <= limit:
+        return text
+    window = text[: limit - 1]
+    cut = max(window.rfind(". "), window.rfind("! "), window.rfind("? "))
+    if cut >= limit // 2:
+        return window[: cut + 1].rstrip()
+    space = window.rfind(" ")
+    if space >= limit // 2:
+        window = window[:space]
+    return window.rstrip(" ,;:—–-") + "…"
+
+
 def fallback_brief(
     articles: Sequence[Article],
     *,
@@ -126,17 +151,13 @@ def fallback_brief(
     for article in ordered[:limit]:
         sentence = _first_sentence(article.summary_vi)
         line = f"{article.source or 'Nguồn'} — {sentence or article.title_vi}"
-        if len(line) > 220:
-            line = line[:220]
-        bullets.append(line)
+        bullets.append(_truncate_at_boundary(line))
     if len(bullets) < limit and posts:
         ranked = sorted(posts, key=lambda post: post.score, reverse=True)
         for post in ranked[: limit - len(bullets)]:
             sentence = _first_sentence(post.summary)
             line = f"@{post.author or 'X'} — {sentence or post.title}"
-            if len(line) > 220:
-                line = line[:220]
-            bullets.append(line)
+            bullets.append(_truncate_at_boundary(line))
     if not bullets:
         return BriefResult(tuple(), "fallback", "no articles")
     return BriefResult(tuple(bullets), "fallback", "")
@@ -211,6 +232,13 @@ def generate_brief(
     return BriefResult(fb.bullets, "fallback", "ai hub failed")
 
 
+def _brief_max_tokens() -> int:
+    try:
+        return max(1024, int(os.environ.get("AI_HUB_BRIEF_MAX_TOKENS", "16000")))
+    except ValueError:
+        return 16000
+
+
 def _brief_via_hub(
     day: str,
     articles: Sequence[Article],
@@ -224,10 +252,11 @@ def _brief_via_hub(
         day, _brief_items(articles, limit) + _post_items(posts, post_limit)
     )
     try:
-        # 8192 is deliberately roomy: the model burns budget on a hidden reasoning phase
-        # before writing a single character, and a tight ceiling yields empty content that
-        # looks like a model failure but is really a budget one.
-        parsed = ai_hub.chat_json(prompt, max_tokens=8192, temperature=0.3)
+        # Deliberately roomy: the model burns budget on a hidden reasoning phase before
+        # writing a single character, and a tight ceiling yields empty content that looks
+        # like a model failure but is really a budget one (8192 failed with 28-31k reasoning
+        # chars on 2026-10-31/11-01). Override with AI_HUB_BRIEF_MAX_TOKENS.
+        parsed = ai_hub.chat_json(prompt, max_tokens=_brief_max_tokens(), temperature=0.3)
     except Exception as exc:  # noqa: BLE001 — hub hong thi caller dung fallback
         logger.warning("Brief via AI Hub failed for %s: %s", day, str(exc)[:200])
         return None
@@ -241,7 +270,110 @@ def _brief_via_hub(
         # thay vì lặng lẽ coi lời từ chối của model là một brief hợp lệ.
         logger.warning("Brief via AI Hub từ chối trả lời cho %s: %s", day, cleaned[0][:120])
         return None
+
+    if any(bullet_output_issue(b) for b in cleaned):
+        # Output guard: chữ CJK/Cyrillic hoặc tiếng Việt dính liền từ tiếng Anh. Sinh lại ĐÚNG
+        # MỘT lần; nếu vẫn lỗi thì bỏ riêng dòng lỗi thay vì vứt cả brief.
+        logger.warning("Brief của %s có dòng lỗi ký tự/dính chữ, sinh lại 1 lần", day)
+        try:
+            retry = ai_hub.chat_json(prompt, max_tokens=_brief_max_tokens(), temperature=0.3)
+            retried = _clean_bullets(retry.get("bullets"))
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("Brief regenerate failed for %s: %s", day, str(exc)[:200])
+            retried = []
+        if retried and not looks_like_refusal(retried):
+            bad_before = sum(1 for b in cleaned if bullet_output_issue(b))
+            bad_after = sum(1 for b in retried if bullet_output_issue(b))
+            if bad_after <= bad_before:
+                cleaned = retried
+        kept = [b for b in cleaned if not bullet_output_issue(b)]
+        if len(kept) < len(cleaned):
+            logger.warning(
+                "Brief của %s: bỏ %d dòng lỗi ký tự/dính chữ", day, len(cleaned) - len(kept)
+            )
+        cleaned = kept
+        if not cleaned:
+            logger.warning("Brief via AI Hub: mọi dòng đều lỗi ký tự cho %s", day)
+            return None
+
+    warn_unsupported_numbers(day, cleaned, articles, posts)
     return BriefResult(tuple(cleaned), "aihub", "")
+
+
+_CJK_CYRILLIC_RE = re.compile(
+    "[Ѐ-ӿ぀-ヿ㐀-䶿一-鿿가-힯＀-￯]"
+)
+# Một "từ" vừa có ký tự Latin có dấu (tiếng Việt) vừa có chỗ chuyển chữ thường -> HOA
+# ("tăngFed") hoặc cụm HOA ASCII (>=2) rồi chữ thường ("FEDtăng") là từ bị dính.
+_WORD_RE = re.compile(r"[^\W\d_]+")
+_GLUE_RES: tuple[re.Pattern[str], ...] = (
+    re.compile(r"[a-zÀ-ɏḀ-ỿ][A-Z]"),
+    re.compile(r"[A-Z]{2,}[a-zÀ-ɏḀ-ỿ]"),
+)
+
+
+def _is_latin_diacritic(ch: str) -> bool:
+    return ord(ch) > 127 and unicodedata.name(ch, "").startswith("LATIN")
+
+
+def bullet_output_issue(bullet: str) -> str:
+    """Return a short reason if the bullet has CJK/Cyrillic or Vietnamese glued to English."""
+    if _CJK_CYRILLIC_RE.search(bullet):
+        return "cjk_cyrillic"
+    for word in _WORD_RE.findall(bullet):
+        if any(_is_latin_diacritic(ch) for ch in word) and any(
+            pattern.search(word) for pattern in _GLUE_RES
+        ):
+            return "glued_words"
+    return ""
+
+
+_NUMBER_RE = re.compile(r"\d[\d.,]*\d|\d")
+
+
+def _number_forms(text: str) -> set[str]:
+    forms: set[str] = set()
+    for raw in _NUMBER_RE.findall(text):
+        forms.add(raw)
+        forms.add(re.sub(r"\D", "", raw))
+    return forms
+
+
+def unsupported_numbers(
+    bullets: Sequence[str],
+    articles: Sequence[Article],
+    posts: Sequence[Post] = (),
+) -> list[str]:
+    """Numbers in `bullets` that appear in no article/post text of the day."""
+    source_text: list[str] = []
+    for article in articles:
+        source_text.extend(
+            [article.title, article.title_vi, article.summary_vi, *article.key_points]
+        )
+    for post in posts:
+        source_text.extend([post.title, post.summary])
+    known = _number_forms(" ".join(t for t in source_text if t))
+    missing: list[str] = []
+    for bullet in bullets:
+        for raw in _NUMBER_RE.findall(bullet):
+            if raw not in known and re.sub(r"\D", "", raw) not in known and raw not in missing:
+                missing.append(raw)
+    return missing
+
+
+def warn_unsupported_numbers(
+    day: str,
+    bullets: Sequence[str],
+    articles: Sequence[Article],
+    posts: Sequence[Post] = (),
+) -> list[str]:
+    """Cheap hallucination check: log (never block) numbers absent from the sources."""
+    missing = unsupported_numbers(bullets, articles, posts)
+    if missing:
+        logger.warning(
+            "Brief của %s có số không thấy trong tin nguồn: %s", day, ", ".join(missing)
+        )
+    return missing
 
 
 def _clean_bullets(raw: object) -> list[str]:

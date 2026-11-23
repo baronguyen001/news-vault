@@ -18,6 +18,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from newsvault.cli import load_dotenv  # noqa: E402
 from newsvault.videos import connect  # noqa: E402
 
 STATE_LIMIT = 30
@@ -118,6 +119,9 @@ def main(argv: list[str] | None = None) -> int:
     except SystemExit:
         # Đây là tác vụ cảnh báo phụ; cả tham số sai cũng không được làm hỏng build.
         return 0
+    # Không nạp .env thì NEWSVAULT_VIDEO_DB không bao giờ có mặt khi chạy từ Task Scheduler
+    # và cảnh báo im lặng bỏ qua mỗi lần. Cùng cách nạp với newsvault/cli.py.
+    load_dotenv(REPO_ROOT / ".env")
     db_value = args.db or os.environ.get("NEWSVAULT_VIDEO_DB")
     if not db_value:
         print("[video-freshness] bỏ qua — thiếu DB")
