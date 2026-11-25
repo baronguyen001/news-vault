@@ -1265,38 +1265,38 @@
     {
       "d": "2026-11-25",
       "months": "2026-11",
-      "n": 87
+      "n": 106
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 4953,
+      "n": 4966,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 934,
+      "n": 937,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 761,
+      "n": 762,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 671,
+      "n": 674,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 621,
+      "n": 623,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 609,
+      "n": 610,
       "slug": "du-lieu"
     },
     {
@@ -1306,27 +1306,27 @@
     },
     {
       "label": "chip",
-      "n": 514,
+      "n": 515,
       "slug": "chip"
     },
     {
       "label": "thuế",
-      "n": 463,
+      "n": 464,
       "slug": "thue"
     },
     {
       "label": "quốc hội",
-      "n": 454,
+      "n": 456,
       "slug": "quoc-hoi"
     },
     {
       "label": "ngân hàng",
-      "n": 426,
+      "n": 429,
       "slug": "ngan-hang"
     },
     {
       "label": "đảng",
-      "n": 367,
+      "n": 368,
       "slug": "dang"
     },
     {
@@ -1336,27 +1336,27 @@
     },
     {
       "label": "chính sách",
-      "n": 350,
+      "n": 353,
       "slug": "chinh-sach"
     },
     {
       "label": "xuất khẩu",
-      "n": 329,
+      "n": 331,
       "slug": "xuat-khau"
     },
     {
       "label": "chiến tranh",
-      "n": 296,
+      "n": 297,
       "slug": "chien-tranh"
     },
     {
       "label": "lạm phát",
-      "n": 284,
+      "n": 285,
       "slug": "lam-phat"
     },
     {
       "label": "trung ương",
-      "n": 275,
+      "n": 276,
       "slug": "trung-uong"
     },
     {
@@ -1366,7 +1366,7 @@
     },
     {
       "label": "năng lượng",
-      "n": 267,
+      "n": 268,
       "slug": "nang-luong"
     },
     {
@@ -1411,7 +1411,7 @@
     },
     {
       "label": "thuế quan",
-      "n": 122,
+      "n": 123,
       "slug": "thue-quan"
     },
     {
@@ -1421,7 +1421,7 @@
     },
     {
       "label": "bảo hiểm",
-      "n": 82,
+      "n": 83,
       "slug": "bao-hiem"
     },
     {
@@ -1431,7 +1431,7 @@
     },
     {
       "label": "hành chính",
-      "n": 76,
+      "n": 77,
       "slug": "hanh-chinh"
     },
     {
@@ -1471,7 +1471,7 @@
     },
     {
       "label": "kinh tế vĩ mô",
-      "n": 25,
+      "n": 26,
       "slug": "kinh-te-vi-mo"
     },
     {
@@ -2918,7 +2918,26 @@
     10673,
     10676,
     10668,
-    10672
+    10672,
+    10737,
+    10738,
+    10740,
+    10748,
+    10747,
+    10742,
+    10753,
+    10751,
+    10739,
+    10752,
+    10749,
+    10744,
+    10750,
+    10746,
+    10741,
+    10754,
+    10755,
+    10743,
+    10745
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
