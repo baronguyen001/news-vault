@@ -1260,68 +1260,73 @@
     {
       "d": "2026-11-24",
       "months": "2026-11",
-      "n": 154
+      "n": 174
+    },
+    {
+      "d": "2026-11-25",
+      "months": "2026-11",
+      "n": 87
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 4928,
+      "n": 4953,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 930,
+      "n": 934,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 759,
+      "n": 761,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 666,
+      "n": 671,
       "slug": "doanh-nghiep"
     },
     {
       "label": "công nghệ",
-      "n": 620,
+      "n": 621,
       "slug": "cong-nghe"
     },
     {
       "label": "dữ liệu",
-      "n": 607,
+      "n": 609,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 550,
+      "n": 554,
       "slug": "chinh-phu"
     },
     {
       "label": "chip",
-      "n": 511,
+      "n": 514,
       "slug": "chip"
     },
     {
       "label": "thuế",
-      "n": 460,
+      "n": 463,
       "slug": "thue"
     },
     {
       "label": "quốc hội",
-      "n": 452,
+      "n": 454,
       "slug": "quoc-hoi"
     },
     {
       "label": "ngân hàng",
-      "n": 425,
+      "n": 426,
       "slug": "ngan-hang"
     },
     {
       "label": "đảng",
-      "n": 365,
+      "n": 367,
       "slug": "dang"
     },
     {
@@ -1331,17 +1336,17 @@
     },
     {
       "label": "chính sách",
-      "n": 349,
+      "n": 350,
       "slug": "chinh-sach"
     },
     {
       "label": "xuất khẩu",
-      "n": 328,
+      "n": 329,
       "slug": "xuat-khau"
     },
     {
       "label": "chiến tranh",
-      "n": 295,
+      "n": 296,
       "slug": "chien-tranh"
     },
     {
@@ -1350,14 +1355,14 @@
       "slug": "lam-phat"
     },
     {
+      "label": "trung ương",
+      "n": 275,
+      "slug": "trung-uong"
+    },
+    {
       "label": "trí tuệ nhân tạo",
       "n": 274,
       "slug": "tri-tue-nhan-tao"
-    },
-    {
-      "label": "trung ương",
-      "n": 274,
-      "slug": "trung-uong"
     },
     {
       "label": "năng lượng",
@@ -1371,17 +1376,17 @@
     },
     {
       "label": "nghị quyết",
-      "n": 204,
+      "n": 205,
       "slug": "nghi-quyet"
     },
     {
       "label": "trừng phạt",
-      "n": 173,
+      "n": 174,
       "slug": "trung-phat"
     },
     {
       "label": "chứng khoán",
-      "n": 155,
+      "n": 156,
       "slug": "chung-khoan"
     },
     {
@@ -1396,17 +1401,17 @@
     },
     {
       "label": "nghị định",
-      "n": 135,
+      "n": 137,
       "slug": "nghi-dinh"
     },
     {
       "label": "bán dẫn",
-      "n": 128,
+      "n": 129,
       "slug": "ban-dan"
     },
     {
       "label": "thuế quan",
-      "n": 121,
+      "n": 122,
       "slug": "thue-quan"
     },
     {
@@ -1421,12 +1426,12 @@
     },
     {
       "label": "cải cách",
-      "n": 77,
+      "n": 79,
       "slug": "cai-cach"
     },
     {
       "label": "hành chính",
-      "n": 75,
+      "n": 76,
       "slug": "hanh-chinh"
     },
     {
@@ -1436,7 +1441,7 @@
     },
     {
       "label": "bộ chính trị",
-      "n": 48,
+      "n": 49,
       "slug": "bo-chinh-tri"
     },
     {
@@ -1476,7 +1481,7 @@
     },
     {
       "label": "điện toán đám mây",
-      "n": 18,
+      "n": 19,
       "slug": "dien-toan-dam-may"
     },
     {
@@ -1705,7 +1710,7 @@
       "slug": "xay-dung-dang"
     }
   ],
-  "generated_at": "2026-11-24T23:59:59+07:00",
+  "generated_at": "2026-11-25T23:59:59+07:00",
   "kdf_iterations": 250000,
   "months": [
     "2025-08",
@@ -2918,6 +2923,29 @@
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
   "substack": [
+    "2363",
+    "2371",
+    "2350",
+    "2358",
+    "2370",
+    "2355",
+    "2351",
+    "2368",
+    "2352",
+    "2367",
+    "2353",
+    "2348",
+    "2354",
+    "2349",
+    "2369",
+    "2366",
+    "2357",
+    "2362",
+    "2365",
+    "2359",
+    "2356",
+    "2361",
+    "2364",
     "2333",
     "2334",
     "2325",
