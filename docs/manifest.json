@@ -1180,7 +1180,7 @@
     {
       "d": "2026-11-08",
       "months": "2026-11",
-      "n": 119
+      "n": 120
     },
     {
       "d": "2026-11-09",
@@ -1270,28 +1270,28 @@
     {
       "d": "2026-11-26",
       "months": "2026-11",
-      "n": 106
+      "n": 143
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 5013,
+      "n": 5027,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 942,
+      "n": 941,
       "slug": "dau-tu"
     },
     {
       "label": "luật",
-      "n": 767,
+      "n": 768,
       "slug": "luat"
     },
     {
       "label": "doanh nghiệp",
-      "n": 678,
+      "n": 679,
       "slug": "doanh-nghiep"
     },
     {
@@ -1301,7 +1301,7 @@
     },
     {
       "label": "dữ liệu",
-      "n": 615,
+      "n": 618,
       "slug": "du-lieu"
     },
     {
@@ -1311,12 +1311,12 @@
     },
     {
       "label": "chip",
-      "n": 521,
+      "n": 526,
       "slug": "chip"
     },
     {
       "label": "thuế",
-      "n": 465,
+      "n": 467,
       "slug": "thue"
     },
     {
@@ -1326,17 +1326,17 @@
     },
     {
       "label": "ngân hàng",
-      "n": 432,
+      "n": 433,
       "slug": "ngan-hang"
     },
     {
       "label": "đảng",
-      "n": 368,
+      "n": 371,
       "slug": "dang"
     },
     {
       "label": "lãi suất",
-      "n": 357,
+      "n": 358,
       "slug": "lai-suat"
     },
     {
@@ -1346,7 +1346,7 @@
     },
     {
       "label": "xuất khẩu",
-      "n": 333,
+      "n": 337,
       "slug": "xuat-khau"
     },
     {
@@ -1356,17 +1356,17 @@
     },
     {
       "label": "lạm phát",
-      "n": 288,
+      "n": 290,
       "slug": "lam-phat"
     },
     {
       "label": "trung ương",
-      "n": 278,
+      "n": 280,
       "slug": "trung-uong"
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 275,
+      "n": 276,
       "slug": "tri-tue-nhan-tao"
     },
     {
@@ -1416,7 +1416,7 @@
     },
     {
       "label": "thuế quan",
-      "n": 123,
+      "n": 124,
       "slug": "thue-quan"
     },
     {
@@ -1446,7 +1446,7 @@
     },
     {
       "label": "bộ chính trị",
-      "n": 50,
+      "n": 52,
       "slug": "bo-chinh-tri"
     },
     {
@@ -2956,8 +2956,8 @@
     10825,
     10834,
     10836,
-    10833,
-    10830
+    10830,
+    10833
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
   "site": "Kho tin",
