@@ -1270,18 +1270,18 @@
     {
       "d": "2026-11-26",
       "months": "2026-11",
-      "n": 143
+      "n": 200
     }
   ],
   "entities": [
     {
       "label": "AI",
-      "n": 5027,
+      "n": 5034,
       "slug": "ai"
     },
     {
       "label": "đầu tư",
-      "n": 941,
+      "n": 942,
       "slug": "dau-tu"
     },
     {
@@ -1291,7 +1291,7 @@
     },
     {
       "label": "doanh nghiệp",
-      "n": 679,
+      "n": 680,
       "slug": "doanh-nghiep"
     },
     {
@@ -1301,17 +1301,17 @@
     },
     {
       "label": "dữ liệu",
-      "n": 618,
+      "n": 619,
       "slug": "du-lieu"
     },
     {
       "label": "chính phủ",
-      "n": 563,
+      "n": 562,
       "slug": "chinh-phu"
     },
     {
       "label": "chip",
-      "n": 526,
+      "n": 527,
       "slug": "chip"
     },
     {
@@ -1331,12 +1331,12 @@
     },
     {
       "label": "đảng",
-      "n": 371,
+      "n": 372,
       "slug": "dang"
     },
     {
       "label": "lãi suất",
-      "n": 358,
+      "n": 359,
       "slug": "lai-suat"
     },
     {
@@ -1361,22 +1361,22 @@
     },
     {
       "label": "trung ương",
-      "n": 280,
+      "n": 281,
       "slug": "trung-uong"
     },
     {
       "label": "trí tuệ nhân tạo",
-      "n": 276,
+      "n": 277,
       "slug": "tri-tue-nhan-tao"
     },
     {
       "label": "năng lượng",
-      "n": 270,
+      "n": 269,
       "slug": "nang-luong"
     },
     {
       "label": "xung đột",
-      "n": 260,
+      "n": 261,
       "slug": "xung-dot"
     },
     {
@@ -2944,7 +2944,6 @@
     10743,
     10744,
     10745,
-    10827,
     10829,
     10838,
     10837,
@@ -2957,6 +2956,8 @@
     10834,
     10836,
     10830,
+    10827,
+    10866,
     10833
   ],
   "salt": "50dXbU+UEP6nLFPfl4/GpQ==",
